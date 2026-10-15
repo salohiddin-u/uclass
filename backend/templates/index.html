@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Grades</title>
+<style>
+:root{--bg:#fff;--ink:#111;--mute:#6b6b6b;--line:#e6e6e6;--ok:#1a7f4b;--sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#0f0f10;--ink:#eee;--mute:#8d8d92;--line:#26262a;--ok:#3dbe88}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--sans)}
+main{max-width:40rem;margin:0 auto;padding:2rem 1.25rem 4rem}
+h1{font-size:1.6rem;font-weight:500;margin:0 0 1.5rem}
+.mute{color:var(--mute)}
+details{border-top:1px solid var(--line)}
+summary{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:1rem 0;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.name{font-weight:500}
+.id{display:block;font-size:.85rem;color:var(--mute);font-weight:400}
+.overall{font-size:1.2rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.panel{padding-bottom:1.2rem}
+.item{display:grid;grid-template-columns:1fr auto;gap:.1rem 1rem;padding:.55rem 0;border-top:1px solid var(--line)}
+.pts{text-align:right;font-variant-numeric:tabular-nums}
+.total .label{font-weight:600}
+.bar{grid-column:1/-1;height:3px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ok)}
+</style>
+</head>
+<body>
+<main>
+  <p class="mute">{{ student_name }}</p>
+  <h1>Grades</h1>
+
+  {% for course in courses %}
+  <details open>
+    <summary>
+      <span class="name">{{ course.fullname }}<span class="id">Course ID {{ course.id }}</span></span>
+      <span class="overall" aria-label="Overall grade">{% for item in grades_overview %}{% if item.courseid == course.id %}{{ item.grade }}{% endif %}{% endfor %}</span>
+    </summary>
+    
+  </details>
+  {% endfor %}
+
+</main>
+</body>
+</html>
