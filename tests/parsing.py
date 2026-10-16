@@ -53,7 +53,16 @@ for row in rows:
         r"(\d{1,2} \w+ \d{4}) (\d{1,2}(?::\d{2})?[AP]M)",
         text
     )
-    print("Date:", datetime.strptime(date.group(1), "%d %B %Y").date() if date else "N/A")
+    date = date if date else re.search(
+        r"(\d{1,2} \w+ \d{4})",
+        text
+    )
+
+    time = re.search(
+        r"(\d{1,2}(?::\d{2})?[AP]M)",
+        text
+    )
+    print("Date:", datetime.strptime(date.group(1), "%d %b %Y").date() if date else "N/A")
 
 
     status = row.select_one("td.desccol").get_text(strip=True) if row.select_one("td.desccol") else "N/A"
