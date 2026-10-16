@@ -42,6 +42,19 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
     
   </details>
   {% endfor %}
+  <details>
+    <summary>
+      <span class="name">Attendance</span>
+    </summary>
+    <div class="panel">
+      {% for record in attendance_data %}
+      <div class="item">
+        <span class="name">{{ record.date }}</span>
+        <span class="pts">{{ record.status }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </details>
 
 </main>
 </body>
