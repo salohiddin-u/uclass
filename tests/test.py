@@ -12,7 +12,7 @@ def ws(token, function, **params):
 
 
 
-info = ws("", "tool_mobile_get_content", component="mod_attendance",
+info = ws("<TOKEN>", "tool_mobile_get_content", omponent="mod_attendance",
     method="mobile_view_activity",
     **{
         "args[0][name]": "cmid",     "args[0][value]": 1553,

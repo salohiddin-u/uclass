@@ -42,29 +42,34 @@ response = session.get(
 response.raise_for_status()
 
 soup = BeautifulSoup(response.text, "html.parser")
-rows = soup.select("tr")
+
+rows = soup.select("table.generaltable")
+for r in rows:
+    text = r.select_one("tr.lastrow").select_one("td.cell").get_text(strip=True) if r.select_one("tr.lastrow") else "N/A"
+    print(text.split(" ")[2])
+    break
 # print(rows)
-for row in rows:
-    date_text = row.select_one("td.colcourse").get_text(" ", strip=True) if row.select_one("td.desccol") else "N/A"
-    date_split = date_text.split(" ", 1)
-    text = date_split[1] if len(date_split) > 1 else "N/A"
-    text = text.replace("Sept", "Sep")
-    date = re.search(
-        r"(\d{1,2} \w+ \d{4}) (\d{1,2}(?::\d{2})?[AP]M)",
-        text
-    )
-    date = date if date else re.search(
-        r"(\d{1,2} \w+ \d{4})",
-        text
-    )
+# for row in rows:
+#     date_text = row.select_one("td.colcourse").get_text(" ", strip=True) if row.select_one("td.desccol") else "N/A"
+#     date_split = date_text.split(" ", 1)
+#     text = date_split[1] if len(date_split) > 1 else "N/A"
+#     text = text.replace("Sept", "Sep")
+#     date = re.search(
+#         r"(\d{1,2} \w+ \d{4}) (\d{1,2}(?::\d{2})?[AP]M)",
+#         text
+#     )
+#     date = date if date else re.search(
+#         r"(\d{1,2} \w+ \d{4})",
+#         text
+#     )
 
-    time = re.search(
-        r"(\d{1,2}(?::\d{2})?[AP]M)",
-        text
-    )
-    print("Date:", datetime.strptime(date.group(1), "%d %b %Y").date() if date else "N/A")
+#     time = re.search(
+#         r"(\d{1,2}(?::\d{2})?[AP]M)",
+#         text
+#     )
+#     print("Date:", datetime.strptime(date.group(1), "%d %b %Y").date() if date else "N/A")
 
 
-    status = row.select_one("td.desccol").get_text(strip=True) if row.select_one("td.desccol") else "N/A"
+#     status = row.select_one("td.desccol").get_text(strip=True) if row.select_one("td.desccol") else "N/A"
 
-session.close()
+# session.close()
