@@ -74,7 +74,7 @@ class ChatFile(models.Model):
 class ChatMessage(models.Model):
     message = models.TextField()
     output = models.TextField()
-    file = models.ManyToManyField(ChatFile, related_name="chat_messages", blank=True, null=True)
+    file = models.ManyToManyField(ChatFile, related_name="chat_messages", blank=True)
     chat_message = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="chat")
 
     def __str__(self):

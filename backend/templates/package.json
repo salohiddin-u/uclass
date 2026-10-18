@@ -1,0 +1,14 @@
+{
+  "name": "campus-html-templates",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Separate Tailwind HTML templates with static example data, ready to adapt to Django.",
+  "scripts": {
+    "build:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/styles.css --minify",
+    "watch:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/styles.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.0",
+    "tailwindcss": "^4.1.0"
+  }
+}
