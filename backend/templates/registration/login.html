@@ -49,7 +49,7 @@
       <h1 id="login-title">Connect your<br class="auth-title-break"> university account</h1>
       <p class="auth-card-subtitle">Sign in with your Inha LMS credentials to access your academic dashboard.</p>
 
-      <form id="connection-form" class="auth-form" method="post" action="{% url 'dashboard' %}" autocomplete="on" novalidate>
+      <form id="connection-form" class="auth-form" method="post" action="{% url 'login' %}" autocomplete="on" novalidate>
         {% csrf_token %}
         {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
 
@@ -115,6 +115,6 @@
     </section>
   </main>
 
-  <footer class="auth-footer"><p>uclass.uz is an independent student project and is not an official Inha University or LMS service.</p><span>Built for a more organized student life.</span></footer>
+  <footer class="auth-footer"><p>uclass.uz is an independent student project and is not an official Inha University in Tashkent service.</p></footer>
 </body>
 </html>
