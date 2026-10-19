@@ -1,4 +1,4 @@
-# Campus — separate HTML templates
+# uclass.uz — separate HTML templates
 
 A responsive Tailwind CSS student portal, with **example data written directly in HTML**. There is no JavaScript data array, API request, JSON data file, or client-side page renderer.
 
@@ -6,19 +6,14 @@ A responsive Tailwind CSS student portal, with **example data written directly i
 
 Open `index.html` in your browser. Compiled CSS, UI JavaScript, and sample downloads are local, so no CDN, npm installation, build step, or backend is needed to preview it.
 
-For consistent browser storage and development, serve the folder:
-
-```bash
-python -m http.server 8000
-```
-
-Then visit http://localhost:8000.
+For consistent browser storage and development, use your editor's static preview server to serve this folder.
 
 ## Pages
 
 | File | Purpose |
 | --- | --- |
 | `index.html` | Dashboard with current grades, attendance, schedule, and course cards |
+| `login.html` | Frontend-only Moodle connection preview with disclosure and explicit consent controls |
 | `courses.html` | Search, filter, sort, save courses; grid and list modes |
 | `course-detail.html` | Object-Oriented Programming course detail template |
 | `course-database.html` | Database Systems sample detail page |
@@ -38,8 +33,10 @@ assets/
   css/
     input.css       # Tailwind source and shared components
     styles.css      # Compiled CSS; ready to use
+    login.css       # Scoped responsive connection-page styling
   js/
     ui.js           # UI interactions only
+    login.js        # Local validation, loading preview, password visibility and theme
   files/
     *.md            # Sample notes and syllabi
     *.csv           # Sample practice datasets
@@ -60,7 +57,20 @@ npm run build:css
 npm run watch:css
 ```
 
-The Tailwind dependencies are development-only. The delivered pages load only `styles.css` and `ui.js`.
+The Tailwind dependencies are development-only. Dashboard pages load `styles.css` and `ui.js`; the connection page loads `styles.css`, `login.css`, and `login.js`.
+
+## Moodle connection preview
+
+Open `login.html`. This page uses plain HTML, CSS, and vanilla JavaScript. It does not authenticate, synchronize academic information, record consent, encrypt credentials, or implement deletion. All server protections described on the page are explicitly labeled as intended future behavior and must be implemented and verified before production use.
+
+- Use sample values. Credentials are never sent to an endpoint, serialized, logged, or saved in browser storage. The page's Content Security Policy blocks connections and native form submission.
+- Both consent boxes start unchecked. Both must be selected before the loading preview is enabled; username and password are validated on submission.
+- The loading animation ends with a neutral preview-complete message, not a login success, and clears the password field. Page navigation and reload clear the form.
+- Remember me is a UI-only preference and is not persisted. Only the light/dark theme preference is saved by `login.js`.
+- Privacy Policy and Terms of Service links are unavailable placeholders. They must be replaced with real documents before collecting agreements.
+- The disclosure stays expanded on all screen sizes. Password visibility, keyboard focus, validation feedback, reduced-motion support, and no-JavaScript fallback are included.
+
+The existing dashboard remains a separate static demo. No backend framework or API is required for this preview.
 
 ## Move into Django later
 
@@ -109,3 +119,7 @@ No Django application, authentication, database, or live Moodle integration is i
 - Dates: fall 2026. Times: Asia/Tashkent.
 
 Update the sample numbers, notes, and policy labels for your institution. Sample resource files are editable Markdown and CSV files, not official university documents.
+
+## Theme motion
+
+The theme button uses a circular View Transition reveal and animated sun/moon SVGs. Browsers without View Transitions use a short color fade. Reduced-motion preferences switch themes immediately with no decorative animation.

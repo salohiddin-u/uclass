@@ -19,6 +19,13 @@ class Course(models.Model):
     def __str__(self):
         return f"{self.name} ({self.short_name})"
 
+class CourseEnrollment(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="enrollments")
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="enrollments")
+
+    def __str__(self):
+        return f"{self.student} enrolled in {self.course}"
+
 class CourseSection(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="sections")
     section_number = models.IntegerField()

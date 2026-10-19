@@ -1,4 +1,4 @@
-/* Campus UI interactions only.
+/* uclass.uz UI interactions only.
  * Course names, scores, attendance, files and sections live in the HTML.
  * This file does not fetch or render application data.
  */
@@ -27,13 +27,63 @@
 
   function theme(dark) {
     document.documentElement.classList.toggle('dark', dark);
-    $('theme').textContent = dark ? '☀' : '☾';
-    $('theme').setAttribute('aria-label', dark ? 'Use light mode' : 'Use dark mode');
+    const label = dark ? 'Switch to light mode' : 'Switch to dark mode';
+    $('theme').setAttribute('aria-label', label);
+    $('theme').setAttribute('title', label);
     $('theme').setAttribute('aria-pressed', String(dark));
     write('dark', dark);
   }
   theme(read('dark', false));
-  $('theme').addEventListener('click', () => theme(!document.documentElement.classList.contains('dark')));
+  let themeBusy = false;
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  async function switchTheme() {
+    if (themeBusy) return;
+    const root = document.documentElement;
+    const dark = !root.classList.contains('dark');
+    if (reducedMotion.matches) {
+      theme(dark);
+      return;
+    }
+    themeBusy = true;
+    const button = $('theme');
+    button.classList.add('is-switching');
+    let transition;
+    try {
+      if (!document.startViewTransition) {
+        // Progressive enhancement: the same control works without this API.
+        root.classList.add('theme-fading');
+        theme(dark);
+        await new Promise(resolve => setTimeout(resolve, 460));
+      } else {
+        const rect = button.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+        root.classList.add('theme-revealing');
+        transition = document.startViewTransition(() => theme(dark));
+        // Consume finished even if a browser cancels the transition early.
+        const finished = transition.finished.catch(() => {});
+        await transition.ready;
+        await root.animate({
+          clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`]
+        }, {
+          duration: 650,
+          easing: 'cubic-bezier(.2,.8,.2,1)',
+          pseudoElement: '::view-transition-new(root)'
+        }).finished;
+        await finished;
+      }
+    } catch {
+      // A cancelled snapshot must never leave the theme or control stuck.
+      transition?.skipTransition();
+      theme(dark);
+    } finally {
+      root.classList.remove('theme-revealing', 'theme-fading');
+      button.classList.remove('is-switching');
+      themeBusy = false;
+    }
+  }
+  $('theme').addEventListener('click', switchTheme);
 
   function menu(open, returnFocus = true) {
     $('sidebar').inert = !open && innerWidth < 1024;

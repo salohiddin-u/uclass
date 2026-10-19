@@ -1,10 +1,10 @@
-# Computer Networks
-## IP addressing
+# Object-Oriented Programming
+## Object design
 
-Illustrative learning resource for the Campus template.
+Illustrative learning resource for the uclass.uz template.
 
 ### Learning objectives
-- Explain the core concepts of ip addressing.
+- Explain the core concepts of object design.
 - Work through a small example.
 - Apply the concept in a practice exercise.
 

@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
 import truststore
 truststore.inject_into_ssl()
 
@@ -18,6 +20,11 @@ def ws(token, function, **params):
     data = {"wstoken": token, "wsfunction": function, "moodlewsrestformat": "json", **params}
     return requests.post(url, data=data, timeout=25).json()
 
+
+def index(request):
+    return render(request, 'index.html')
+
+@login_required
 def dashboard(request):
     
     courses = ws(env.str("WS_TOKEN"), "core_enrol_get_users_courses", userid=238)
@@ -28,7 +35,7 @@ def dashboard(request):
 
     context = {
         "student_name": grades["usergrades"][0]["userfullname"],
-        "student_icon": "".join(map(lambda word: word[0], (grades["usergrades"][0]["userfullname"]).split())),
+        "student_initials": "".join(map(lambda word: word[0], (grades["usergrades"][0]["userfullname"]).split())),
         "course_id": grades["usergrades"][0]["courseid"],
         "course_name": next((course["fullname"] for course in courses if course["id"] == grades["usergrades"][0]["courseid"]), "Unknown Course"),
         "courses": courses,
@@ -38,4 +45,4 @@ def dashboard(request):
 
 
     }
-    return render(request, 'index.html', context)
+    return render(request, 'dashboard.html', context)

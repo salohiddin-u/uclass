@@ -1,10 +1,10 @@
-# Database Systems
-## Relational models
+# Computer Networks
+## IP addressing
 
-Illustrative learning resource for the Campus template.
+Illustrative learning resource for the uclass.uz template.
 
 ### Learning objectives
-- Explain the core concepts of relational models.
+- Explain the core concepts of ip addressing.
 - Work through a small example.
 - Apply the concept in a practice exercise.
 

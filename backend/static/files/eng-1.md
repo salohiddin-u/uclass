@@ -1,7 +1,7 @@
 # Academic English
 ## Academic reading
 
-Illustrative learning resource for the Campus template.
+Illustrative learning resource for the uclass.uz template.
 
 ### Learning objectives
 - Explain the core concepts of academic reading.

@@ -52,3 +52,76 @@
 
 /* Let nested course panels shrink on narrow screens. */
 #main .grid > * { min-width: 0; }
+
+/* Clear, consistent navigation symbols and a text-only brand. */
+.brand-name { display: block; line-height: 36px; }
+.nav-icon, .menu-icon { width: 24px; height: 24px; flex: none; }
+#navigation .nav { min-height: 48px; gap: 14px; }
+#openMenu, #closeMenu { min-width: 44px; min-height: 44px; padding: 9px; }
+
+/* Sun / moon exchange: readable 24px strokes inside a 44px touch target. */
+.theme-toggle {
+  position: relative;
+  isolation: isolate;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  flex: none;
+  padding: 0;
+  color: #4338ca;
+  overflow: visible;
+}
+.dark .theme-toggle { color: #fcd34d; }
+.theme-toggle:hover { box-shadow: 0 0 0 4px rgb(99 102 241 / .09); }
+.theme-icon { position: relative; display: block; width: 24px; height: 24px; }
+.theme-icon > svg {
+  position: absolute;
+  inset: 0;
+  width: 24px;
+  height: 24px;
+  stroke-width: 2.1;
+  transform-origin: center;
+  transition: transform .5s cubic-bezier(.22,1,.36,1), opacity .25s ease;
+}
+.theme-moon { opacity: 1; transform: rotate(-12deg) scale(1); }
+.theme-sun { opacity: 0; transform: rotate(-100deg) scale(.35); }
+.dark .theme-moon { opacity: 0; transform: rotate(85deg) scale(.35); }
+.dark .theme-sun { opacity: 1; transform: rotate(0deg) scale(1); }
+.sun-rays { transform-origin: 12px 12px; }
+.theme-toggle:hover .sun-rays { animation: sun-orbit 6s linear infinite; }
+.theme-orbit {
+  position: absolute;
+  inset: -1px;
+  border-radius: 13px;
+  border: 2px solid currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.theme-toggle.is-switching .theme-orbit { animation: theme-orbit .65s ease-out; }
+@keyframes sun-orbit { to { transform: rotate(180deg); } }
+@keyframes theme-orbit {
+  0% { opacity: .5; transform: scale(.95); }
+  100% { opacity: 0; transform: scale(1.65); }
+}
+
+/* Reveal the next theme from the control, without moving the layout. */
+html.theme-revealing::view-transition-old(root),
+html.theme-revealing::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html.theme-revealing::view-transition-old(root) { z-index: 1; }
+html.theme-revealing::view-transition-new(root) { z-index: 2; }
+html.theme-revealing #theme { transition: none; }
+html.theme-fading body,
+html.theme-fading #sidebar,
+html.theme-fading #topbar,
+html.theme-fading .panel,
+html.theme-fading .nav,
+html.theme-fading .btn {
+  transition: background-color .4s ease, color .4s ease, border-color .4s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle *, .theme-icon > svg { animation: none !important; transition: none !important; }
+  html.theme-fading * { transition: none !important; }
+}

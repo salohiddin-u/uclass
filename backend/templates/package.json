@@ -1,5 +1,5 @@
 {
-  "name": "campus-html-templates",
+  "name": "uclass-html-templates",
   "version": "1.0.0",
   "private": true,
   "description": "Separate Tailwind HTML templates with static example data, ready to adapt to Django.",

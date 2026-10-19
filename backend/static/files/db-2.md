@@ -1,10 +1,10 @@
-# Discrete Mathematics
-## Sets & relations
+# Database Systems
+## SQL & joins
 
-Illustrative learning resource for the Campus template.
+Illustrative learning resource for the uclass.uz template.
 
 ### Learning objectives
-- Explain the core concepts of sets & relations.
+- Explain the core concepts of sql & joins.
 - Work through a small example.
 - Apply the concept in a practice exercise.
 

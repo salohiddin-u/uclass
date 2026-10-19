@@ -1,7 +1,7 @@
 # Computer Networks
 ## Network models
 
-Illustrative learning resource for the Campus template.
+Illustrative learning resource for the uclass.uz template.
 
 ### Learning objectives
 - Explain the core concepts of network models.
