@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="light dark" name="color-scheme"/>
+  <title>
+   Discrete Mathematics · uclass.uz
+  </title>
+  <link href="assets/css/styles.css" rel="stylesheet"/>
+  <script defer="" src="assets/js/ui.js">
+  </script>
+ </head>
+ <body data-course="math" data-page="courses">
+  <a class="sr-only fixed left-4 top-4 z-50 rounded-xl bg-indigo-600 p-3 text-white focus:not-sr-only" href="#main">
+   Skip to content
+  </a>
+  <div class="fixed inset-0 z-30 hidden bg-slate-950/50 lg:hidden" id="overlay">
+  </div>
+  <aside class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col border-r border-slate-200 bg-white px-5 py-7 transition-transform dark:border-slate-800 dark:bg-[#151d2b] lg:translate-x-0" id="sidebar">
+   <a aria-label="uclass.uz home" class="brand-name px-3 text-2xl font-extrabold tracking-tight" href="index.html">
+    uclass.uz
+   </a>
+   <button aria-label="Close menu" class="btn absolute right-3 top-20 lg:hidden" id="closeMenu" type="button">
+    <svg aria-hidden="true" class="menu-icon" fill="none" focusable="false" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+     <path d="m6 6 12 12M18 6 6 18">
+     </path>
+    </svg>
+   </button>
+   <p class="label mb-3 mt-12 px-4">
+    My workspace
+   </p>
+   <nav aria-label="Main navigation" class="space-y-2" id="navigation">
+    <a class="nav" href="index.html">
+     <svg aria-hidden="true" class="nav-icon" fill="none" focusable="false" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+      <rect height="7" rx="1.5" width="7" x="3" y="3">
+      </rect>
+      <rect height="7" rx="1.5" width="7" x="14" y="3">
+      </rect>
+      <rect height="7" rx="1.5" width="7" x="3" y="14">
+      </rect>
+      <rect height="7" rx="1.5" width="7" x="14" y="14">
+      </rect>
+     </svg>
+     Overview
+    </a>
+    <a aria-current="page" class="nav active" href="courses.html">
+     <svg aria-hidden="true" class="nav-icon" fill="none" focusable="false" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 6C9 3.5 5.5 3.5 3 4.5v14c2.5-1 6-1 9 1.5 3-2.5 6.5-2.5 9-1.5v-14c-2.5-1-6-1-9 1.5Z">
+      </path>
+      <path d="M12 6v14M6 8h2m8 0h2M6 11h2m8 0h2">
+      </path>
+     </svg>
+     My courses
+    </a>
+    <a class="nav" href="grades.html">
+     <svg aria-hidden="true" class="nav-icon" fill="none" focusable="false" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 4v16h17M8 15v-4m5 4V7m5 8v-6">
+      </path>
+     </svg>
+     Grades
+    </a>
+    <a class="nav" href="attendance.html">
+     <svg aria-hidden="true" class="nav-icon" fill="none" focusable="false" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+      <rect height="16" rx="3" width="18" x="3" y="5">
+      </rect>
+      <path d="M7 3v4m10-4v4M3 10h18m-13 5 2.5 2.5L16 13">
+      </path>
+     </svg>
+     Attendance
+    </a>
+   </nav>
+   <div class="mt-8 px-4">
+    <p class="label mb-4">
+     This semester
+    </p>
+    <p class="text-sm font-semibold">
+     Fall 2026
+    </p>
+    <p class="muted mt-1">
+     Computer Science · Year 2
+    </p>
+    <div class="mt-4 flex items-center gap-2 text-xs text-slate-500">
+     <span class="h-1.5 w-1.5 rounded-full bg-emerald-500">
+     </span>
+     Sample student workspace
+    </div>
+   </div>
+   <div class="mt-auto pt-8">
+    <div class="mt-5 flex items-center gap-3 px-2">
+     <div class="grid h-9 w-9 place-items-center rounded-full bg-amber-100 text-xs font-bold text-amber-800">
+      AS
+     </div>
+     <div>
+      <p class="text-xs font-semibold">
+       Alex Student
+      </p>
+      <p class="muted">
+       Demo account
+      </p>
+     </div>
+    </div>
+   </div>
+  </aside>
+  <div class="lg:ml-64" id="shell">
+   <header class="flex h-20 items-center justify-between gap-3 border-b border-slate-200/80 bg-white/80 px-4 dark:border-slate-800 dark:bg-[#151d2b] sm:px-8" id="topbar">
+    <div class="flex min-w-0 items-center gap-3">
+     <button aria-controls="sidebar" aria-expanded="false" aria-label="Open menu" class="btn !px-3 lg:hidden" id="openMenu" type="button">
+      <svg aria-hidden="true" class="menu-icon" fill="none" focusable="false" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+       <path d="M4 6h16M4 12h16M4 18h16">
+       </path>
+      </svg>
+     </button>
+     <span class="hidden text-xs text-slate-400 sm:inline">
+      Workspace
+      <span class="mx-3">
+       /
+      </span>
+     </span>
+     <span class="truncate text-xs font-medium" id="breadcrumb">
+      Discrete Mathematics
+     </span>
+    </div>
+    <div class="flex shrink-0 items-center gap-2">
+     <span class="pill green hidden sm:inline-flex">
+      ● Fall 2026
+     </span>
+     <button aria-label="Switch to dark mode" aria-pressed="false" class="btn theme-toggle" id="theme" title="Switch to dark mode" type="button">
+      <span aria-hidden="true" class="theme-orbit">
+      </span>
+      <span aria-hidden="true" class="theme-icon">
+       <svg aria-hidden="true" class="theme-moon" fill="none" focusable="false" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.2 15.4A8.7 8.7 0 0 1 8.6 3.8 8.7 8.7 0 1 0 20.2 15.4Z">
+        </path>
+       </svg>
+       <svg aria-hidden="true" class="theme-sun" fill="none" focusable="false" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="4">
+        </circle>
+        <g class="sun-rays">
+         <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42">
+         </path>
+        </g>
+       </svg>
+      </span>
+     </button>
+     <button aria-label="Template help" class="btn !px-3" data-open-dialog="helpDialog" id="help">
+      ?
+     </button>
+    </div>
+   </header>
+   <main class="mx-auto max-w-[1500px] p-4 pb-10 sm:p-8" id="main" tabindex="-1">
+    <a class="mb-5 inline-block text-xs text-slate-500 hover:text-indigo-600" href="courses.html">
+     ← Back to courses
+    </a>
+    <div class="mb-7 flex flex-wrap items-center justify-between gap-4">
+     <div>
+      <p class="label mb-2 !text-indigo-500">
+       MTH 202 · 3 credits
+      </p>
+      <h1 class="text-2xl font-bold sm:text-3xl">
+       Discrete Mathematics
+      </h1>
+      <p class="muted mt-2">
+       Dr. Maya Chen · Fall 2026
+      </p>
+     </div>
+     <div class="no-print flex flex-wrap gap-2">
+      <button class="btn" data-focus="">
+       Focus mode
+      </button>
+      <a class="btn primary" download="" href="assets/files/math-syllabus.md">
+       <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+        <path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4">
+        </path>
+       </svg>
+       Syllabus
+      </a>
+     </div>
+    </div>
+    <div class="mb-5 grid gap-3 sm:grid-cols-3">
+     <div class="panel">
+      <div class="flex items-center justify-between">
+       <p class="muted">
+        Current grade
+       </p>
+       <span class="text-slate-400">
+        <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+         <path d="M4 20h16M7 16v-5m5 5V5m5 11V8">
+         </path>
+        </svg>
+       </span>
+      </div>
+      <p class="mb-2 mt-4 text-3xl font-bold tracking-tight">
+       71.1%
+      </p>
+      <p class="muted !text-[10px]">
+       70% of assessment weight graded
+      </p>
+     </div>
+     <div class="panel">
+      <div class="flex items-center justify-between">
+       <p class="muted">
+        Attendance
+       </p>
+       <span class="text-slate-400">
+        <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+         <path d="m5 12 4 4L19 6">
+         </path>
+        </svg>
+       </span>
+      </div>
+      <p class="mb-2 mt-4 text-3xl font-bold tracking-tight">
+       66.7%
+      </p>
+      <p class="muted !text-[10px]">
+       Present and late / 9 recorded sessions
+      </p>
+     </div>
+     <div class="panel">
+      <div class="flex items-center justify-between">
+       <p class="muted">
+        Sections completed
+       </p>
+       <span class="text-slate-400">
+        <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+         <path d="M12 5C8 2 3 4 3 4v15s5-2 9 1c4-3 9-1 9-1V4s-5-2-9 1v15">
+         </path>
+        </svg>
+       </span>
+      </div>
+      <p class="mb-2 mt-4 text-3xl font-bold tracking-tight" id="completionCount">
+       0 / 3
+      </p>
+      <p class="muted !text-[10px]">
+       Saved on this browser
+      </p>
+     </div>
+    </div>
+    <div aria-label="Course view" class="mb-5 flex gap-1 overflow-x-auto rounded-xl bg-slate-100 p-1 dark:bg-slate-800" role="group">
+     <button aria-controls="sections" aria-pressed="true" class="tab active" data-tab-target="sections" id="tab-sections">
+      Learning sections
+     </button>
+     <button aria-controls="files" aria-pressed="false" class="tab" data-tab-target="files" id="tab-files">
+      Files &amp; resources
+     </button>
+     <button aria-controls="grades" aria-pressed="false" class="tab" data-tab-target="grades" id="tab-grades">
+      Grades
+     </button>
+     <button aria-controls="attendance" aria-pressed="false" class="tab" data-tab-target="attendance" id="tab-attendance">
+      Attendance
+     </button>
+    </div>
+    <div id="detailContent">
+     <section aria-labelledby="tab-sections" data-tab-panel="" id="sections">
+      <div class="grid gap-5 xl:grid-cols-[1fr_290px]">
+       <section class="space-y-4">
+        <details class="panel group" open="">
+         <summary class="flex list-none items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+           <span class="grid h-9 w-9 place-items-center rounded-xl bg-slate-100 text-xs font-semibold dark:bg-slate-800">
+            01
+           </span>
+           <div>
+            <p class="label">
+             Section 1
+            </p>
+            <h2 class="mt-1 text-sm font-semibold">
+             Logic &amp; proofs
+            </h2>
+           </div>
+          </div>
+          <span aria-hidden="true" class="text-slate-400 group-open:rotate-180">
+           ⌄
+          </span>
+         </summary>
+         <div class="mt-5">
+          <p class="muted mb-4">
+           Explore the concepts, review your notes, and apply what you’ve learned.
+          </p>
+          <div class="row flex items-center justify-between gap-3 py-3">
+           <div class="flex min-w-0 items-center gap-3">
+            <span class="rounded-lg bg-indigo-50 p-2 text-indigo-500 dark:bg-indigo-500/10">
+             <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+              <path d="M14 2H5v20h14V7Zm0 0v5h5M8 12h8m-8 4h6">
+              </path>
+             </svg>
+            </span>
+            <div class="min-w-0">
+             <p class="truncate text-xs font-semibold">
+              Logic &amp; proofs — notes.md
+             </p>
+             <p class="muted !text-[10px]">
+              Markdown · Sample resource
+             </p>
+            </div>
+           </div>
+           <div class="flex shrink-0 gap-1">
+            <button aria-label="Preview Logic &amp; proofs — notes.md" class="btn !px-2 !text-[10px]" data-open-dialog="file-math-0">
+             Preview
+            </button>
+            <a aria-label="Download Logic &amp; proofs — notes.md" class="btn !px-2" download="" href="assets/files/math-1.md">
+             <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+              <path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4">
+              </path>
+             </svg>
+            </a>
+           </div>
+          </div>
+          <div class="row flex flex-wrap items-center justify-between gap-3 pt-4">
+           <button class="text-xs font-semibold text-indigo-500" data-open-dialog="assessment-math-0">
+            View assessment →
+           </button>
+           <label class="flex cursor-pointer items-center gap-2 text-xs">
+            <input class="!min-h-0 accent-indigo-600" data-complete="math:0" type="checkbox"/>
+            Mark section complete
+           </label>
+          </div>
+         </div>
+        </details>
+        <details class="panel group">
+         <summary class="flex list-none items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+           <span class="grid h-9 w-9 place-items-center rounded-xl bg-slate-100 text-xs font-semibold dark:bg-slate-800">
+            02
+           </span>
+           <div>
+            <p class="label">
+             Section 2
+            </p>
+            <h2 class="mt-1 text-sm font-semibold">
+             Sets &amp; relations
+            </h2>
+           </div>
+          </div>
+          <span aria-hidden="true" class="text-slate-400 group-open:rotate-180">
+           ⌄
+          </span>
+         </summary>
+         <div class="mt-5">
+          <p class="muted mb-4">
+           Explore the concepts, review your notes, and apply what you’ve learned.
+          </p>
+          <div class="row flex items-center justify-between gap-3 py-3">
+           <div class="flex min-w-0 items-center gap-3">
+            <span class="rounded-lg bg-indigo-50 p-2 text-indigo-500 dark:bg-indigo-500/10">
+             <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+              <path d="M14 2H5v20h14V7Zm0 0v5h5M8 12h8m-8 4h6">
+              </path>
+             </svg>
+            </span>
+            <div class="min-w-0">
+             <p class="truncate text-xs font-semibold">
+              Sets &amp; relations — notes.md
+             </p>
+             <p class="muted !text-[10px]">
+              Markdown · Sample resource
+             </p>
+            </div>
+           </div>
+           <div class="flex shrink-0 gap-1">
+            <button aria-label="Preview Sets &amp; relations — notes.md" class="btn !px-2 !text-[10px]" data-open-dialog="file-math-1">
+             Preview
+            </button>
+            <a aria-label="Download Sets &amp; relations — notes.md" class="btn !px-2" download="" href="assets/files/math-2.md">
+             <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+              <path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4">
+              </path>
+             </svg>
+            </a>
+           </div>
+          </div>
+          <div class="row flex flex-wrap items-center justify-between gap-3 pt-4">
+           <button class="text-xs font-semibold text-indigo-500" data-open-dialog="assessment-math-1">
+            View assessment →
+           </button>
+           <label class="flex cursor-pointer items-center gap-2 text-xs">
+            <input class="!min-h-0 accent-indigo-600" data-complete="math:1" type="checkbox"/>
+            Mark section complete
+           </label>
+          </div>
+         </div>
+        </details>
+        <details class="panel group">
+         <summary class="flex list-none items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+           <span class="grid h-9 w-9 place-items-center rounded-xl bg-slate-100 text-xs font-semibold dark:bg-slate-800">
+            03
+           </span>
+           <div>
+            <p class="label">
+             Section 3
+            </p>
+            <h2 class="mt-1 text-sm font-semibold">
+             Graph theory
+            </h2>
+           </div>
+          </div>
+          <span aria-hidden="true" class="text-slate-400 group-open:rotate-180">
+           ⌄
+          </span>
+         </summary>
+         <div class="mt-5">
+          <p class="muted mb-4">
+           Explore the concepts, review your notes, and apply what you’ve learned.
+          </p>
+          <div class="row flex items-center justify-between gap-3 py-3">
+           <div class="flex min-w-0 items-center gap-3">
+            <span class="rounded-lg bg-indigo-50 p-2 text-indigo-500 dark:bg-indigo-500/10">
+             <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+              <path d="M14 2H5v20h14V7Zm0 0v5h5M8 12h8m-8 4h6">
+              </path>
+             </svg>
+            </span>
+            <div class="min-w-0">
+             <p class="truncate text-xs font-semibold">
+              Practice dataset.csv
+             </p>
+             <p class="muted !text-[10px]">
+              CSV · Sample resource
+             </p>
+            </div>
+           </div>
+           <div class="flex shrink-0 gap-1">
+            <button aria-label="Preview Practice dataset.csv" class="btn !px-2 !text-[10px]" data-open-dialog="file-math-2">
+             Preview
+            </button>
+            <a aria-label="Download Practice dataset.csv" class="btn !px-2" download="" href="assets/files/math-3.csv">
+             <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+              <path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4">
+              </path>
+             </svg>
+            </a>
+           </div>
+          </div>
+          <div class="row flex flex-wrap items-center justify-between gap-3 pt-4">
+           <button class="text-xs font-semibold text-indigo-500" data-open-dialog="assessment-math-2">
+            View assessment →
+           </button>
+           <label class="flex cursor-pointer items-center gap-2 text-xs">
+            <input class="!min-h-0 accent-indigo-600" data-complete="math:2" type="checkbox"/>
+            Mark section complete
+           </label>
+          </div>
+         </div>
+        </details>
+       </section>
+       <aside class="panel !static !w-auto self-start">
+        <h2 class="font-bold">
+         About this course
+        </h2>
+        <p class="muted mt-3">
+         Build a working understanding of discrete mathematics through guided study and practical exercises.
+        </p>
+        <div class="my-5 border-t border-slate-100 dark:border-slate-700">
+        </div>
+        <p class="label">
+         Instructor
+        </p>
+        <p class="mt-2 text-sm font-semibold">
+         Dr. Maya Chen
+        </p>
+        <p class="muted mt-2">
+         Office hours · Wednesday, 15:00–16:00
+         <br/>
+         Illustrative course information
+        </p>
+        <div class="mt-6 rounded-xl bg-indigo-50 p-4 dark:bg-indigo-500/10">
+         <p class="text-xs font-semibold">
+          Make room for focus.
+         </p>
+         <p class="muted mt-2">
+          Focus mode hides navigation so your course takes center stage.
+         </p>
+         <button class="mt-3 text-xs font-semibold text-indigo-500" data-focus="">
+          Enter focus mode →
+         </button>
+        </div>
+       </aside>
+      </div>
+     </section>
+     <section aria-labelledby="tab-files" data-tab-panel="" id="files">
+      <section class="panel">
+       <h2 class="mb-4 font-bold">
+        Course files
+       </h2>
+       <p class="muted mb-4">
+        Preview or download sample notes and a practice dataset.
+       </p>
+       <div class="row flex items-center justify-between gap-3 py-3">
+        <div class="flex min-w-0 items-center gap-3">
+         <span class="rounded-lg bg-indigo-50 p-2 text-indigo-500 dark:bg-indigo-500/10">
+          <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+           <path d="M14 2H5v20h14V7Zm0 0v5h5M8 12h8m-8 4h6">
+           </path>
+          </svg>
+         </span>
+         <div class="min-w-0">
+          <p class="truncate text-xs font-semibold">
+           Logic &amp; proofs — notes.md
+          </p>
+          <p class="muted !text-[10px]">
+           Markdown · Sample resource
+          </p>
+         </div>
+        </div>
+        <div class="flex shrink-0 gap-1">
+         <button aria-label="Preview Logic &amp; proofs — notes.md" class="btn !px-2 !text-[10px]" data-open-dialog="file-math-0">
+          Preview
+         </button>
+         <a aria-label="Download Logic &amp; proofs — notes.md" class="btn !px-2" download="" href="assets/files/math-1.md">
+          <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+           <path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4">
+           </path>
+          </svg>
+         </a>
+        </div>
+       </div>
+       <div class="row flex items-center justify-between gap-3 py-3">
+        <div class="flex min-w-0 items-center gap-3">
+         <span class="rounded-lg bg-indigo-50 p-2 text-indigo-500 dark:bg-indigo-500/10">
+          <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+           <path d="M14 2H5v20h14V7Zm0 0v5h5M8 12h8m-8 4h6">
+           </path>
+          </svg>
+         </span>
+         <div class="min-w-0">
+          <p class="truncate text-xs font-semibold">
+           Sets &amp; relations — notes.md
+          </p>
+          <p class="muted !text-[10px]">
+           Markdown · Sample resource
+          </p>
+         </div>
+        </div>
+        <div class="flex shrink-0 gap-1">
+         <button aria-label="Preview Sets &amp; relations — notes.md" class="btn !px-2 !text-[10px]" data-open-dialog="file-math-1">
+          Preview
+         </button>
+         <a aria-label="Download Sets &amp; relations — notes.md" class="btn !px-2" download="" href="assets/files/math-2.md">
+          <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+           <path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4">
+           </path>
+          </svg>
+         </a>
+        </div>
+       </div>
+       <div class="row flex items-center justify-between gap-3 py-3">
+        <div class="flex min-w-0 items-center gap-3">
+         <span class="rounded-lg bg-indigo-50 p-2 text-indigo-500 dark:bg-indigo-500/10">
+          <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+           <path d="M14 2H5v20h14V7Zm0 0v5h5M8 12h8m-8 4h6">
+           </path>
+          </svg>
+         </span>
+         <div class="min-w-0">
+          <p class="truncate text-xs font-semibold">
+           Practice dataset.csv
+          </p>
+          <p class="muted !text-[10px]">
+           CSV · Sample resource
+          </p>
+         </div>
+        </div>
+        <div class="flex shrink-0 gap-1">
+         <button aria-label="Preview Practice dataset.csv" class="btn !px-2 !text-[10px]" data-open-dialog="file-math-2">
+          Preview
+         </button>
+         <a aria-label="Download Practice dataset.csv" class="btn !px-2" download="" href="assets/files/math-3.csv">
+          <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+           <path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4">
+           </path>
+          </svg>
+         </a>
+        </div>
+       </div>
+      </section>
+     </section>
+     <section aria-labelledby="tab-grades" data-tab-panel="" id="grades">
+      <div class="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
+       <section class="panel overflow-x-auto">
+        <h2 class="mb-4 font-bold">
+         Assessment breakdown
+        </h2>
+        <table class="w-full min-w-[400px] text-left text-xs">
+         <thead class="text-slate-400">
+          <tr>
+           <th class="pb-3 font-medium">
+            Assessment
+           </th>
+           <th class="pb-3 font-medium">
+            Weight
+           </th>
+           <th class="pb-3 text-right font-medium">
+            Score
+           </th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr class="row">
+           <td class="py-4 font-medium">
+            Weekly quizzes
+           </td>
+           <td>
+            20%
+           </td>
+           <td class="text-right">
+            68 / 100
+           </td>
+          </tr>
+          <tr class="row">
+           <td class="py-4 font-medium">
+            Practical assignment
+           </td>
+           <td>
+            30%
+           </td>
+           <td class="text-right">
+            74 / 100
+           </td>
+          </tr>
+          <tr class="row">
+           <td class="py-4 font-medium">
+            Midterm examination
+           </td>
+           <td>
+            20%
+           </td>
+           <td class="text-right">
+            70 / 100
+           </td>
+          </tr>
+          <tr class="row">
+           <td class="py-4 font-medium">
+            Final project
+           </td>
+           <td>
+            30%
+           </td>
+           <td class="text-right">
+            <span class="pill amber">
+             Not graded
+            </span>
+           </td>
+          </tr>
+         </tbody>
+        </table>
+        <p class="muted mt-4">
+         Current grade excludes ungraded work and rescales the graded weights.
+        </p>
+       </section>
+       <section class="panel">
+        <span class="pill bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-300">
+         HOW GRADES WORK
+        </span>
+        <h2 class="mt-4 font-bold">
+         Every assessment counts.
+        </h2>
+        <p class="muted mt-3">
+         Your current grade is the weighted average of graded assessments. Ungraded work is excluded until a score is available.
+        </p>
+        <div class="my-5 rounded-xl bg-slate-50 p-4 dark:bg-slate-800">
+         <p class="label">
+          Remaining assessment
+         </p>
+         <p class="mt-2 text-sm font-semibold">
+          Final project · 30%
+         </p>
+         <p class="muted mt-2">
+          Not graded yet
+         </p>
+        </div>
+        <p class="muted">
+         Example grading rules. Replace these with your institution’s policy.
+        </p>
+       </section>
+      </div>
+     </section>
+     <section aria-labelledby="tab-attendance" data-tab-panel="" id="attendance">
+      <section class="panel">
+       <div class="mb-5 flex flex-wrap justify-between gap-3">
+        <div>
+         <h2 class="font-bold">
+          Session attendance
+         </h2>
+         <p class="muted mt-1">
+          Late counts as attended · Example target: 75%
+         </p>
+        </div>
+        <button class="btn" data-export-name="MTH 202-attendance.csv" data-export-table="sessionTable">
+         <svg aria-hidden="true" class="icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24">
+          <path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4">
+          </path>
+         </svg>
+         Export sessions
+        </button>
+       </div>
+       <div class="overflow-x-auto">
+        <table class="w-full min-w-[380px] text-left text-xs" id="sessionTable">
+         <thead class="text-slate-400">
+          <tr>
+           <th class="pb-3 font-medium">
+            Date
+           </th>
+           <th class="pb-3 font-medium">
+            Time
+           </th>
+           <th class="pb-3 text-right font-medium">
+            Status
+           </th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr class="row">
+           <td class="py-4">
+            13 Oct 2026
+           </td>
+           <td>
+            14:00 – 16:00
+           </td>
+           <td class="text-right">
+            <span class="pill green">
+             Present
+            </span>
+           </td>
+          </tr>
+          <tr class="row">
+           <td class="py-4">
+            12 Oct 2026
+           </td>
+           <td>
+            16:00 – 18:00
+           </td>
+           <td class="text-right">
+            <span class="pill bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-300">
+             Absent
+            </span>
+           </td>
+          </tr>
+          <tr class="row">
+           <td class="py-4">
+            9 Oct 2026
+           </td>
+           <td>
+            14:00 – 16:00
+           </td>
+           <td class="text-right">
+            <span class="pill green">
+             Present
+            </span>
+           </td>
+          </tr>
+          <tr class="row">
+           <td class="py-4">
+            6 Oct 2026
+           </td>
+           <td>
+            14:00 – 16:00
+           </td>
+           <td class="text-right">
+            <span class="pill amber">
+             Late
+            </span>
+           </td>
+          </tr>
+          <tr class="row">
+           <td class="py-4">
+            5 Oct 2026
+           </td>
+           <td>
+            16:00 – 18:00
+           </td>
+           <td class="text-right">
+            <span class="pill bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-300">
+             Absent
+            </span>
+           </td>
+          </tr>
+          <tr class="row">
+           <td class="py-4">
+            2 Oct 2026
+           </td>
+           <td>
+            14:00 – 16:00
+           </td>
+           <td class="text-right">
+            <span class="pill green">
+             Present
+            </span>
+           </td>
+          </tr>
+          <tr class="row">
+           <td class="py-4">
+            29 Sept 2026
+           </td>
+           <td>
+            14:00 – 16:00
+           </td>
+           <td class="text-right">
+            <span class="pill green">
+             Present
+            </span>
+           </td>
+          </tr>
+          <tr class="row">
+           <td class="py-4">
+            28 Sept 2026
+           </td>
+           <td>
+            16:00 – 18:00
+           </td>
+           <td class="text-right">
+            <span class="pill bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-300">
+             Absent
+            </span>
+           </td>
+          </tr>
+          <tr class="row">
+           <td class="py-4">
+            25 Sept 2026
+           </td>
+           <td>
+            14:00 – 16:00
+           </td>
+           <td class="text-right">
+            <span class="pill green">
+             Present
+            </span>
+           </td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </section>
+     </section>
+    </div>
+   </main>
+   <footer class="mx-auto flex max-w-[1500px] flex-wrap justify-between gap-2 px-4 pb-6 text-[10px] text-slate-400 sm:px-8">
+    <span>
+     uclass.uz · Student workspace template
+    </span>
+    <span>
+     Illustrative data · No live LMS connection · Times in Asia/Tashkent
+    </span>
+   </footer>
+  </div>
+  <div class="pointer-events-none fixed bottom-5 left-1/2 z-50 hidden -translate-x-1/2 rounded-xl bg-slate-900 px-5 py-3 text-center text-xs text-white shadow-xl dark:bg-white dark:text-slate-900" id="toast" role="status">
+  </div>
+  <noscript>
+   <p class="muted px-8 py-3">
+    All example data is available below. Enable JavaScript for filters, theme switching, and saved progress.
+   </p>
+  </noscript>
+  <dialog aria-labelledby="helpTitle" class="w-[min(92vw,580px)] rounded-2xl border border-slate-200 bg-white p-6 text-slate-800 shadow-2xl dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" id="helpDialog">
+   <div class="mb-5 flex items-center justify-between">
+    <h2 class="text-lg font-bold" id="helpTitle">
+     Your student workspace
+    </h2>
+    <button aria-label="Close help" class="btn" data-close-dialog="">
+     ×
+    </button>
+   </div>
+   <div class="space-y-4 text-sm leading-relaxed">
+    <p>
+     Browse your courses, review grades and attendance, and download learning materials.
+    </p>
+    <p>
+     Use grid or list mode on the courses page. Open a course for learning sections, files, grade breakdowns, and session records.
+    </p>
+    <p>
+     Saved courses, completed sections, and the color theme are remembered in this browser.
+    </p>
+    <p class="muted">
+     Sample data is written directly in each HTML page. JavaScript only handles interface interactions. Press / to focus a search field or Escape to close a dialog.
+    </p>
+   </div>
+  </dialog>
+  <dialog aria-labelledby="file-title-0" class="max-h-[85dvh] w-[min(92vw,650px)] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" id="file-math-0">
+   <div class="mb-5 flex items-center justify-between gap-3">
+    <h2 class="font-bold" id="file-title-0">
+     Logic &amp; proofs — notes.md
+    </h2>
+    <button aria-label="Close preview" class="btn" data-close-dialog="">
+     ×
+    </button>
+   </div>
+   <pre class="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-xs leading-7 dark:bg-slate-800"># Discrete Mathematics
+## Logic &amp; proofs
+
+Illustrative learning resource for the uclass.uz template.
+
+### Learning objectives
+- Explain the core concepts of logic &amp; proofs.
+- Work through a small example.
+- Apply the concept in a practice exercise.
+
+Replace this sample with your actual course material.
+</pre>
+   <a class="btn primary mt-5" download="" href="assets/files/math-1.md">
+    Download file
+   </a>
+  </dialog>
+  <dialog aria-labelledby="file-title-1" class="max-h-[85dvh] w-[min(92vw,650px)] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" id="file-math-1">
+   <div class="mb-5 flex items-center justify-between gap-3">
+    <h2 class="font-bold" id="file-title-1">
+     Sets &amp; relations — notes.md
+    </h2>
+    <button aria-label="Close preview" class="btn" data-close-dialog="">
+     ×
+    </button>
+   </div>
+   <pre class="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-xs leading-7 dark:bg-slate-800"># Discrete Mathematics
+## Sets &amp; relations
+
+Illustrative learning resource for the uclass.uz template.
+
+### Learning objectives
+- Explain the core concepts of sets &amp; relations.
+- Work through a small example.
+- Apply the concept in a practice exercise.
+
+Replace this sample with your actual course material.
+</pre>
+   <a class="btn primary mt-5" download="" href="assets/files/math-2.md">
+    Download file
+   </a>
+  </dialog>
+  <dialog aria-labelledby="file-title-2" class="max-h-[85dvh] w-[min(92vw,650px)] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" id="file-math-2">
+   <div class="mb-5 flex items-center justify-between gap-3">
+    <h2 class="font-bold" id="file-title-2">
+     Practice dataset.csv
+    </h2>
+    <button aria-label="Close preview" class="btn" data-close-dialog="">
+     ×
+    </button>
+   </div>
+   <pre class="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-xs leading-7 dark:bg-slate-800">id,topic,completed
+1,Practice example,false
+2,Review exercise,false
+</pre>
+   <a class="btn primary mt-5" download="" href="assets/files/math-3.csv">
+    Download file
+   </a>
+  </dialog>
+  <dialog aria-labelledby="assessment-title-0" class="w-[min(92vw,580px)] rounded-2xl border border-slate-200 bg-white p-6 text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" id="assessment-math-0">
+   <div class="mb-5 flex items-center justify-between gap-3">
+    <h2 class="font-bold" id="assessment-title-0">
+     Weekly quizzes
+    </h2>
+    <button aria-label="Close assessment" class="btn" data-close-dialog="">
+     ×
+    </button>
+   </div>
+   <p class="muted">
+    20% of the final course grade
+   </p>
+   <div class="my-5 rounded-xl bg-indigo-50 p-5 dark:bg-indigo-500/10">
+    <p class="label">
+     Recorded score
+    </p>
+    <p class="mt-2 text-3xl font-bold">
+     68 / 100
+    </p>
+   </div>
+   <p class="text-sm">
+    Review the section notes and practice exercises. This is an illustrative assessment brief for Discrete Mathematics.
+   </p>
+  </dialog>
+  <dialog aria-labelledby="assessment-title-1" class="w-[min(92vw,580px)] rounded-2xl border border-slate-200 bg-white p-6 text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" id="assessment-math-1">
+   <div class="mb-5 flex items-center justify-between gap-3">
+    <h2 class="font-bold" id="assessment-title-1">
+     Practical assignment
+    </h2>
+    <button aria-label="Close assessment" class="btn" data-close-dialog="">
+     ×
+    </button>
+   </div>
+   <p class="muted">
+    30% of the final course grade
+   </p>
+   <div class="my-5 rounded-xl bg-indigo-50 p-5 dark:bg-indigo-500/10">
+    <p class="label">
+     Recorded score
+    </p>
+    <p class="mt-2 text-3xl font-bold">
+     74 / 100
+    </p>
+   </div>
+   <p class="text-sm">
+    Review the section notes and practice exercises. This is an illustrative assessment brief for Discrete Mathematics.
+   </p>
+  </dialog>
+  <dialog aria-labelledby="assessment-title-2" class="w-[min(92vw,580px)] rounded-2xl border border-slate-200 bg-white p-6 text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" id="assessment-math-2">
+   <div class="mb-5 flex items-center justify-between gap-3">
+    <h2 class="font-bold" id="assessment-title-2">
+     Midterm examination
+    </h2>
+    <button aria-label="Close assessment" class="btn" data-close-dialog="">
+     ×
+    </button>
+   </div>
+   <p class="muted">
+    20% of the final course grade
+   </p>
+   <div class="my-5 rounded-xl bg-indigo-50 p-5 dark:bg-indigo-500/10">
+    <p class="label">
+     Recorded score
+    </p>
+    <p class="mt-2 text-3xl font-bold">
+     70 / 100
+    </p>
+   </div>
+   <p class="text-sm">
+    Review the section notes and practice exercises. This is an illustrative assessment brief for Discrete Mathematics.
+   </p>
+  </dialog>
+ </body>
+</html>
