@@ -1,120 +1,103 @@
-<!doctype html>
 {% load static %}
-<html lang="en">
-<head>
+<!DOCTYPE html>
+<html lang="en"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <meta name="description" content="Connect your Inha LMS account to uclass.uz to keep your courses, attendance, grades and assignments in one place.">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'self'; base-uri 'none'; object-src 'none'">
-  <title>Connect your university account | uclass.uz</title>
-  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-  <link rel="stylesheet" href="{% static 'css/login.css' %}">
-  <script src="{% static 'js/login.js' %}" defer></script>
-</head>
-<body class="auth-page">
+  <meta name="description" content="Sign in to your uclass.uz academic workspace.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; object-src 'none'">
+  <title>Sign in · uclass.uz</title>
+  <link rel="stylesheet" href="{% static 'uclass/css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'uclass/css/login.css' %}">
+  <script src="{% static 'uclass/js/theme-transition.js' %}" defer></script><script src="{% static 'uclass/js/login.js' %}" defer=""></script>
+<link rel="stylesheet" href="{% static 'uclass/css/workspace.css' %}"><script src="{% static 'uclass/vendor/lucide.min.js' %}" defer=""></script><script src="{% static 'uclass/js/workspace.js' %}" defer=""></script><link rel="stylesheet" href="{% static 'uclass/css/classic.css' %}"><link rel="stylesheet" href="{% static 'uclass/css/palette.css' %}"></head>
+<body class="auth-page auth-centered">
+  <a class="auth-skip" href="#connection-form">Skip to connection form</a>
   <header class="auth-header">
-    <a class="auth-wordmark" href="{% url 'index' %}" aria-label="uclass.uz home">uclass.uz</a>
+    <a class="auth-wordmark" href="{% url 'index' %}" aria-label="uclass.uz index">uclass.uz</a>
     <div class="auth-header-actions">
       <button id="auth-theme" class="btn theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode">
         <span class="theme-orbit" aria-hidden="true"></span>
         <span class="theme-icon" aria-hidden="true">
-          <svg class="theme-moon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 15.4A8.7 8.7 0 0 1 8.6 3.8 8.7 8.7 0 1 0 20.2 15.4Z"/></svg>
-          <svg class="theme-sun" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><g class="sun-rays"><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></g></svg>
+          <svg class="theme-moon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 15.4A8.7 8.7 0 0 1 8.6 3.8 8.7 8.7 0 1 0 20.2 15.4Z"></path></svg>
+          <svg class="theme-sun" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><g class="sun-rays"><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></g></svg>
         </span>
       </button>
     </div>
   </header>
 
   <main class="auth-layout" id="main">
-    <aside class="auth-story" aria-labelledby="trust-title">
-      <section class="auth-trust">
-        <div class="auth-trust-heading"><h3 id="trust-title">Designed around your control</h3></div>
-        <div class="auth-trust-item">
-          <span class="auth-trust-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></svg></span>
-          <div><h4>Encrypted credentials</h4><p>Your LMS password is encrypted on the server before storage.</p></div>
-        </div>
-        <div class="auth-trust-item">
-          <span class="auth-trust-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M5.6 7a7 7 0 0 1 11.6-2L20 8M4 16l2.8 3A7 7 0 0 0 18.4 17"/></svg></span>
-          <div><h4>Automatic updates</h4><p>Your academic information is synchronized periodically without requiring you to log in each time.</p></div>
-        </div>
-        <div class="auth-trust-item">
-          <span class="auth-trust-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg></span>
-          <div><h4>You control your data</h4><p>Disconnect your account and request deletion of your stored information at any time.</p></div>
-        </div>
-      </section>
-    </aside>
+    
 
     <section class="auth-card" aria-labelledby="login-title">
-      <h1 id="login-title">Connect your<br class="auth-title-break"> university account</h1>
-      <p class="auth-card-subtitle">Sign in with your Inha LMS credentials to access your academic dashboard.</p>
-
-      <form id="connection-form" class="auth-form" method="post" action="{% url 'login' %}" autocomplete="on" novalidate>
+      <h1 id="login-title">Sign in</h1>
+      <form id="connection-form" class="auth-form" method="post" action="{% url 'login' %}">
         {% csrf_token %}
         {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-
-        <p class="auth-field-error" id="form-status" role="alert" {% if not form_error %}hidden{% endif %}>{{ form_error }}</p>
-
+        {% if form.non_field_errors %}<div class="auth-form-status" role="alert">{{ form.non_field_errors }}</div>{% endif %}
         <div class="auth-field">
-          <label for="moodle-username">Username <span aria-hidden="true">*</span></label>
+          <label for="moodle-username">Moodle username / Student ID <span aria-hidden="true">*</span></label>
           <div class="auth-input-wrap">
-            <svg class="auth-input-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>
-            <input id="moodle-username" name="username" type="text" value="{{ username|default:'' }}" placeholder="Enter your username or Student ID" autocomplete="username" autocapitalize="none" spellcheck="false" required aria-describedby="username-hint username-error">
+            <svg class="auth-input-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M5 21v-2a7 7 0 0 1 14 0v2"></path></svg>
+            <input id="moodle-username" name="username" type="text" value="{{ form.username.value|default_if_none:'' }}" placeholder="Enter your username or Student ID" autocomplete="username" autocapitalize="none" spellcheck="false" required="" aria-describedby="username-hint username-error">
           </div>
-          <p class="auth-field-hint" id="username-hint">Use the username you normally enter on Inha LMS (edu.inha.uz).</p>
-          <p class="auth-field-error" id="username-error" aria-live="polite" hidden></p>
+          <p class="auth-field-hint" id="username-hint">Use the username you normally enter on Inha Moodle.</p>
+          <p class="auth-field-error" id="username-error" aria-live="polite" {% if not form.username.errors %}hidden{% endif %}>{{ form.username.errors|striptags }}</p>
         </div>
 
         <div class="auth-field">
-          <label for="moodle-password">Password <span aria-hidden="true">*</span></label>
+          <label for="moodle-password">Moodle password <span aria-hidden="true">*</span></label>
           <div class="auth-input-wrap auth-password-wrap">
-            <svg class="auth-input-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></svg>
-            <input id="moodle-password" name="password" type="password" placeholder="Enter your LMS password" autocomplete="current-password" spellcheck="false" required aria-describedby="password-error">
+            <svg class="auth-input-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="3"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"></path></svg>
+            <input id="moodle-password" name="password" type="password" placeholder="Enter your Moodle password" autocomplete="current-password" spellcheck="false" required="" aria-describedby="password-error security-title">
             <button class="auth-password-toggle" id="password-toggle" type="button" aria-label="Show password" aria-pressed="false" aria-controls="moodle-password">
-              <svg id="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-              <svg id="eye-closed" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="m3 3 18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.2A11.7 11.7 0 0 1 12 5c6.5 0 10 7 10 7a18 18 0 0 1-3.2 4.1M6.1 6.1A21 21 0 0 0 2 12s3.5 7 10 7a11 11 0 0 0 5.9-1.9"/></svg>
+              <svg id="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <svg id="eye-closed" viewBox="0 0 24 24" aria-hidden="true" hidden=""><path d="m3 3 18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.2A11.7 11.7 0 0 1 12 5c6.5 0 10 7 10 7a18 18 0 0 1-3.2 4.1M6.1 6.1A21 21 0 0 0 2 12s3.5 7 10 7a11 11 0 0 0 5.9-1.9"></path></svg>
             </button>
           </div>
-          <p class="auth-field-error" id="password-error" aria-live="polite" hidden></p>
+          <p class="auth-field-error" id="password-error" aria-live="polite" {% if not form.password.errors %}hidden{% endif %}>{{ form.password.errors|striptags }}</p>
         </div>
 
         <section class="auth-security" aria-labelledby="security-title">
-          <div class="auth-security-title"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6l-8-3Z"/><path d="M9 12h6m-3-3v6"/></svg></span><div><h2 id="security-title">How we protect your LMS credentials</h2></div></div>
-          <p class="auth-security-intro">To keep your courses, attendance, grades, and assignments up to date automatically, uclass.uz securely stores an encrypted copy of your LMS password on the server.</p>
+          <div class="auth-security-title"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6l-8-3Z"></path></svg></span><h2 id="security-title">Your account and safety</h2></div>
           <ul>
-            <li>The password is encrypted before being stored in the database.</li>
-            <li>The password is used to establish authorized LMS sessions and synchronize academic information.</li>
-            <li><strong>Encryption does not make storing passwords risk-free.</strong></li>
-            <li>uclass.uz is a third-party service, not the official LMS or University website.</li>
-            <li>You may disconnect your LMS account and request deletion of stored credentials and synchronized personal data.</li>
+            <li>uclass.uz is an independent service, not the official university or Moodle website.</li>
+            <li>Only connect an account that belongs to you. Never share your Moodle password with another person.</li>
+            <li>Read the <a href="{% url 'privacy' %}">Privacy Policy</a> to understand how your credentials and academic information are handled.</li>
+            {% if credential_storage_enabled %}<li>Automatic synchronization requires permission to store and use your Moodle credentials. Storing passwords carries risk, even with encryption.</li>{% endif %}
           </ul>
         </section>
 
+        <div class="auth-preferences">
+          <label class="auth-check auth-remember" for="remember-me"><input id="remember-me" name="remember_me" type="checkbox" value="1"><span>Remember me</span></label>
+        </div>
+
         <fieldset class="auth-consents" aria-describedby="consent-hint">
-          <legend>Your choice, clearly stated</legend>
+          <legend>Consent</legend>
+          {% if credential_storage_enabled %}<div class="auth-consent-row">
+            <label class="auth-check" for="credential-consent"><input id="credential-consent" name="credential_consent" value="1" type="checkbox" required="" aria-describedby="credential-consent-error"><span>I consent to the storage and use of my Moodle credentials for automatic academic synchronization, as described in the Privacy Policy.</span></label>
+            <p class="auth-field-error" id="credential-consent-error" aria-live="polite" {% if not form.credential_consent.errors %}hidden{% endif %}>{{ form.credential_consent.errors|striptags }}</p>
+          </div>{% endif %}
           <div class="auth-consent-row">
-            <label class="auth-check" for="credential-consent"><input id="credential-consent" name="credential_consent" type="checkbox" value="1" required aria-describedby="credential-consent-error"><span>I understand that uclass.uz is an independent service and I consent to the encrypted storage and use of my LMS credentials for academic synchronization.</span></label>
-            <p class="auth-field-error" id="credential-consent-error" aria-live="polite" hidden></p>
-          </div>
-          <div class="auth-consent-row">
-            <label class="auth-check" for="policy-consent"><input id="policy-consent" name="policy_consent" type="checkbox" value="1" required aria-describedby="policy-consent-error"><span>I agree to the <a class="auth-policy-link" href="{% url 'dashboard' %}" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a class="auth-policy-link" href="{% url 'dashboard' %}" target="_blank" rel="noopener noreferrer">Terms of Service</a>.</span></label>
-            <p class="auth-field-error" id="policy-consent-error" aria-live="polite" hidden></p>
+            <label class="auth-check" for="policy-consent"><input id="policy-consent" name="policy_consent" value="1" type="checkbox" required="" aria-describedby="policy-consent-error"><span>I agree to the <a class="auth-policy-link" href="{% url 'privacy' %}">Privacy Policy</a> and <a class="auth-policy-link" href="{% url 'terms' %}">Terms of Service</a>.</span></label>
+            <p class="auth-field-error" id="policy-consent-error" aria-live="polite" {% if not form.policy_consent.errors %}hidden{% endif %}>{{ form.policy_consent.errors|striptags }}</p>
           </div>
         </fieldset>
 
-        <p class="auth-consent-hint" id="consent-hint" aria-live="polite">Select both required checkboxes to continue.</p>
-        <button class="auth-submit" id="connect-account" type="submit" disabled aria-describedby="consent-hint">
-          <span id="submit-label">Connect Account</span>
-          <svg id="submit-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
-          <span class="auth-spinner" id="submit-spinner" aria-hidden="true" hidden></span>
+        <p class="auth-consent-hint" id="consent-hint" aria-live="polite">Confirm the required consent choices to continue.</p>
+        <button class="auth-submit" id="connect-account" type="submit" aria-describedby="consent-hint">
+          <span id="submit-label">Sign in</span>
+          <svg id="submit-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"></path></svg>
+          <span class="auth-spinner" id="submit-spinner" aria-hidden="true" hidden=""></span>
         </button>
+        <div class="auth-form-status" id="form-status" role="status" aria-live="polite" aria-atomic="true" hidden=""></div>
       </form>
 
-      <div class="auth-official"><span>Prefer the university’s official service?</span><a href="https://edu.inha.uz/login/index.php" target="_blank" rel="noopener noreferrer">Go to Inha LMS <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"/></svg><span class="auth-sr-only"> (opens in a new tab)</span></a></div>
-      <noscript><p class="auth-preview-note">JavaScript is disabled. You can still submit the form, but the theme toggle and instant validation are unavailable, and the server will validate your input.</p></noscript>
-    </section>
-  </main>
+      <div class="auth-official"><span>Prefer the university’s official service?</span><a href="https://edu.inha.uz/login/index.php" target="_blank" rel="noopener noreferrer">Go to Inha Moodle <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"></path></svg><span class="auth-sr-only"> (opens in a new tab)</span></a></div>
+      <noscript><p class="auth-field-hint">You can sign in without JavaScript.</p></noscript>
+    </section></main>
 
-  <footer class="auth-footer"><p>uclass.uz is an independent student project and is not an official Inha University in Tashkent service.</p></footer>
-</body>
-</html>
+  <footer class="auth-footer"><p>uclass.uz is an independent student project and is not an official Inha University or Moodle service.</p></footer>
+
+
+</body></html>

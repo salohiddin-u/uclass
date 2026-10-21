@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Assignments{% endblock %}
+{% block page %}assignments{% endblock %}
+{% block breadcrumb %}Assignments{% endblock %}
+{% block content %}
+<div class="page-heading"><h1>Assignments</h1><div class="heading-actions"></div></div><div class="assignment-grid">{% for assignment in assignments %}<article class="panel"><span class="status-tag">{{ assignment.status_label }}</span><h2>{{ assignment.title }}</h2><p>{{ assignment.course_name }}</p><dl><div><dt>Weight</dt><dd>{{ assignment.weight|default_if_none:'—' }}{% if assignment.weight != None %}%{% endif %}</dd></div><div><dt>Due date</dt><dd>{{ assignment.due_at|date:'j M Y, H:i'|default:'Not listed' }}</dd></div><div><dt>Submission</dt><dd>{{ assignment.submission_label|default:'Not available' }}</dd></div></dl><a href="{% url 'course_detail' course_id=assignment.course_id %}#grades">Open course →</a></article>{% empty %}<p class="workspace-empty">No assignments are available.</p>{% endfor %}</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Delete my data{% endblock %}
+{% block page %}delete_data{% endblock %}
+{% block breadcrumb %}Delete my data{% endblock %}
+{% block content %}
+<div class="page-heading"><h1>Delete my data</h1><div class="heading-actions"></div></div><section class="panel"><h2>Confirm data deletion</h2><p>{{ deletion_scope }}</p>{% if deletion_enabled and deletion_scope %}<form method="post" action="{% url 'delete_data' %}">{% csrf_token %}{{ form.non_field_errors }}<label class="auth-check"><input type="checkbox" name="confirm_deletion" value="1" required><span>I understand and request deletion of the data described above.</span></label><div class="heading-actions"><a class="btn" href="{% url 'profile' %}">Cancel</a><button class="profile-danger-button" id="delete-data" type="submit">Delete my data</button></div></form>{% else %}<p>Data deletion is unavailable. Review the <a href="{% url 'privacy' %}">Privacy Policy</a> for the applicable data-request process.</p>{% endif %}</section>
+{% endblock %}

@@ -1,0 +1,17 @@
+<article class="panel course-card" data-course-id="{{ course.id }}" data-grade="{{ course.grade|default_if_none:'' }}" data-attendance="{{ course.attendance|default_if_none:'' }}">
+  <span class="course-code">{{ course.shortname }}</span>
+  <p class="label mt-5">{{ course.categoryname|default_if_none:'—' }}</p>
+  <h3 class="mb-1 mt-2 text-base font-bold">
+    <a href="{% url 'course_detail' course_id=course.id %}">{{ course.fullname }}</a>
+  </h3>
+  <p class="muted">{{ course.professor|default:'—' }}</p>
+  <div class="course-card-score">
+    <span>Current grade</span>
+    <strong>{% if course.grade != None %}{{ course.grade|floatformat:1 }}%{% else %}—{% endif %}</strong>
+  </div>{% if course.grade != None %} <div class="track">
+    <div style="width:{{ course.grade|floatformat:'2u' }}%"></div>
+  </div>{% endif %} <div class="course-card-score">
+    <span>{% if course.attendance != None %}{{ course.attendance|floatformat:1 }}% attendance{% else %}Attendance unavailable{% endif %}</span>
+    <a href="{% url 'course_detail' course_id=course.id %}">Open →</a>
+  </div>
+</article>
