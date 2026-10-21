@@ -1,0 +1,38 @@
+/* Data-driven equivalents of the existing workspace components. */
+.heading-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:22px 0}
+.summary-grid .text-3xl{margin:16px 0 4px}.summary-grid>.panel>strong{display:block;font-size:28px;margin-block:15px}
+.course-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-block:18px}
+.course-grid.course-list{grid-template-columns:1fr}
+.course-code{display:inline-flex;align-items:center;min-height:42px;padding:9px 12px;border-radius:11px;background:var(--lp-primary-soft);font-size:12px;font-weight:650}
+.course-card-score{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;margin-top:24px;margin-bottom:10px}
+.track>div{height:100%;border-radius:inherit;background:var(--lp-primary)}
+.workspace-footer{padding:24px;font-size:11px;color:var(--ws-muted)}
+#main>.panel,#main>.assessment-database,#main>.grade-main-grid,#main>.attendance-database{margin-bottom:24px}
+.course-section,.course-file{margin:16px 0}.course-section p,.course-file p{margin:12px 0;line-height:1.8}
+.course-section input[type=checkbox],.profile-side-panels input[type=checkbox]{min-height:0;width:16px;height:16px;vertical-align:middle}
+.course-section h3,.course-file h3{font-weight:650;font-size:16px}
+.grade-columns{grid-auto-flow:column;grid-auto-columns:minmax(50px,1fr);grid-template-columns:none;overflow-x:auto}
+.session-calendar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.calendar-day [data-record]{display:flex;flex-direction:column;gap:7px}
+.workspace-dialog pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.7}
+.legal-document{width:min(800px,calc(100% - 40px));margin:48px auto;padding:28px}.legal-document h1{font-size:32px;margin-block:30px}.legal-document h2{font-size:20px;margin-top:28px}.legal-document p{line-height:1.85;margin-block:15px}
+#main .page-heading{align-items:flex-start;margin-top:0}
+#main .page-heading h1{overflow-wrap:anywhere}
+#main>.muted+.page-heading{margin-top:20px}
+.database-scroll{overflow-x:auto}.database-table{min-width:530px}
+.auth-form-status ul{padding-left:20px}
+.profile-side-panels>form{margin-top:20px}.profile-side-panels .panel{margin-bottom:20px}
+@media(max-width:1100px){.course-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.session-calendar{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.course-grid,.session-calendar{grid-template-columns:1fr}.heading-actions{width:100%}.heading-actions input{width:100%}.attendance-database .database-table{min-width:0}.grade-chart{overflow-x:auto}.database-tabs{flex-wrap:wrap}.database-tabs button{white-space:normal}.legal-document{padding:10px}.summary-grid{gap:12px}.summary-grid .panel{min-width:0}}
+
+/* Give course headings clear separation without relying on utility classes. */
+.course-grid{gap:24px}
+.course-grid>.course-card{min-width:0;padding:24px}
+.course-card>.course-code{max-width:100%;overflow-wrap:anywhere}
+.course-card>.label{margin:18px 0 0;line-height:1.6;overflow-wrap:anywhere}
+.course-card>h3{margin:9px 0 10px;font-size:17px;font-weight:650;line-height:1.5;letter-spacing:-.15px;overflow-wrap:anywhere}
+.course-card>h3>a{display:block;text-wrap:pretty}
+.course-card>.muted{margin:0;line-height:1.7}
+@media(max-width:600px){.course-grid{gap:18px}.course-grid>.course-card{padding:20px}}

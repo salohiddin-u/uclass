@@ -1,0 +1,52 @@
+/* Shared palette. The supplied dark values are exact; light surfaces remain readable. */
+:root,body,body[data-page],body.landing,body.auth-page{
+ --lp-primary:#3a7bff;--lp-primary-dark:#2d68e6;
+ --lp-primary-soft:rgba(58,123,255,.09);--lp-primary-tint:rgba(58,123,255,.16);--lp-primary-line:rgba(58,123,255,.42);
+ --lp-text:#000;--lp-text-soft:#000;--lp-muted:#52617a;--lp-line:#e2e8f0;--lp-line-soft:#edf0f6;
+ --lp-bg:#f5f6fa;--lp-bg-soft:#f0f3f9;--lp-surface:#fff;--lp-glass:rgba(255,255,255,.82);--lp-cell:#eaf0fb;
+ --lp-shadow:0 30px 60px -28px rgba(36,48,70,.18);--lp-shadow-soft:0 12px 28px -16px rgba(36,48,70,.12);
+}
+:root.dark,.dark body,.dark body[data-page],.dark body.landing,.dark body.auth-page{
+ --lp-text:#edf2f9;--lp-text-soft:#b1bccd;--lp-muted:#8692a6;--lp-line:#242e40;--lp-line-soft:#1b2331;
+ --lp-bg:#0b1018;--lp-bg-soft:#0f151f;--lp-surface:#141b27;--lp-glass:rgba(11,16,24,.82);--lp-cell:#1b2433;
+ --lp-shadow:0 30px 60px -28px rgba(0,0,0,.7);--lp-shadow-soft:0 12px 28px -16px rgba(0,0,0,.6);
+}
+body,body[data-page],body.landing,body.auth-page,.dark body,.dark body[data-page],.dark body.landing,.dark body.auth-page{
+ --classic-page:var(--lp-bg);--ws-bg:var(--lp-surface);--ws-soft:var(--lp-bg-soft);--ws-hover:var(--lp-cell);--ws-ink:var(--lp-text);--ws-muted:var(--lp-text-soft);--ws-line:var(--lp-line);--ws-accent:var(--lp-primary);--ws-blue:var(--lp-primary-soft);--ws-shadow:var(--lp-shadow-soft);
+ --lp-ink:var(--lp-text);--lp-accent:var(--lp-primary);--lp-soft:var(--lp-primary-soft);--lp-raised:var(--lp-bg-soft);--lp-grid:var(--lp-line-soft);
+ --orbit-blue:var(--lp-primary);--orbit-blue-soft:var(--lp-primary-soft);
+ --profile-ink:var(--lp-text);--profile-muted:var(--lp-text-soft);--profile-line:var(--lp-line);--profile-surface:var(--lp-surface);--profile-soft:var(--lp-bg-soft);--profile-accent:var(--lp-primary);
+ --auth-bg:var(--lp-bg);--auth-surface:var(--lp-surface);--auth-ink:var(--lp-text);--auth-muted:var(--lp-text-soft);--auth-line:var(--lp-line);--auth-accent:var(--lp-primary);--auth-accent-soft:var(--lp-primary-soft);--auth-input:var(--lp-cell);--auth-panel:var(--lp-bg-soft);--auth-shadow:var(--lp-shadow);
+ background:var(--lp-bg);color:var(--lp-text);
+}
+#sidebar.workspace-sidebar,.dark #sidebar.workspace-sidebar{background:var(--lp-surface)}
+#topbar,.dark #topbar,.landing .lp-header{background:var(--lp-glass);backdrop-filter:blur(20px);border-color:var(--lp-line)}
+#navigation .nav.active,.dark #navigation .nav.active{background:var(--lp-primary-soft);box-shadow:inset 0 0 0 1px var(--lp-primary-tint)}
+#navigation .nav.active>svg{stroke:var(--lp-primary)}
+body .btn.primary,.dark body .btn.primary,body .auth-submit:not(:disabled),body .lp-button:not(.lp-secondary){background:var(--lp-primary);border-color:var(--lp-primary)}
+body .btn.primary:hover,body .auth-submit:not(:disabled):hover,body .lp-button:not(.lp-secondary):hover{background:var(--lp-primary-dark);border-color:var(--lp-primary-dark)}
+.orbit-graph-card,.landing .lp-browser{box-shadow:var(--lp-shadow)}
+.orbit-float-card,.orbit-mini-card,.orbit-explorer,.landing .lp-feature,.landing .lp-final-cta{box-shadow:var(--lp-shadow-soft)}
+.orbit-graph-card,.orbit-float-card,.orbit-mini-card{background:var(--lp-surface);border-color:var(--lp-line)}
+.orbit-point-controls button[aria-pressed=true],.orbit-explorer-tabs button[aria-selected=true]{background:var(--lp-primary-soft);border-color:var(--lp-primary-line)}
+.landing :is(a,button,summary,[tabindex]):focus-visible{outline-color:var(--lp-primary)}
+.dark body :is(p,small,dt,figcaption,.muted,.analytics-method,.analytics-panel-description,.lp-section-intro>p,.orbit-copy>p,.auth-subtitle){color:var(--lp-text-soft)!important}
+.dark body :is(.sidebar-label,.profile-small-label,.analytics-eyebrow,.orbit-section-label,.lp-eyebrow,.database-resultbar,.orbit-chart-caption,.orbit-panel-foot,time){color:var(--lp-muted)!important}
+.dark body input::placeholder{color:var(--lp-muted);opacity:1}
+.dark .track,.dark .assessment-track,.dark .orbit-week-track{background:var(--lp-cell)}
+.dark .database-table th,.dark .calendar-day,.dark .database-tabs{background:var(--lp-bg-soft)}
+.dark .database-table :is(th,td){border-color:var(--lp-line-soft)}
+/* Restore the icon exchange and a circular reveal from the theme button. */
+.theme-icon>svg{transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .25s ease}
+.theme-orbit{display:block;color:var(--lp-primary)}
+#home-theme.is-switching svg{animation:theme-icon-turn .55s cubic-bezier(.22,1,.36,1)}
+@keyframes theme-icon-turn{from{transform:rotate(-90deg) scale(.55)}to{transform:rotate(0) scale(1)}}
+html.theme-revealing::view-transition-old(root),html.theme-revealing::view-transition-new(root){animation:none;mix-blend-mode:normal}
+html.theme-revealing::view-transition-old(root){z-index:1}
+html.theme-revealing::view-transition-new(root){z-index:2}
+html.theme-revealing::view-transition-group(root){animation:none}
+html.theme-fading body,html.theme-fading body *{transition:background-color .4s ease,color .4s ease,border-color .4s ease,box-shadow .4s ease}
+@media(prefers-reduced-motion:reduce){.theme-icon>svg,.theme-toggle *,#home-theme *{animation:none!important;transition:none!important}html.theme-fading body,html.theme-fading body *{transition:none!important}}
+/* Keep identity tiles and key figures legible against the new dark surfaces. */
+.dark .profile-link-avatar,.dark .profile-avatar{background:var(--lp-cell);color:var(--lp-text)!important}
+.dark body .workspace-metrics .text-3xl{color:var(--lp-text)!important}
