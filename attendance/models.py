@@ -131,7 +131,7 @@ class GradeItem(models.Model):
 
 class GradeBook(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="gradebook_entries")
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="gradebook_course")
     max_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     earned_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)

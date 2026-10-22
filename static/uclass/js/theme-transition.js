@@ -1,7 +1,14 @@
-/* Shared visual theme exchange. No data access; persistence remains with each page. */
+/* Restore the saved theme before revealing the page; animate explicit switches only. */
 (() => {
   'use strict';
   const root = document.documentElement;
+  // This shared script is already loaded by every page. No template changes needed.
+  let savedDark = false;
+  try { savedDark = JSON.parse(localStorage.getItem('campus-static-dark')) === true; } catch {}
+  root.classList.toggle('dark', savedDark);
+  // Commit the initial palette with transitions suppressed by the CSS guard.
+  void root.offsetWidth;
+  root.setAttribute('data-theme-ready', '');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   let busy = false;
   window.uclassThemeTransition = async (control, update) => {

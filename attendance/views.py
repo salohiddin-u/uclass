@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db import transaction
+from django.db.models import OuterRef, Subquery
 
 import requests
 import environs
@@ -145,10 +146,30 @@ def index(request):
     if not request.user.is_authenticated:
         return render(request, 'index.html')
     else:
-        course_enrollments = CourseEnrollment.objects.filter(student__user=request.user)
-        courses = [enrollment.course for enrollment in course_enrollments]
+        course_enrollments = CourseEnrollment.objects.filter(student__user=request.user).select_related('course').annotate(
+            earned_grade=Subquery(
+            GradeBook.objects
+            .filter(student=OuterRef("student"), course=OuterRef("course"))
+            .values("earned_grade")[:1]
+        ),
+        max_grade=Subquery(
+            GradeBook.objects
+            .filter(student=OuterRef("student"), course=OuterRef("course"))
+            .values("max_grade")[:1]
+        ),
+        percent_grade=Subquery(
+            GradeBook.objects
+            .filter(student=OuterRef("student"), course=OuterRef("course"))
+            .values("percentage")[:1]
+        ))
+
+        
+        for enrollment in course_enrollments:
+            enrollment.course.earned_grade = enrollment.earned_grade
+            enrollment.course.max_grade = enrollment.max_grade
+            print(f"Course: {enrollment.course.fullname}, Earned Grade: {enrollment.percent_grade}, Max Grade: {enrollment.max_grade}")
         context = {
-            'courses': courses,
+            'courses': course_enrollments,
             'student': Student.objects.get(user=request.user),
 
         }
@@ -156,10 +177,24 @@ def index(request):
 
 @login_required
 def courses(request):
-    course_enrollments = CourseEnrollment.objects.filter(student__user=request.user)
-    courses = [enrollment.course for enrollment in course_enrollments]
+    course_enrollments = CourseEnrollment.objects.filter(student__user=request.user).select_related('course').annotate(
+                earned_grade=Subquery(
+                GradeBook.objects
+                .filter(student=OuterRef("student"), course=OuterRef("course"))
+                .values("earned_grade")[:1]
+            ),
+            max_grade=Subquery(
+                GradeBook.objects
+                .filter(student=OuterRef("student"), course=OuterRef("course"))
+                .values("max_grade")[:1]
+            ),
+            percent_grade=Subquery(
+                GradeBook.objects
+                .filter(student=OuterRef("student"), course=OuterRef("course"))
+                .values("percentage")[:1]
+            ))
     context = {
-        'courses': courses,
+        'courses': course_enrollments,
         'student': Student.objects.get(user=request.user),
     }
     return render(request, 'courses.html', context)

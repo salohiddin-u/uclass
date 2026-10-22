@@ -50,3 +50,20 @@ html.theme-fading body,html.theme-fading body *{transition:background-color .4s 
 /* Keep identity tiles and key figures legible against the new dark surfaces. */
 .dark .profile-link-avatar,.dark .profile-avatar{background:var(--lp-cell);color:var(--lp-text)!important}
 .dark body .workspace-metrics .text-3xl{color:var(--lp-text)!important}
+
+/* Deferred scripts must restore the saved theme before the first content paint.
+   The dark canvas avoids a white flash between documents. Fail open if JS fails;
+   browsers with scripting disabled keep the normal, visible page. */
+html { background-color:var(--lp-bg); color-scheme:light; }
+html.dark { color-scheme:dark; }
+@media (scripting:enabled) {
+ html:not([data-theme-ready]) { background-color:#0b1018; }
+ html:not([data-theme-ready]) body {
+  visibility:hidden;
+  animation:uclass-theme-fail-open 0s 3s forwards!important;
+ }
+ html:not([data-theme-ready]) *,
+ html:not([data-theme-ready]) *::before,
+ html:not([data-theme-ready]) *::after { transition:none!important; }
+}
+@keyframes uclass-theme-fail-open { to { visibility:visible; } }
