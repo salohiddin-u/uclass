@@ -52,6 +52,9 @@ class CourseModule(models.Model):
     due_at = models.DateTimeField(null=True, blank=True)
     last_seen_at = models.DateTimeField(null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.name} ({self.modname}) in {self.course.fullname}"
+
     class Meta:
         ordering = ["position"]
 
@@ -75,6 +78,9 @@ class AttendanceSession(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
 
+    def __str__(self):
+        return f"Attendance Session for {self.module.name} on {self.session_date} from {self.start_time} to {self.end_time}"
+
 
 class AttendanceRecord(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="attendance_records")
@@ -94,42 +100,49 @@ class AttendanceRecord(models.Model):
 
 class Grade(models.Model):
     moodle_id = models.IntegerField(unique=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, null=True, blank=True)
     instance = models.IntegerField()
-    category_id = models.IntegerField()
+    category_id = models.IntegerField(null=True, blank=True)
     module = models.ForeignKey(CourseModule, on_delete=models.CASCADE)
-    min_point = models.IntegerField(blank=True, null=True)
-    max_point = models.IntegerField(blank=True, null=True)
-    cmid = models.IntegerField(blank=True, null=True)
-    weightraw = models.DecimalField(blank=True, null=True, decimal_places=10, max_digits=10)
+    min_grade = models.IntegerField(blank=True, null=True)
+    max_grade = models.IntegerField(blank=True, null=True)
+    weightraw = models.DecimalField(
+        max_digits=12,
+        decimal_places=10,
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
-        return self.name
+        return f"{self.name} (Module: {self.module.name}, Min: {self.min_grade}, Max: {self.max_grade})"
 
 class GradeItem(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
-    earned_points = models.IntegerField(blank=True, null=True)
+    earned_grade = models.IntegerField(blank=True, null=True)
     rank = models.IntegerField(blank=True, null=True)
     numusers = models.IntegerField(blank=True, null=True)
-    is_hidden = models.BooleanField(default=False)
-    is_overridden = models.BooleanField(default=False)
+    is_hidden = models.BooleanField(default=False, null=True, blank=True)
+    is_overridden = models.BooleanField(default=False, null=True, blank=True)
     graded_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return self.student
+        return f"{self.student} - {self.grade.name}: {self.earned_grade}/{self.grade.max_grade} (Rank: {self.rank}/{self.numusers})"
 
 class GradeBook(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="gradebook_entries")
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     max_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    total_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    earned_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     letter_grade = models.CharField(max_length=5, null=True, blank=True)
     last_updated = models.DateTimeField(auto_now=True)
+    rank = models.IntegerField(null=True, blank=True)
+    numusers = models.IntegerField(null=True, blank=True)
+
 
     def __str__(self):
-        return f"{self.student} - {self.course}: {self.total_grade}/{self.max_grade} ({self.percentage}%)"
+        return f"{self.student} - {self.course}: {self.earned_grade}/{self.max_grade} ({self.percentage}%)"
 
 class Chat(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="chat_messages")

@@ -1,5 +1,7 @@
-from django.db import transaction
+from asyncio.log import logger
+
 import truststore
+
 truststore.inject_into_ssl()
 
 from django.shortcuts import render, redirect
@@ -8,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.utils import timezone
+from django.db import transaction
 
 import requests
 import environs
@@ -16,243 +19,126 @@ from bs4 import BeautifulSoup
 
 from datetime import datetime
 
-from .encryption import encrypt, decrypt
+from .services.encryption import encrypt, decrypt
 from .models import *
+
+from .services.moodle_api import *
+from .services.sync import sync_courses, sync_grades
 
 env = environs.Env()
 env.read_env()
 
-url = "https://edu.inha.uz/webservice/rest/server.php"
 
 
-def normalize_group(name):
-    match = re.fullmatch(
-        r"([A-Za-z]+)-?(\d{2})-(\d+)",
-        name.strip()
-    )
+from django.contrib.auth import login
+from django.contrib.auth.models import User
+from django.db import transaction
+from django.shortcuts import redirect, render
+from django.utils import timezone
 
-    if not match:
-        return None
-
-    program, year, number = match.groups()
-
-    return f"{program.upper()}{year}-{int(number)}"
-
-
-
-def ws(token, function, **params):
-    data = {"wstoken": token, "wsfunction": function, "moodlewsrestformat": "json", **params}
-    return requests.post(url, data=data, timeout=45).json()
-
-def get_token(username, password):
-    r = requests.post(
-        "https://edu.inha.uz/login/token.php",
-        data={
-            "username": username,
-            "password": password,
-            "service": "moodle_mobile_app",
-        },
-        timeout=20,
-    )
-    data = r.json()
-    if "token" in data:
-        return data["token"]
-    raise RuntimeError(data.get("error", "token request failed"))
-
-def get_user_info(token):
-    r = requests.post(
-    "https://edu.inha.uz/webservice/rest/server.php",
-    data={
-        "wstoken": token,
-        "wsfunction": "core_webservice_get_site_info",
-        "moodlewsrestformat": "json",
-    },
-    timeout=45,
-)
-    userid = r.json()["userid"]
-    first_name = r.json()["firstname"]
-    last_name = r.json()["lastname"]
-    return userid, first_name, last_name
-
-
-def get_user_courses(userid, token):
-    enrolled_courses = ws(token, "core_enrol_get_users_courses", userid=userid)
-    courses = {'courses': []}
-    request = ws(token, "core_course_get_courses_by_field", field="id", value=course["id"])["courses"][0]
-    for course in enrolled_courses:
-        professors = request["contacts"]
-        categoryname = request["categoryname"]
-        shortname = request["shortname"]
-        for professor in professors:
-            if professor["fullname"] != "Academic Affairs":
-                professor_name = professor["fullname"]
-        item = {
-            'courseid': course["id"],
-            "fullname": course["fullname"],
-            "categoryname": categoryname,
-            "professor": professor_name,
-            "shortname": shortname,
-        }
-        courses["courses"].append(item)
-
-    return courses
-
-
-def get_course_sections(courseid, token):
-    try:
-        r_sections = ws(token, "core_course_get_contents", courseid=courseid)
-        sections = {'sections': []}
-        for section in r_sections:
-            moodle_id = section['id']
-            visible = section['visible']
-            description = section.get('description', '')
-            uservisible = section['uservisible']
-            name = section['name']
-            section_number = section['section']
-            r_modules = section.get('modules', [])
-            modules = {'modules': []}
-            contents = []
-
-            for module in r_modules:
-                module_name = module['name']
-                module_moodle_id = module['id']
-                module_type = module.get('modname', '')
-                module_contents = module.get('contents', [])
-                module_visible = module.get('visible', 0)
-                module_uservisible = module.get('uservisible', False)
-                url = module.get('url', '')
-                instance = module.get('instance', None)
-                opened_at = module.get('opened_at', None)
-                due_at = module.get('due_at', None)
-
-                for content in module_contents:
-                    content_file_url = content.get('fileurl', '')
-                    contents.append({'file_url': content_file_url})
-                modules['modules'].append({
-                    'moodle_id': module_moodle_id,
-                    'name': module_name,
-                    'module_type': module_type,
-                    'visible': module_visible,
-                    'uservisible': module_uservisible,
-                    'url': url,
-                    'instance': instance,
-                    'opened_at': opened_at,
-                    'due_at': due_at,
-                    'contents': contents
-                })
-
-            item = {
-                'moodle_id': moodle_id,
-                'name': name,
-                'visible': visible,
-                'section_number': section_number,
-                'modules': modules,
-            }
-            sections['sections'].append(item)
-        return sections
-    except Exception as e:
-        return JsonResponse({"error": str(e), "message": "Error fetching course sections. Please try again later."}, status=500)
-
-def sync_courses(request):
-    try:
-        student = Student.objects.get(user=request.user)
-        token = get_token(request.user.username, decrypt(student.enc_password))
-        courses = get_user_courses(student.userid, token)
-
-        for course in courses["courses"]:
-            with transaction.atomic():
-                new_course, created = Course.objects.update_or_create(
-                    courseid=course["courseid"],
-                    fullname=course["fullname"],
-                    categoryname=course["categoryname"],
-                    professor=course["professor"],
-                    shortname=course["shortname"],
-                )
-                CourseEnrollment.objects.get_or_create(student=student, course=new_course)
-            
-            course_sections = get_course_sections(course["courseid"], token)
-            with transaction.atomic():
-                for section in course_sections["sections"]:
-                    new_section, created = CourseSection.objects.update_or_create(
-                        course=new_course,
-                        section_number=section["section_number"],
-                        moodle_id=section["moodle_id"],
-                        name=section["name"],
-                    )
-                    for module in section["modules"]["modules"]:
-                        new_module, created = CourseModule.objects.update_or_create(
-                            course=new_course,
-                            section=new_section,
-                            cmid=module["moodle_id"],
-                            instance=module["instance"],
-                            modname=module["module_type"],
-                            name=module["name"],
-                            url=module["url"],
-                            description=module.get("description", ""),
-                            opened_at=datetime.fromtimestamp(module["opened_at"]) if module["opened_at"] else None,
-                            due_at=datetime.fromtimestamp(module["due_at"]) if module["due_at"] else None,
-                        )
-                        for content in module["contents"]:
-                            new_file, created = CourseFile.objects.update_or_create(
-                                module=new_module,
-                                filename=content["file_url"],
-                            )
-        student.last_sync = timezone.now()
-        student.save()
-            
-                
-        return JsonResponse({"message": "Courses synced successfully."})
-    except Exception as e:
-        return JsonResponse({"error": str(e), "message": "Error syncing courses. Please try again later."}, status=500)
-
-def sync_user(request):
-    try:
-        with transaction.atomic():
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            token = get_token(username, password)
-            userid, first_name, last_name = get_user_info(token)
-
-            users = User.objects.filter(username=username)
-            if users.exists():
-                login(request, users.first())
-                return redirect('/')
-            elif not users.exists():
-                                
-                user = User(username=username)
-                user.set_unusable_password()
-                user.save()
-                student, created = Student.objects.update_or_create(
-                    user=request.user,
-                    defaults={
-                        'enc_password': encrypt(password),
-                        'first_name': first_name,
-                        'last_name': last_name,
-                        'userid': userid,
-                        'consent_enabled': timezone.now(),
-                        'last_sync': timezone.now()
-                    }
-                )
-                login(request, user)
-
-
-        return JsonResponse({"message": "User synced successfully."})
-    except Exception as e:
-        return JsonResponse({"error": str(e), "message": "Error syncing user. Please try again later."}, status=500)
 
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('/')
-    else:
-        if request.method == 'POST':
-            
-            sync_user(request)
-            sync_courses(request)
-                
-            return redirect('/')
+        return redirect("/")
 
-    return render(request, 'registration/login.html')
+    if request.method == "POST":
+        username = (request.POST.get("username") or "").strip()
+        password = request.POST.get("password") or ""
 
+        if not username or not password:
+            return render(request, "registration/login.html", {
+                "error": "Enter username and password."
+            })
+
+        try:
+            print("+"*32)
+            print("Attempting to get token for user:", username)
+            token = get_token(username, password)
+            print("Token obtained:", token)
+
+            if not isinstance(token, str) or not token:
+                raise ValueError("Invalid token")
+
+            userid, first_name, last_name = get_user_info(token)
+
+            if not userid:
+                raise ValueError("Missing Moodle user ID")
+
+        except Exception:
+            return render(request, "registration/login.html", {
+                "error": "Invalid Moodle credentials or server unavailable."
+            })
+
+        try:
+            with transaction.atomic():
+                student = (
+                    Student.objects.select_related("user")
+                    .filter(userid=userid)
+                    .first()
+                )
+
+                if student:
+                    user = student.user
+                else:
+                    if User.objects.filter(username=username).exists():
+                        raise ValueError("Account conflict")
+
+                    user = User(username=username)
+                    user.set_unusable_password()
+                    user.save()
+
+
+                if student:
+                    student.first_name = first_name
+                    student.last_name = last_name
+                    student.consent_enabled = timezone.now()
+                    student.enc_password = encrypt(password)
+                    
+                    student.save(
+                        update_fields=["first_name", "last_name", "consent_enabled", "enc_password"]
+                    )
+                else:
+                    student = Student.objects.create(
+                        user=user,
+                        userid=userid,
+                        first_name=first_name,
+                        last_name=last_name,
+                        consent_enabled=timezone.now(),
+                        enc_password=encrypt(password),
+                        last_sync=timezone.now(),
+                    )
+
+        except ValueError:
+            return render(request, "registration/login.html", {
+                "error": "Account conflict. Contact support."
+            })
+
+        
+
+        try:
+            print("Syncing courses and grades for user:", username)
+            print("User ID:", student.userid)
+            sync_courses(student.userid)
+            sync_grades(student.userid)
+            print("Sync completed for user:", username)
+        except Exception:
+            logger.exception(
+                "Moodle synchronization failed for student %s",
+                student.pk,
+            )
+
+        student = (
+                Student.objects.select_related("user")
+                .filter(userid=userid)
+                .first()
+                )
+        student.last_sync = timezone.now()
+        student.consent_enabled = timezone.now()
+        student.save(update_fields=["last_sync", "consent_enabled"])
+        login(request, student.user)
+        return redirect("/")
+
+    return render(request, "registration/login.html")
 
 
 def index(request):
@@ -301,3 +187,7 @@ def profile(request):
 
 def course_detail(request, course_id):
     pass
+
+def logout_view(request):
+    logout(request)
+    return redirect("/login/")
