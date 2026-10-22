@@ -66,5 +66,11 @@ def get_course_sections(courseid, token):
     return sections
 
 
-shortname = ws("", "core_course_get_courses_by_field", field="id", value=230)["courses"][0]["shortname"]
-print(shortname)
+# shortname = ws("3c4a2f862cbf707473e84fc1601ae156", "core_course_get_courses_by_field", field="id", value=230)["courses"][0]["shortname"]
+# grades = ws("3c4a2f862cbf707473e84fc1601ae156", "gradereport_user_get_grade_items", userid=238, courseid=230)
+# grade_str = grades['usergrades'][0]['gradeitems'][-1]['percentageformatted'][:6]
+# grade = (float(grade_str)) if grade_str != "-" else "N/A"
+# print(f"Course Shortname: {shortname}, Grade: {grade}")
+
+grade = ws("3c4a2f862cbf707473e84fc1601ae156", "gradereport_overview_get_course_grades", userid=238)
+print(grade)

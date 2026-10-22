@@ -1,3 +1,4 @@
+from django.db import transaction
 import truststore
 truststore.inject_into_ssl()
 
@@ -5,6 +6,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.utils import timezone
 
 import requests
 import environs
@@ -75,22 +78,19 @@ def get_user_info(token):
 def get_user_courses(userid, token):
     enrolled_courses = ws(token, "core_enrol_get_users_courses", userid=userid)
     courses = {'courses': []}
+    request = ws(token, "core_course_get_courses_by_field", field="id", value=course["id"])["courses"][0]
     for course in enrolled_courses:
-        professors = ws(token, "core_course_get_courses_by_field", field="id", value=course["id"])["courses"][0]["contacts"]
-        categoryname = ws(token, "core_course_get_courses_by_field", field="id", value=course["id"])["courses"][0]["categoryname"]
-        shortname = ws(token, "core_course_get_courses_by_field", field="id", value=course["id"])["courses"][0]["shortname"]
+        professors = request["contacts"]
+        categoryname = request["categoryname"]
+        shortname = request["shortname"]
         for professor in professors:
             if professor["fullname"] != "Academic Affairs":
                 professor_name = professor["fullname"]
-        grades = ws(token, "gradereport_user_get_grade_items", userid=userid, courseid=course['id'])
-        grade_str = grades['usergrades'][0]['gradeitems'][-1]['percentageformatted'][:6]
-        grade = (float(grade_str)) if grade_str != "-" else "N/A"
         item = {
             'courseid': course["id"],
             "fullname": course["fullname"],
             "categoryname": categoryname,
             "professor": professor_name,
-            "grade": grade,
             "shortname": shortname,
         }
         courses["courses"].append(item)
@@ -100,9 +100,6 @@ def get_user_courses(userid, token):
 
 def get_course_sections(courseid, token):
     try:
-        print("="*32)
-        print("came")
-        print("="*32)
         r_sections = ws(token, "core_course_get_contents", courseid=courseid)
         sections = {'sections': []}
         for section in r_sections:
@@ -153,88 +150,106 @@ def get_course_sections(courseid, token):
             }
             sections['sections'].append(item)
         return sections
-    except:
-        print("="*32)
-        print("error")
-        print("="*32)
+    except Exception as e:
+        return JsonResponse({"error": str(e), "message": "Error fetching course sections. Please try again later."}, status=500)
 
+def sync_courses(request):
+    try:
+        student = Student.objects.get(user=request.user)
+        token = get_token(request.user.username, decrypt(student.enc_password))
+        courses = get_user_courses(student.userid, token)
+
+        for course in courses["courses"]:
+            with transaction.atomic():
+                new_course, created = Course.objects.update_or_create(
+                    courseid=course["courseid"],
+                    fullname=course["fullname"],
+                    categoryname=course["categoryname"],
+                    professor=course["professor"],
+                    shortname=course["shortname"],
+                )
+                CourseEnrollment.objects.get_or_create(student=student, course=new_course)
+            
+            course_sections = get_course_sections(course["courseid"], token)
+            with transaction.atomic():
+                for section in course_sections["sections"]:
+                    new_section, created = CourseSection.objects.update_or_create(
+                        course=new_course,
+                        section_number=section["section_number"],
+                        moodle_id=section["moodle_id"],
+                        name=section["name"],
+                    )
+                    for module in section["modules"]["modules"]:
+                        new_module, created = CourseModule.objects.update_or_create(
+                            course=new_course,
+                            section=new_section,
+                            cmid=module["moodle_id"],
+                            instance=module["instance"],
+                            modname=module["module_type"],
+                            name=module["name"],
+                            url=module["url"],
+                            description=module.get("description", ""),
+                            opened_at=datetime.fromtimestamp(module["opened_at"]) if module["opened_at"] else None,
+                            due_at=datetime.fromtimestamp(module["due_at"]) if module["due_at"] else None,
+                        )
+                        for content in module["contents"]:
+                            new_file, created = CourseFile.objects.update_or_create(
+                                module=new_module,
+                                filename=content["file_url"],
+                            )
+        student.last_sync = timezone.now()
+        student.save()
+            
+                
+        return JsonResponse({"message": "Courses synced successfully."})
+    except Exception as e:
+        return JsonResponse({"error": str(e), "message": "Error syncing courses. Please try again later."}, status=500)
+
+def sync_user(request):
+    try:
+        with transaction.atomic():
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            token = get_token(username, password)
+            userid, first_name, last_name = get_user_info(token)
+
+            users = User.objects.filter(username=username)
+            if users.exists():
+                login(request, users.first())
+                return redirect('/')
+            elif not users.exists():
+                                
+                user = User(username=username)
+                user.set_unusable_password()
+                user.save()
+                student, created = Student.objects.update_or_create(
+                    user=request.user,
+                    defaults={
+                        'enc_password': encrypt(password),
+                        'first_name': first_name,
+                        'last_name': last_name,
+                        'userid': userid,
+                        'consent_enabled': timezone.now(),
+                        'last_sync': timezone.now()
+                    }
+                )
+                login(request, user)
+
+
+        return JsonResponse({"message": "User synced successfully."})
+    except Exception as e:
+        return JsonResponse({"error": str(e), "message": "Error syncing user. Please try again later."}, status=500)
 
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('/')
     else:
         if request.method == 'POST':
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            token = get_token(username, password)
-            encryted_password = encrypt(password)
-            userid = get_user_info(token)[0]
-            first_name = get_user_info(token)[1]
-            last_name = get_user_info(token)[2]
-            users = User.objects.filter(username=username)
-            if users.exists():
-                login(request, users.first())
-
-                return redirect('/')
-            elif not users.exists():
-
-                user = User.objects.create_user(username=username, password=encryted_password)
-                user.save()
-
-                student = Student.objects.create(user=user, enc_password=encryted_password, first_name=first_name, last_name=last_name, userid=userid, consent_enabled=datetime.now(), last_sync=datetime.now())
-                student.save()
-
-                courses = get_user_courses(userid, token)
-
-                for course in courses["courses"]:
-                    if not Course.objects.filter(courseid=course["courseid"]).exists():
-                        new_course = Course.objects.create(
-                            courseid=course["courseid"],
-                            fullname=course["fullname"],
-                            categoryname=course["categoryname"],
-                            professor=course["professor"],
-                            shortname=course["shortname"],
-                        )
-                        new_course.save()
-                        CourseEnrollment.objects.create(student=student, course=new_course)
-                        course_sections = get_course_sections(course["courseid"], token)
-                        for section in course_sections["sections"]:
-                            new_section = CourseSection.objects.create(
-                                course=new_course,
-                                section_number=section["section_number"],
-                                moodle_id=section["moodle_id"],
-                                name=section["name"],
-                            )
-                            new_section.save()
-                            for module in section["modules"]["modules"]:
-                                new_module = CourseModule.objects.create(
-                                    course=new_course,
-                                    section=new_section,
-                                    cmid=module["moodle_id"],
-                                    instance=module["instance"],
-                                    modname=module["module_type"],
-                                    name=module["name"],
-                                    url=module["url"],
-                                    description=module.get("description", ""),
-                                    opened_at=datetime.fromtimestamp(module["opened_at"]) if module["opened_at"] else None,
-                                    due_at=datetime.fromtimestamp(module["due_at"]) if module["due_at"] else None,
-                                )
-                                new_module.save()
-                                for content in module["contents"]:
-                                    new_file = CourseFile.objects.create(
-                                        module=new_module,
-                                        filename=content["file_url"],
-                                    )
-                                    new_file.save()
-                        
-                    elif Course.objects.filter(courseid=course["courseid"]).exists():
-                        existing_course = Course.objects.get(courseid=course["courseid"])
-                        if not CourseEnrollment.objects.filter(student=student, course=existing_course).exists():
-                            CourseEnrollment.objects.create(student=student, course=existing_course)
-
-                login(request, user)
-
-                return redirect('/')
+            
+            sync_user(request)
+            sync_courses(request)
+                
+            return redirect('/')
 
     return render(request, 'registration/login.html')
 
@@ -253,14 +268,20 @@ def index(request):
         }
         return render(request, 'dashboard.html', context)
 
+@login_required
+def courses(request):
+    course_enrollments = CourseEnrollment.objects.filter(student__user=request.user)
+    courses = [enrollment.course for enrollment in course_enrollments]
+    context = {
+        'courses': courses,
+        'student': Student.objects.get(user=request.user),
+    }
+    return render(request, 'courses.html', context)
 
 def privacy(request):
     pass
 
 def terms(request):
-    pass
-
-def courses(request):
     pass
 
 def attendance(request):

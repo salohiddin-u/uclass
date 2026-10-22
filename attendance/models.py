@@ -92,6 +92,45 @@ class AttendanceRecord(models.Model):
     def __str__(self):
         return f"{self.student} - {self.session} on {self.record_time}: {self.status}"
 
+class Grade(models.Model):
+    moodle_id = models.IntegerField(unique=True)
+    name = models.CharField(max_length=200)
+    instance = models.IntegerField()
+    category_id = models.IntegerField()
+    module = models.ForeignKey(CourseModule, on_delete=models.CASCADE)
+    min_point = models.IntegerField(blank=True, null=True)
+    max_point = models.IntegerField(blank=True, null=True)
+    cmid = models.IntegerField(blank=True, null=True)
+    weightraw = models.DecimalField(blank=True, null=True, decimal_places=10, max_digits=10)
+
+    def __str__(self):
+        return self.name
+
+class GradeItem(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
+    earned_points = models.IntegerField(blank=True, null=True)
+    rank = models.IntegerField(blank=True, null=True)
+    numusers = models.IntegerField(blank=True, null=True)
+    is_hidden = models.BooleanField(default=False)
+    is_overridden = models.BooleanField(default=False)
+    graded_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return self.student
+
+class GradeBook(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="gradebook_entries")
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    max_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    total_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    letter_grade = models.CharField(max_length=5, null=True, blank=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.student} - {self.course}: {self.total_grade}/{self.max_grade} ({self.percentage}%)"
+
 class Chat(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="chat_messages")
     timestamp = models.DateTimeField(auto_now_add=True)
