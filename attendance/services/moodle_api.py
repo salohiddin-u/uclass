@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 
 from django.http import JsonResponse
 
+from .utilities import to_datetime
+
 URL = "https://edu.inha.uz/webservice/rest/server.php"
 
 
@@ -54,12 +56,22 @@ def get_user_courses(userid, token):
         for professor in professors:
             if professor["fullname"] != "Academic Affairs":
                 professor_name = professor["fullname"]
+        for field in course_data.get("customfields", []):
+            if field["shortname"] == "ects":
+                ects = field["valueraw"]
+            elif field["shortname"] == "semester":
+                semester = field["valueraw"]
+        
         item = {
             'courseid': course["id"],
             "fullname": course["fullname"],
             "categoryname": categoryname,
-            "professor": professor_name,
+            "professor": professor_name or "",
             "shortname": shortname,
+            "ects": ects,
+            "semester": semester,
+            "started_at": to_datetime(course_data.get("startdate")),
+
         }
         courses["courses"].append(item)
 

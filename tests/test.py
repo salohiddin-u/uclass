@@ -79,7 +79,7 @@ def get_course_sections(courseid, token):
 
 def get_course_grades(userid, token):
     try:
-        grades = ws(token, "gradereport_overview_get_course_grades", userid=userid)
+        grades = ws(token, "core_course_get_courses_by_field", field="id", value=230)
         return grades
     except Exception as e:
         return print({"error": str(e), "message": "Error fetching course grades. Please try again later."}, status=500)

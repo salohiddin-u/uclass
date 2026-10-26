@@ -18,6 +18,9 @@ class Course(models.Model):
     shortname = models.CharField(max_length=100, null=True, blank=True)
     courseid = models.IntegerField(unique=True, null=True, blank=True)
     professor = models.CharField(max_length=250)
+    ects = models.IntegerField(null=True, blank=True)
+    semester = models.CharField(max_length=20, null=True, blank=True)
+    started_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.fullname} ({self.categoryname})"

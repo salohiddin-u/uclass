@@ -35,6 +35,9 @@ def sync_courses(pk):
                     "categoryname": course["categoryname"],
                     "professor": course.get("professor", ""),
                     "shortname": course["shortname"],
+                    "ects": course.get("ects", None),
+                    "semester": course.get("semester", None),
+                    "started_at": course.get("started_at", None),
                 },
             )
             CourseEnrollment.objects.get_or_create(student=student, course=new_course)

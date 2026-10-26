@@ -1,12 +1,58 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block title %}{{ course.name }}{% endblock %}
-{% block page %}course_detail{% endblock %}
-{% block breadcrumb %}{{ course.name }}{% endblock %}
-{% block content %}
-<a href="{% url 'courses' %}" class="muted">← Back to courses</a><div class="page-heading"><h1>{{ course.name }}</h1><div class="heading-actions"><button class="btn" data-focus aria-pressed="false">Focus mode</button>{% if course.syllabus_id %}<a class="btn primary" href="{% url 'course_file' file_id=course.syllabus_id %}" download>Syllabus</a>{% endif %}</div></div><p class="muted">{{ course.code }} · {{ course.credits }} credits · {{ course.instructor }}</p><div class="summary-grid"><div class="panel"><p>Current grade</p><strong>{% if course.grade != None %}{{ course.grade|floatformat:1 }}%{% else %}Not graded{% endif %}</strong></div><div class="panel"><p>Attendance</p><strong>{% if course.attendance != None %}{{ course.attendance|floatformat:1 }}%{% else %}—{% endif %}</strong></div><div class="panel"><p>Sections reviewed</p><strong id="completionCount">0 / {{ course.sections|length }}</strong><p class="muted">Saved on this browser</p></div></div>
-<div class="database-tabs" role="group" aria-label="Course view"><button class="tab active" data-tab-target="sections" aria-pressed="true" aria-controls="sections">Learning sections</button><button class="tab" data-tab-target="files" aria-pressed="false" aria-controls="files">Files & resources</button><button class="tab" data-tab-target="grades" aria-pressed="false" aria-controls="grades">Grades</button><button class="tab" data-tab-target="attendance" aria-pressed="false" aria-controls="attendance">Attendance</button></div>
-<section id="sections" data-tab-panel><div class="section-title"><h2>Learning sections</h2></div>{% for section in course.sections %}<article class="panel course-section"><h3>{{ section.title }}</h3><p>{{ section.description|linebreaksbr }}</p><label><input type="checkbox" data-complete="{{ course.id }}-{{ section.id }}"> Mark reviewed</label>{% for file in section.files %}<p><a href="{% url 'course_file' file_id=file.id %}" download>{{ file.name }}</a></p>{% endfor %}</article>{% empty %}<p class="workspace-empty">No learning sections are available.</p>{% endfor %}</section>
-<section id="files" data-tab-panel><div class="section-title"><h2>Files & resources</h2></div>{% for file in course.files %}<article class="panel course-file"><h3>{{ file.name }}</h3><p>{{ file.description }}</p><div class="heading-actions">{% if file.text_content %}<button class="btn" data-open-dialog="file-{{ file.id }}">View contents</button>{% endif %}<a class="btn" href="{% url 'course_file' file_id=file.id %}" download>Download</a></div>{% if file.text_content %}<dialog class="workspace-dialog" id="file-{{ file.id }}"><div class="section-title"><h2>{{ file.name }}</h2><button class="icon-button" data-close-dialog="file-{{ file.id }}" aria-label="Close file">×</button></div><pre>{{ file.text_content }}</pre></dialog>{% endif %}</article>{% empty %}<p class="workspace-empty">No course files are available.</p>{% endfor %}</section>
-<section id="grades" data-tab-panel><div class="section-title"><h2>Course gradebook</h2></div>{% include 'uclass/includes/assessment_table.html' with assessments=course.assessments %}</section><section id="attendance" data-tab-panel><div class="section-title"><h2>Attendance</h2><button class="btn" data-export-table="attendanceRecords" data-export-name="course-attendance.csv">Export attendance</button></div>{% include 'uclass/includes/attendance_database.html' %}</section>
-{% endblock %}
+{% extends 'base.html' %} {% load static %} {% block title %}{{ course.fullname }}{% endblock %} {% block page %}course_detail{% endblock %} {% block breadcrumb %}{{ course.fullname }}{% endblock %} {% block content %} <a href="{% url 'courses' %}" class="muted">← Back to courses</a>
+<div class="page-heading">
+	<h1>{{ course.fullname }}</h1>
+	<div class="heading-actions">
+		<button class="btn" data-focus aria-pressed="false">Focus mode</button>{% if course.syllabus_id %}<a class="btn primary" href="{% url 'course_file' file_id=course.syllabus_id %}" download>Syllabus</a>{% endif %}</div>
+</div>
+<p class="muted">Semester {{ course.semester }} · {{ course.ects }} credits · {{ course.professor }}</p>
+<div class="summary-grid">
+	<div class="panel">
+		<p>Current grade</p><strong>{% if grade.earned_grade != None %}{{ grade.earned_grade|floatformat:1 }}{% else %}Not graded{% endif %}</strong>
+		<p class="muted">/ {{ grade.max_grade|floatformat:1 }}</p>
+		
+	</div>
+	<div class="panel">
+		<p>Attendance</p><strong>{% if course.attendance != None %}{{ course.attendance|floatformat:1 }}%{% else %}—{% endif %}</strong></div>
+	<div class="panel">
+		<p>Sections reviewed</p><strong id="completionCount">0 / {{ course.sections|length }}</strong>
+		<p class="muted">Saved on this browser</p>
+	</div>
+</div>
+<div class="database-tabs" role="group" aria-label="Course view">
+	<button class="tab active" data-tab-target="sections" aria-pressed="true" aria-controls="sections">Learning sections</button>
+	<button class="tab" data-tab-target="files" aria-pressed="false" aria-controls="files">Files & resources</button>
+	<button class="tab" data-tab-target="grades" aria-pressed="false" aria-controls="grades">Grades</button>
+	<button class="tab" data-tab-target="attendance" aria-pressed="false" aria-controls="attendance">Attendance</button>
+</div>
+<section id="sections" data-tab-panel>
+	<div class="section-title">
+		<h2>Learning sections</h2></div>{% for section in sections %}
+	<article class="panel course-section">
+		<h3>{{ section.title }}</h3>
+		<p>{{ section.description|linebreaksbr }}</p>
+		<label>
+			<input type="checkbox" data-complete="{{ course.id }}-{{ section.id }}"> Mark reviewed</label>{% for file in section.files %}
+		<p><a href="{% url 'course_file' file_id=file.id %}" download>{{ file.name }}</a></p>{% endfor %}</article>{% empty %}
+	<p class="workspace-empty">No learning sections are available.</p>{% endfor %}</section>
+<section id="files" data-tab-panel>
+	<div class="section-title">
+		<h2>Files & resources</h2></div>{% for file in course.files %}
+	<article class="panel course-file">
+		<h3>{{ file.name }}</h3>
+		<p>{{ file.description }}</p>
+		<div class="heading-actions">{% if file.text_content %}
+			<button class="btn" data-open-dialog="file-{{ file.id }}">View contents</button>{% endif %}<a class="btn" href="{% url 'course_file' file_id=file.id %}" download>Download</a></div>{% if file.text_content %}
+		<dialog class="workspace-dialog" id="file-{{ file.id }}">
+			<div class="section-title">
+				<h2>{{ file.name }}</h2>
+				<button class="icon-button" data-close-dialog="file-{{ file.id }}" aria-label="Close file">×</button>
+			</div><pre>{{ file.text_content }}</pre></dialog>{% endif %}</article>{% empty %}
+	<p class="workspace-empty">No course files are available.</p>{% endfor %}</section>
+<section id="grades" data-tab-panel>
+	<div class="section-title">
+		<h2>Course gradebook</h2></div>{% include 'includes/assessment_table.html' with assessments=assessments %}</section>
+<section id="attendance" data-tab-panel>
+	<div class="section-title">
+		<h2>Attendance</h2>
+		<button class="btn" data-export-table="attendanceRecords" data-export-name="course-attendance.csv">Export attendance</button>
+	</div>{% include 'includes/attendance_database.html' %}</section> {% endblock %}

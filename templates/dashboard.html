@@ -8,7 +8,7 @@
 <div class="workspace-metrics summary-grid">
   <div class="panel">
     <p class="muted">Current average</p>
-    <p class="text-3xl font-bold">{% if summary.grade != None %}{{ summary.grade|floatformat:1 }}%{% else %}—{% endif %}</p>
+    <p class="text-3xl font-bold">{% if current_average != None %}{{ current_average|floatformat:1 }}%{% else %}—{% endif %}</p>
   </div>
   <div class="panel">
     <p class="muted">Overall attendance</p>

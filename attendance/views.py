@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db import transaction
-from django.db.models import OuterRef, Subquery
+from django.db.models import Avg, OuterRef, Subquery
 
 import requests
 import environs
@@ -31,13 +31,6 @@ env.read_env()
 
 
 
-from django.contrib.auth import login
-from django.contrib.auth.models import User
-from django.db import transaction
-from django.shortcuts import redirect, render
-from django.utils import timezone
-
-
 def login_view(request):
     if request.user.is_authenticated:
         return redirect("/")
@@ -52,10 +45,7 @@ def login_view(request):
             })
 
         try:
-            print("+"*32)
-            print("Attempting to get token for user:", username)
             token = get_token(username, password)
-            print("Token obtained:", token)
 
             if not isinstance(token, str) or not token:
                 raise ValueError("Invalid token")
@@ -117,11 +107,8 @@ def login_view(request):
         
 
         try:
-            print("Syncing courses and grades for user:", username)
-            print("User ID:", student.userid)
             sync_courses(student.userid)
             sync_grades(student.userid)
-            print("Sync completed for user:", username)
         except Exception:
             logger.exception(
                 "Moodle synchronization failed for student %s",
@@ -171,6 +158,7 @@ def index(request):
         context = {
             'courses': course_enrollments,
             'student': Student.objects.get(user=request.user),
+            'current_average': GradeBook.objects.filter(student__user=request.user).aggregate(average=Avg('percentage'))['average'],
 
         }
         return render(request, 'dashboard.html', context)
@@ -208,8 +196,10 @@ def terms(request):
 def attendance(request):
     pass
 
+@login_required
 def grades(request):
-    pass
+    return render(request, 'grades.html')
+
 
 def timetable(request):
     pass
@@ -220,8 +210,15 @@ def assignments(request):
 def profile(request):
     pass
 
+@login_required
 def course_detail(request, course_id):
-    pass
+    course = Course.objects.get(courseid=course_id)
+    return render(request, 'course_detail.html', {
+        'course': course,
+        'student': Student.objects.get(user=request.user),
+        'sections': CourseSection.objects.filter(course=course),
+        'grade': GradeBook.objects.get(student__user=request.user, course=course),
+    })
 
 def logout_view(request):
     logout(request)
