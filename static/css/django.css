@@ -8,7 +8,7 @@
 .course-card-score{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;margin-top:24px;margin-bottom:10px}
 .track>div{height:100%;border-radius:inherit;background:var(--lp-primary)}
 .workspace-footer{padding:24px;font-size:11px;color:var(--ws-muted)}
-#main>.panel,#main>.assessment-database,#main>.grade-main-grid,#main>.attendance-database{margin-bottom:24px}
+#content>.panel,#content>.assessment-database,#content>.grade-main-grid,#content>.attendance-database{margin-bottom:24px}
 .course-section,.course-file{margin:16px 0}.course-section p,.course-file p{margin:12px 0;line-height:1.8}
 .course-section input[type=checkbox],.profile-side-panels input[type=checkbox]{min-height:0;width:16px;height:16px;vertical-align:middle}
 .course-section h3,.course-file h3{font-weight:650;font-size:16px}
@@ -17,9 +17,9 @@
 .calendar-day [data-record]{display:flex;flex-direction:column;gap:7px}
 .workspace-dialog pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.7}
 .legal-document{width:min(800px,calc(100% - 40px));margin:48px auto;padding:28px}.legal-document h1{font-size:32px;margin-block:30px}.legal-document h2{font-size:20px;margin-top:28px}.legal-document p{line-height:1.85;margin-block:15px}
-#main .page-heading{align-items:flex-start;margin-top:0}
-#main .page-heading h1{overflow-wrap:anywhere}
-#main>.muted+.page-heading{margin-top:20px}
+#content .page-heading{align-items:flex-start;margin-top:0}
+#content .page-heading h1{overflow-wrap:anywhere}
+#content>.muted+.page-heading{margin-top:20px}
 .database-scroll{overflow-x:auto}.database-table{min-width:530px}
 .auth-form-status ul{padding-left:20px}
 .profile-side-panels>form{margin-top:20px}.profile-side-panels .panel{margin-bottom:20px}

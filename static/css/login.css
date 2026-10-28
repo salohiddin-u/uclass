@@ -221,7 +221,7 @@ html.theme-fading .auth-page :is(.auth-card,.auth-input-wrap input,.auth-securit
 }
 
 /* Focused sign-in page: one centered form with its safety disclosures. */
-.auth-page.auth-centered #main.auth-layout{display:block;width:100%;max-width:640px;margin:20px auto 0;padding:0 20px 40px}
+.auth-page.auth-centered #content.auth-layout{display:block;width:100%;max-width:640px;margin:20px auto 0;padding:0 20px 40px}
 .auth-centered .auth-card{width:100%;margin-inline:auto}
 .auth-centered .auth-footer{justify-content:center;text-align:center}
-@media(max-width:600px){.auth-page.auth-centered #main.auth-layout{margin-top:12px;padding:0 16px 28px}}
+@media(max-width:600px){.auth-page.auth-centered #content.auth-layout{margin-top:12px;padding:0 16px 28px}}

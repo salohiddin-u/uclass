@@ -14,7 +14,7 @@
     theme.title = theme.getAttribute('aria-label');
     if (persist) { try { localStorage.setItem('campus-static-dark', JSON.stringify(dark)); } catch {} }
   }
-  let dark = false;
+  let dark = true;
   try { const stored = JSON.parse(localStorage.getItem('campus-static-dark')); if (typeof stored === 'boolean') dark = stored; } catch {}
   applyTheme(dark);
   theme.addEventListener('click', () => window.uclassThemeTransition(theme, () => applyTheme(!root.classList.contains('dark'), true)));

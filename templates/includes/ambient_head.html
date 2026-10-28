@@ -1,0 +1,16 @@
+{# Critical palette and static ambient: deliberately independent of effects quality. #}
+<meta name="theme-color" id="app-theme-color" content="#000000">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<script>
+(function(){var r=document.documentElement,dark=true;try{var saved=localStorage.getItem('campus-static-dark');if(saved!==null)dark=JSON.parse(saved)===true;}catch(e){}r.classList.toggle('dark',dark);r.style.colorScheme=dark?'dark':'light';document.getElementById('app-theme-color').content=dark?'#000000':'#f2f2f7';new MutationObserver(function(){var d=r.classList.contains('dark');r.style.colorScheme=d?'dark':'light';document.getElementById('app-theme-color').content=d?'#000000':'#f2f2f7';}).observe(r,{attributes:true,attributeFilter:['class']});window.addEventListener('load',function(){requestAnimationFrame(function(){requestAnimationFrame(function(){r.classList.remove('no-transition');});});},{once:true});})();
+</script>
+<style>
+html{--bg:#f2f2f7;background-color:#f2f2f7;color-scheme:light}
+html.dark{--bg:#000000;background-color:#000000;color-scheme:dark}
+body{background-color:var(--bg)}
+#ambient-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 3% 32%,rgba(199,169,245,.3),transparent 36%),radial-gradient(ellipse at 14% 65%,rgba(98,214,245,.28),transparent 37%),radial-gradient(ellipse at 58% 10%,rgba(244,216,121,.22),transparent 44%),var(--bg);opacity:1;animation:none;transition:none}
+#ambient-bg::after{content:"";position:absolute;inset:0;background-image:radial-gradient(#f5f5f7 .7px,transparent .7px);background-size:12px 12px;opacity:.06}
+html:not(.dark) #ambient-bg::after{background-image:radial-gradient(#1c1c1e .7px,transparent .7px)}
+html.no-transition *,html.no-transition *::before,html.no-transition *::after{transition:none!important;animation:none!important}
+</style>

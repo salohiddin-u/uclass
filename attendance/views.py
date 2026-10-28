@@ -126,12 +126,12 @@ def login_view(request):
         login(request, student.user)
         return redirect("/")
 
-    return render(request, "registration/login.html")
+    return render(request, "login.html")
 
 
-def index(request):
+def home(request):
     if not request.user.is_authenticated:
-        return render(request, 'index.html')
+        return render(request, 'home.html')
     else:
         course_enrollments = CourseEnrollment.objects.filter(student__user=request.user).select_related('course').annotate(
             earned_grade=Subquery(

@@ -1,0 +1,68 @@
+/* The lens is a sibling over the links. No backdrop root may sit above it. */
+#app-sidebar.workspace-sidebar,.dark #app-sidebar.workspace-sidebar,
+html[data-quality] #app-sidebar.workspace-sidebar{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04))!important;isolation:auto;contain:layout style;border-color:var(--glass-edge);box-shadow:inset 0 1px 0 var(--glass-edge)}
+#navigation{isolation:auto}
+#navigation .nav{position:relative;z-index:1}
+#navigation #nav-indicator{z-index:2;border-radius:16px;background:none;isolation:isolate;overflow:visible;box-shadow:none;pointer-events:none}
+#nav-indicator .glass-lens{position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(0,87,255,.13),rgba(255,255,255,.22));box-shadow:inset 1px 1px 0 rgba(255,255,255,.45),inset -1px -1px 0 rgba(255,255,255,.2),inset 0 0 22px rgba(255,255,255,.08),inset 0 -10px 18px rgba(0,0,0,.09),0 8px 24px rgba(0,0,0,.12);backdrop-filter:blur(14px) saturate(170%) brightness(1.1);-webkit-backdrop-filter:blur(14px) saturate(170%) brightness(1.1)}
+.dark #nav-indicator .glass-lens{background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04));box-shadow:inset 1px 1px 0 rgba(255,255,255,.45),inset -1px -1px 0 rgba(255,255,255,.2),inset 0 0 22px rgba(255,255,255,.08),inset 0 -10px 18px rgba(0,0,0,.16),0 10px 28px rgba(0,0,0,.3)}
+html[data-quality="high"][data-refraction="supported"] #nav-indicator .glass-lens{backdrop-filter:url("#lg-filter") blur(.15px) saturate(170%) brightness(1.1);-webkit-backdrop-filter:url("#lg-filter") blur(.15px) saturate(170%) brightness(1.1)}
+#nav-indicator .glass-lens::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;background:linear-gradient(130deg,rgba(255,255,255,.58),transparent 38%,rgba(98,214,245,.25) 60%,rgba(255,255,255,.55));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+#nav-indicator .glass-lens::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at var(--pointer,30% 20%),rgba(255,255,255,.3),transparent 55%),linear-gradient(115deg,rgba(255,255,255,.3),transparent 40%);opacity:.35;transition:opacity .2s}
+#nav-indicator.is-wet .glass-lens::after{opacity:.75}
+/* The translucent lens no longer inverts text as an opaque active pill did. */
+.partial-navigation body[data-page] #navigation a.nav[aria-current="page"],.partial-navigation.dark body[data-page] #navigation a.nav[aria-current="page"],.partial-navigation body[data-page] #navigation a.nav[aria-current="page"] span,.partial-navigation body[data-page] #navigation a.nav[aria-current="page"] svg{color:var(--text);stroke:currentColor}
+html[data-quality="medium"] #navigation [aria-current] span{transform:scale(1.04);transform-origin:left center}
+html[data-quality="low"] #nav-indicator .glass-lens,html:not([data-quality]) #nav-indicator .glass-lens{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface-2);box-shadow:inset 0 1px 0 var(--glass-edge)}
+html[data-quality="low"] #nav-indicator .glass-lens::after{display:none}
+@media(prefers-reduced-transparency:reduce){html[data-quality] #nav-indicator .glass-lens{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:var(--surface-2)}}
+@media(prefers-reduced-motion:reduce){#nav-indicator .glass-lens,#nav-indicator .glass-lens::after{transition:none!important;animation:none!important}html[data-quality="medium"] #navigation [aria-current] span{transform:none}}
+html[data-quality="low"] #navigation #nav-indicator,html[data-quality="medium"] #navigation #nav-indicator{z-index:0}
+#shell{position:relative;z-index:1}
+
+@media(prefers-reduced-transparency:reduce){#navigation #nav-indicator{z-index:0}}
+html[data-refraction="fallback"] #navigation #nav-indicator{z-index:0}
+html[data-refraction="fallback"] #navigation [aria-current] span{transform:scale(1.04);transform-origin:left center}
+@media(prefers-reduced-motion:reduce){html[data-refraction="fallback"] #navigation [aria-current] span{transform:none}}
+
+/* A light-only blue cue identifies selection without replacing the refracting lens. */
+html:not(.dark) #navigation #nav-indicator{box-shadow:none}
+.partial-navigation body[data-page] #navigation a.nav[aria-current="page"],.partial-navigation body[data-page] #navigation a.nav[aria-current="page"] span,.partial-navigation body[data-page] #navigation a.nav[aria-current="page"] svg{color:#00388f;font-weight:650}
+.partial-navigation.dark body[data-page] #navigation a.nav[aria-current="page"],.partial-navigation.dark body[data-page] #navigation a.nav[aria-current="page"] span,.partial-navigation.dark body[data-page] #navigation a.nav[aria-current="page"] svg{color:#fff}
+/* Reduced effects retain a translucent material rather than an opaque gray block. */
+html[data-quality="low"] #nav-indicator .glass-lens,html:not([data-quality]) #nav-indicator .glass-lens{background:linear-gradient(135deg,rgba(0,87,255,.13),rgba(255,255,255,.22));box-shadow:inset 1px 1px 0 rgba(255,255,255,.45),inset -1px -1px 0 rgba(255,255,255,.16)}
+html.dark[data-quality="low"] #nav-indicator .glass-lens,html.dark:not([data-quality]) #nav-indicator .glass-lens{background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04))}
+@media(prefers-reduced-transparency:reduce){html[data-quality] #nav-indicator .glass-lens{background:var(--surface-2)}}
+
+/* Keep the light selection cue in the lens tint, outside its refracted backdrop. */
+html:not(.dark) #nav-indicator .glass-lens{background:linear-gradient(135deg,rgba(0,87,255,.10),rgba(255,255,255,.24))}
+/* Mobile drawer and phone dock. Desktop material is unchanged. */
+#mobile-dock{display:none}
+@media(max-width:1023px){
+ #app-sidebar.workspace-sidebar{width:min(320px,calc(100vw - 32px));height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain;z-index:60;transition:transform .25s cubic-bezier(.22,1,.36,1),opacity .2s;}
+ html[data-quality] #app-sidebar.workspace-sidebar,.dark #app-sidebar.workspace-sidebar{background:var(--surface-1)!important}
+ #app-sidebar.workspace-sidebar.-translate-x-full{transform:translateX(calc(-100% - 32px));opacity:0;visibility:hidden;pointer-events:none}
+ #app-sidebar.workspace-sidebar:not(.-translate-x-full){transform:translateX(0);opacity:1;visibility:visible;pointer-events:auto}
+ #app-sidebar #collapseSidebar{display:none}
+ #app-sidebar #closeMenu{width:44px;height:44px;border-radius:50%;margin-left:auto}
+ #overlay{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.5)}
+ #openMenu{top:16px;bottom:auto;left:16px;width:44px;height:44px}
+ body.mobile-menu-open{overflow:hidden}
+}
+@media(max-width:767px){
+ #openMenu{display:none}
+ body[data-page] #content{padding:24px 16px calc(112px + env(safe-area-inset-bottom))}
+ #mobile-dock{position:fixed;display:flex;align-items:center;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));height:72px;padding:6px;border:1px solid var(--border);border-radius:26px;z-index:40;background:var(--surface-1);box-shadow:0 8px 32px rgba(0,0,0,.16);isolation:isolate}
+ #mobile-dock>a,#mobile-dock>button{position:relative;display:flex;flex:1;min-width:0;height:58px;align-items:center;justify-content:center;flex-direction:column;gap:4px;border-radius:20px;font-size:9px;font-weight:550;color:var(--text-muted);text-decoration:none;touch-action:manipulation;background:transparent;border:0;z-index:1}
+ #mobile-dock svg{width:22px;height:22px;stroke:currentColor}
+ #mobile-dock>a[aria-current="page"],#mobile-dock>button.active{color:var(--accent-text)}
+ #mobile-dock-indicator{position:absolute;left:0;top:6px;height:58px;border-radius:20px;background:var(--accent-soft);box-shadow:inset 0 1px 0 rgba(255,255,255,.38);transition:transform .4s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:0}
+ #mobile-dock.dock-initial #mobile-dock-indicator{transition:none}
+ .workspace-footer{padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+ @supports(backdrop-filter:blur(1px)){html:not([data-quality="low"]) #mobile-dock{background:var(--glass-bg);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border-color:var(--glass-edge)}}
+}
+@media(prefers-reduced-motion:reduce){#mobile-dock-indicator,#app-sidebar.workspace-sidebar{transition:none!important}}
+@media(prefers-reduced-transparency:reduce){#mobile-dock{background:var(--surface-1)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}}
+@media(max-width:390px){body[data-page] #content .heading-actions{gap:8px}body[data-page] #content .heading-actions>.btn:not(#theme){padding-inline:12px;font-size:12px}}
+html[data-quality="low"] #mobile-dock-indicator{transition:transform .2s ease}
+@media(prefers-reduced-motion:reduce){html[data-quality] #mobile-dock-indicator{transition:none!important}}

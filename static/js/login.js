@@ -13,7 +13,7 @@
     const control = byId('auth-theme'), label = dark ? 'Switch to light mode' : 'Switch to dark mode';
     control.setAttribute('aria-label', label); control.title = label; control.setAttribute('aria-pressed', String(dark));
   };
-  try { setTheme(JSON.parse(localStorage.getItem('campus-static-dark')) === true); } catch { setTheme(false); }
+  try { const stored = localStorage.getItem('campus-static-dark'); setTheme(stored === null || JSON.parse(stored) === true); } catch { setTheme(true); }
   byId('auth-theme').addEventListener('click', () => window.uclassThemeTransition(byId('auth-theme'), () => {
     const dark = !document.documentElement.classList.contains('dark');setTheme(dark);
     try { localStorage.setItem('campus-static-dark', JSON.stringify(dark)); } catch {}

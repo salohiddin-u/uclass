@@ -1,20 +1,20 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en"><head>
-  <meta charset="utf-8">
+  <meta charset="utf-8"><script src="{% static 'js/quality.js' %}"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <meta name="description" content="Sign in to your uclass.uz academic workspace.">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; object-src 'none'">
   <title>Sign in · uclass.uz</title>
-  <link rel="stylesheet" href="{% static 'uclass/css/styles.css' %}">
-  <link rel="stylesheet" href="{% static 'uclass/css/login.css' %}">
-  <script src="{% static 'uclass/js/theme-transition.js' %}" defer></script><script src="{% static 'uclass/js/login.js' %}" defer=""></script>
-<link rel="stylesheet" href="{% static 'uclass/css/workspace.css' %}"><script src="{% static 'uclass/vendor/lucide.min.js' %}" defer=""></script><script src="{% static 'uclass/js/workspace.js' %}" defer=""></script><link rel="stylesheet" href="{% static 'uclass/css/classic.css' %}"><link rel="stylesheet" href="{% static 'uclass/css/palette.css' %}"></head>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  <script src="{% static 'js/theme-transition.js' %}" defer></script><script src="{% static 'js/login.js' %}" defer=""></script>
+<link rel="stylesheet" href="{% static 'css/workspace.css' %}"><script src="{% static 'vendor/lucide.min.js' %}" defer=""></script><script src="{% static 'js/workspace.js' %}" defer=""></script><link rel="stylesheet" href="{% static 'css/classic.css' %}"><link rel="stylesheet" href="{% static 'css/palette.css' %}"><link rel="stylesheet" href="{% static 'css/bento.css' %}"></head>
 <body class="auth-page auth-centered">
   <a class="auth-skip" href="#connection-form">Skip to connection form</a>
   <header class="auth-header">
-    <a class="auth-wordmark" href="{% url 'index' %}" aria-label="uclass.uz index">uclass.uz</a>
+    <a class="auth-wordmark" href="{% url 'home' %}" aria-label="uclass.uz home">uclass.uz</a>
     <div class="auth-header-actions">
       <button id="auth-theme" class="btn theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode">
         <span class="theme-orbit" aria-hidden="true"></span>

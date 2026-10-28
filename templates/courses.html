@@ -1,15 +1,8 @@
-{% extends 'base.html' %} {% load static %} {% block title %}Courses{% endblock %} {% block page %}courses{% endblock %} {% block breadcrumb %}Courses{% endblock %} {% block content %} <div class="page-heading">
-  <h1>Courses</h1>
-  <div class="heading-actions"></div>
-</div>
-<div class="section-title">
-  <label class="sr-only" for="courseSearch">Search courses</label>
-  <input id="courseSearch" type="search" placeholder="Search course or instructor…">
-  <div class="database-tabs" aria-label="Course layout">
-    <button class="tab active" data-layout="grid" aria-pressed="true">Gallery</button>
-    <button class="tab" data-layout="list" aria-pressed="false">List</button>
-  </div>
-</div>
-<p id="courseResultCount" class="muted" aria-live="polite"></p>
-<div class="course-grid" id="courseResults">{% for course in courses %}{% include 'includes/course_card.html' %}{% endfor %}</div>
-<p class="workspace-empty" id="courseEmpty" {% if courses %}hidden{% endif %}>No courses found.</p> {% endblock %}
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Courses{% endblock %}
+{% block page %}courses{% endblock %}
+
+{% block content %}
+<div class="page-heading"><div class="page-header-left"><nav class="bento-breadcrumb" aria-label="Breadcrumb"><ol><li><a href="{% url 'home' %}">Workspace</a></li><li aria-hidden="true">/</li><li aria-current="page">{% if request.resolver_match.url_name == 'home' %}Home{% else %}Courses{% endif %}</li></ol></nav><h1>A place for every course.</h1></div><div class="heading-actions">{% include 'includes/theme_toggle.html' %}</div></div><div class="section-title"><label class="sr-only" for="courseSearch">Search courses</label><input id="courseSearch" type="search" placeholder="Search course or instructor…"><div class="database-tabs" aria-label="Course layout"><button class="tab active" data-layout="grid" aria-pressed="true">Gallery</button><button class="tab" data-layout="list" aria-pressed="false">List</button></div></div><p id="courseResultCount" class="muted" aria-live="polite"></p><div class="course-grid" id="courseResults">{% for course in courses %}{% include 'includes/course_card.html' %}{% endfor %}</div><p class="workspace-empty" id="courseEmpty" {% if courses %}hidden{% endif %}>No courses found.</p>
+{% endblock %}

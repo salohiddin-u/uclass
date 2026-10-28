@@ -1,107 +1,12 @@
-{% extends 'base.html' %} {% load static %} {% block title %}Grades{% endblock %} {% block page %}grades{% endblock %} {% block breadcrumb %}Grades{% endblock %} {% block content %}
-<div class="page-heading">
-	<h1>Grades</h1>
-	<div class="heading-actions">
-		<button class="btn" data-export-table="resultsData" data-export-name="grades.csv">Export grades</button>
-	</div>
-</div>
-<div class="grade-stat-strip">
-	<section><span>Credit-weighted average</span><strong>{% if summary.grade != None %}{{ summary.grade|floatformat:1 }}<small>%</small>{% else %}—{% endif %}</strong>
-		<p>{{ summary.credits|default_if_none:'—' }} credits</p>
-	</section>
-	<section><span>Highest current grade</span><strong>{% if summary.highest_grade != None %}{{ summary.highest_grade|floatformat:1 }}<small>%</small>{% else %}—{% endif %}</strong>
-		<p>{{ summary.highest_course }}</p>
-	</section>
-	<section><span>Courses at or above 75%</span><strong>{{ summary.above_target|default_if_none:'—' }}<small> / {{ courses|length }}</small></strong></section>
-	<section><span>Assessments awaiting grades</span><strong>{{ summary.ungraded_count|default_if_none:'—' }}</strong></section>
-</div>
-<div class="grade-main-grid">
-	<section class="panel analytics-panel">
-		<div class="analytics-panel-heading">
-			<h2>Course performance</h2>
-			<label class="analytics-sort-label">Order
-				<select id="grade-chart-order">
-					<option value="course">Course order</option>
-					<option value="highest">Highest grade</option>
-					<option value="lowest">Lowest grade</option>
-				</select>
-			</label>
-		</div>
-		<figure class="grade-chart">
-			<figcaption class="sr-only">Current course grades</figcaption>
-			<div class="grade-axis" aria-hidden="true"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div>
-			<div class="grade-plot">
-				<div class="grade-grid-lines" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
-				<div id="grade-columns" class="grade-columns">{% for course in graded_courses %}<a class="grade-column" data-grade="{{ course.grade|floatformat:'2u' }}" href="{% url 'course_detail' course_id=course.id %}#grades" style="--score:{{ course.grade|floatformat:'2u' }}"><span class="grade-bar-value">{{ course.grade|floatformat:1 }}</span><span class="grade-bar-fill" aria-hidden="true"></span><span class="grade-bar-label">{{ course.code }}</span><span class="sr-only">{{ course.name }}</span></a>{% endfor %}</div>
-			</div>
-		</figure>{% if not graded_courses %}
-		<p class="workspace-empty">No grades are available.</p>{% endif %}</section>
-	<section class="panel analytics-panel">
-		<div class="analytics-panel-heading">
-			<h2>Where you perform best</h2></div>{% for category in assessment_strengths %}
-		<div class="assessment-strength">
-			<div><span>{{ category.label }}</span><strong>{{ category.score|floatformat:1 }}%</strong>
-				<div class="assessment-track"><span style="width:{{ category.score|floatformat:'2u' }}%"></span></div><small>{{ category.note }}</small></div>
-		</div>{% empty %}
-		<p class="muted">Assessment insights will appear when results are available.</p>{% endfor %}</section>
-</div>
-<section class="panel">
-	<div class="section-title">
-		<h2>Your course gradebook</h2>
-		<div class="heading-actions">
-			<label class="sr-only" for="resultSearch">Search results</label>
-			<input id="resultSearch" type="search" placeholder="Find a course…">
-			<label class="sr-only" for="resultFilter">Filter results</label>
-			<select id="resultFilter">
-				<option value="all">All courses</option>
-				<option value="attention">Below 75%</option>
-			</select>
-		</div>
-	</div>
-	<div class="database-scroll">
-		<table class="database-table" id="resultsData">
-			<thead>
-				<tr>
-					<th>Course</th>
-					<th>Credits</th>
-					<th>Current grade</th>
-					<th>Attendance</th>
-				</tr>
-			</thead>
-			<tbody>{% for course in courses %}
-				<tr data-result-row data-score="{{ course.grade|default_if_none:'' }}">
-					<td><a href="{% url 'course_detail' course_id=course.id %}#grades">{{ course.name }}</a></td>
-					<td>{{ course.credits|default_if_none:'—' }}</td>
-					<td>{% if course.grade != None %}{{ course.grade|floatformat:1 }}%{% else %}Not graded{% endif %}</td>
-					<td>{% if course.attendance != None %}{{ course.attendance|floatformat:1 }}%{% else %}—{% endif %}</td>
-				</tr>{% endfor %}</tbody>
-		</table>
-	</div>
-	<p id="resultsEmpty" class="workspace-empty" {% if courses %}hidden{% endif %}>No results found.</p>
-</section>
-<section class="assessment-database">
-	<div class="section-title">
-		<h2>Assessments</h2></div>
-	<div class="database-controls">
-		<label>Search
-			<input id="assessmentSearch" type="search" placeholder="Find an assessment…">
-		</label>
-		<label>Status
-			<select id="assessmentStatus">
-				<option value="all">All assessments</option>
-				<option value="graded">Graded</option>
-				<option value="ungraded">Not graded</option>
-			</select>
-		</label>
-		<label>Order
-			<select id="assessmentSort">
-				<option value="course">Course order</option>
-				<option value="az">Name A–Z</option>
-			</select>
-		</label>
-	</div>
-	<div id="assessmentGroups">{% for course in courses %}
-		<details class="assessment-group" data-name="{{ course.name }}">
-			<summary>{{ course.name }}</summary>{% include 'uclass/includes/assessment_table.html' with assessments=course.assessments %}</details>{% endfor %}</div>
-	<p id="assessmentEmpty" class="workspace-empty" {% if courses %}hidden{% endif %}>No assessments found.</p>
-</section> {% endblock %}
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Grades{% endblock %}
+{% block page %}grades{% endblock %}
+
+{% block content %}
+<div class="page-heading"><div class="page-header-left"><nav class="bento-breadcrumb" aria-label="Breadcrumb"><ol><li><a href="{% url 'home' %}">Workspace</a></li><li aria-hidden="true">/</li><li aria-current="page">{% if request.resolver_match.url_name == 'home' %}Home{% else %}Grades{% endif %}</li></ol></nav><h1>Grades</h1></div><div class="heading-actions"><button class="btn" data-export-table="resultsData" data-export-name="grades.csv">Export grades</button>{% include 'includes/theme_toggle.html' %}</div></div>
+<div class="grade-stat-strip"><section><span>Credit-weighted average</span><strong>{% if summary.grade != None %}{{ summary.grade|floatformat:1 }}<small>%</small>{% else %}—{% endif %}</strong><p>{{ summary.credits|default_if_none:'—' }} credits</p></section><section><span>Highest current grade</span><strong>{% if summary.highest_grade != None %}{{ summary.highest_grade|floatformat:1 }}<small>%</small>{% else %}—{% endif %}</strong><p>{{ summary.highest_course }}</p></section><section><span>Courses at or above 75%</span><strong>{{ summary.above_target|default_if_none:'—' }}<small> / {{ courses|length }}</small></strong></section><section><span>Assessments awaiting grades</span><strong>{{ summary.ungraded_count|default_if_none:'—' }}</strong></section></div>
+<div class="grade-main-grid"><section class="panel analytics-panel"><div class="analytics-panel-heading"><h2>Course performance</h2><label class="analytics-sort-label">Order<select id="grade-chart-order"><option value="course">Course order</option><option value="highest">Highest grade</option><option value="lowest">Lowest grade</option></select></label></div><figure class="grade-chart"><figcaption class="sr-only">Current course grades</figcaption><div class="grade-axis" aria-hidden="true"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div><div class="grade-plot"><div class="grade-grid-lines" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div><div id="grade-columns" class="grade-columns">{% for course in graded_courses %}<a class="grade-column" data-grade="{{ course.grade|floatformat:'2u' }}" href="{% url 'course_detail' course_id=course.id %}#grades" style="--score:{{ course.grade|floatformat:'2u' }}"><span class="grade-bar-value">{{ course.grade|floatformat:1 }}</span><span class="grade-bar-fill" aria-hidden="true"></span><span class="grade-bar-label">{{ course.code }}</span><span class="sr-only">{{ course.name }}</span></a>{% endfor %}</div></div></figure>{% if not graded_courses %}<p class="workspace-empty">No grades are available.</p>{% endif %}</section><section class="panel analytics-panel"><div class="analytics-panel-heading"><h2>Where you perform best</h2></div>{% for category in assessment_strengths %}<div class="assessment-strength"><div><span>{{ category.label }}</span><strong>{{ category.score|floatformat:1 }}%</strong><div class="assessment-track"><span style="width:{{ category.score|floatformat:'2u' }}%"></span></div><small>{{ category.note }}</small></div></div>{% empty %}<p class="muted">Assessment insights will appear when results are available.</p>{% endfor %}</section></div>
+<section class="panel"><div class="section-title"><h2>Your course gradebook</h2><div class="heading-actions"><label class="sr-only" for="resultSearch">Search results</label><input id="resultSearch" type="search" placeholder="Find a course…"><label class="sr-only" for="resultFilter">Filter results</label><select id="resultFilter"><option value="all">All courses</option><option value="attention">Below 75%</option></select></div></div><div class="database-scroll"><table class="database-table" id="resultsData"><thead><tr><th>Course</th><th>Credits</th><th>Current grade</th><th>Attendance</th></tr></thead><tbody>{% for course in courses %}<tr data-result-row data-score="{{ course.grade|default_if_none:'' }}"><td><a href="{% url 'course_detail' course_id=course.id %}#grades">{{ course.name }}</a></td><td>{{ course.credits|default_if_none:'—' }}</td><td>{% if course.grade != None %}{{ course.grade|floatformat:1 }}%{% else %}Not graded{% endif %}</td><td>{% if course.attendance != None %}{{ course.attendance|floatformat:1 }}%{% else %}—{% endif %}</td></tr>{% endfor %}</tbody></table></div><p id="resultsEmpty" class="workspace-empty" {% if courses %}hidden{% endif %}>No results found.</p></section>
+<section class="assessment-database"><div class="section-title"><h2>Assessments</h2></div><div class="database-controls"><label>Search<input id="assessmentSearch" type="search" placeholder="Find an assessment…"></label><label>Status<select id="assessmentStatus"><option value="all">All assessments</option><option value="graded">Graded</option><option value="ungraded">Not graded</option></select></label><label>Order<select id="assessmentSort"><option value="course">Course order</option><option value="az">Name A–Z</option></select></label></div><div id="assessmentGroups">{% for course in courses %}<details class="assessment-group" data-name="{{ course.name }}"><summary>{{ course.name }}</summary>{% include 'includes/assessment_table.html' with assessments=course.assessments %}</details>{% endfor %}</div><p id="assessmentEmpty" class="workspace-empty" {% if courses %}hidden{% endif %}>No assessments found.</p></section>
+{% endblock %}

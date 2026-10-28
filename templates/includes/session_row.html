@@ -1,10 +1,1 @@
-<tr data-record data-course="{{ session.course_name }}" data-status="{{ session.status }}" data-date="{{ session.date|date:'Y-m-d' }}">
-	<td data-label="Date">{{ session.date|date:'j M Y' }}</td>
-	<td data-label="Course"><a href="{% url 'uclass:course_detail' course_id=session.course_id %}#attendance">{{ session.course_name }}</a></td>
-	<td data-label="Time">{{ session.time_label }}</td>
-	<td data-label="Status"><span class="status-tag {{ session.status }}">{{ session.status_label }}</span></td>
-	<td data-label="Points">{{ session.points_label|default:'—' }}</td>
-	<td data-label="Details">
-		<button class="database-detail" data-open-session data-course="{{ session.course_name }}" data-date="{{ session.date|date:'Y-m-d' }}" data-time="{{ session.time_label }}" data-status="{{ session.status }}" data-points="{{ session.points_label|default:'Not available' }}" data-remarks="{{ session.remarks|default:'—' }}" data-href="{% url 'uclass:course_detail' course_id=session.course_id %}#attendance">Details</button>
-	</td>
-</tr>
+<tr data-record data-course="{{ session.course_name }}" data-status="{{ session.status }}" data-date="{{ session.date|date:'Y-m-d' }}"><td data-label="Date">{{ session.date|date:'j M Y' }}</td><td data-label="Course"><a href="{% url 'course_detail' course_id=session.course_id %}#attendance">{{ session.course_name }}</a></td><td data-label="Time">{{ session.time_label }}</td><td data-label="Status"><span class="status-tag {{ session.status }}">{{ session.status_label }}</span></td><td data-label="Points">{{ session.points_label|default:'—' }}</td><td data-label="Details"><button class="database-detail" data-open-session data-course="{{ session.course_name }}" data-date="{{ session.date|date:'Y-m-d' }}" data-time="{{ session.time_label }}" data-status="{{ session.status }}" data-points="{{ session.points_label|default:'Not available' }}" data-remarks="{{ session.remarks|default:'—' }}" data-href="{% url 'course_detail' course_id=session.course_id %}#attendance">Details</button></td></tr>

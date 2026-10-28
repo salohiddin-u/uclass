@@ -3,8 +3,8 @@
   'use strict';
   const root = document.documentElement;
   // This shared script is already loaded by every page. No template changes needed.
-  let savedDark = false;
-  try { savedDark = JSON.parse(localStorage.getItem('campus-static-dark')) === true; } catch {}
+  let savedDark = true;
+  try { const stored = localStorage.getItem('campus-static-dark'); if (stored !== null) savedDark = JSON.parse(stored) === true; } catch {}
   root.classList.toggle('dark', savedDark);
   // Commit the initial palette with transitions suppressed by the CSS guard.
   void root.offsetWidth;

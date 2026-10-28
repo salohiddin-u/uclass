@@ -1,139 +1,39 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <meta content="light dark" name="color-scheme">
-    <title>{% block title %}Workspace{% endblock %} · uclass.uz</title>
-    <link href="{% static 'uclass/css/styles.css' %}" rel="stylesheet">
-    <script src="{% static 'uclass/js/theme-transition.js' %}" defer></script>
-    <script defer="" src="{% static 'uclass/js/ui.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'uclass/css/insights.css' %}">
-    <link rel="stylesheet" href="{% static 'uclass/css/workspace.css' %}">
-    <script src="{% static 'uclass/vendor/lucide.min.js' %}" defer=""></script>
-    <script src="{% static 'uclass/js/workspace.js' %}" defer=""></script>
-    <link rel="stylesheet" href="{% static 'uclass/css/classic.css' %}">
-    <link rel="stylesheet" href="{% static 'uclass/css/palette.css' %}">
-    <link rel="stylesheet" href="{% static 'uclass/css/django.css' %}">{% block extra_head %}{% endblock %}
-  </head>
-  <body data-page="{% block page %}index{% endblock %}" data-user-id="{{ request.user.pk }}">
-    <a class="sr-only fixed left-4 top-4 z-50 rounded-xl bg-indigo-600 p-3 text-white focus:not-sr-only" href="#main"> Skip to content </a>
-    <div class="fixed inset-0 z-30 hidden bg-slate-950/50 lg:hidden" id="overlay"></div>
-    <aside class="workspace-sidebar -translate-x-full" id="sidebar">
-      <div class="workspace-brand">
-        <a href="{% url 'index' %}" aria-label="uclass workspace">
-          <span class="workspace-brand-icon">
-            <i data-lucide="notebook" aria-hidden="true"></i>
-          </span>
-          <strong>uclass</strong>
-          <span class="workspace-brand-suffix">.uz</span>
-        </a>
-        <button id="collapseSidebar" class="icon-button" aria-label="Collapse sidebar" aria-expanded="true">
-          <i data-lucide="panel-left-close" aria-hidden="true"></i>
-        </button>
-        <button id="closeMenu" class="icon-button" aria-label="Close menu">
-          <i data-lucide="x" aria-hidden="true"></i>
-        </button>
-      </div>
-      <button id="workspaceSearch" class="workspace-search">
-        <i data-lucide="search" aria-hidden="true"></i>
-        <span>Search workspace</span>
-        <kbd>⌘ K</kbd>
-      </button>
-      <p class="sidebar-label">Workspace</p>
-      <nav id="navigation" aria-label="Main navigation">
-        <a class="nav" href="{% url 'index' %}">
-          <i data-lucide="house" aria-hidden="true"></i>
-          <span>Home</span>
-        </a>
-        <a class="nav " href="{% url 'courses' %}">
-          <i data-lucide="book-open" aria-hidden="true"></i>
-          <span>My Courses</span>
-        </a>
-        <a class="nav " href="{% url 'attendance' %}">
-          <i data-lucide="calendar-check" aria-hidden="true"></i>
-          <span>Attendance</span>
-        </a>
-        <a class="nav " href="{% url 'grades' %}">
-          <i data-lucide="chart-no-axes-combined" aria-hidden="true"></i>
-          <span>Grades</span>
-        </a>
-        <a class="nav " href="{% url 'timetable' %}">
-          <i data-lucide="calendar-days" aria-hidden="true"></i>
-          <span>Timetable</span>
-        </a>
-        <a class="nav " href="{% url 'assignments' %}">
-          <i data-lucide="list-todo" aria-hidden="true"></i>
-          <span>Assignments</span>
-        </a>
-      </nav>
-      <div class="sidebar-bottom">
-        <a class="profile-link" href="{% url 'profile' %}">
-          <span class="profile-link-avatar">{{ student.initials|default:"U" }}</span>
-          <span class="profile-link-name">{{ student.first_name }} {{ student.last_name }}</span>
-          <i data-lucide="chevrons-up-down" aria-hidden="true"></i>
-        </a>
-      </div>
-    </aside>
-    <div class="lg:ml-64" id="shell">
-      <header class="flex h-20 items-center justify-between gap-3 border-b border-slate-200/80 bg-white/80 px-4 dark:border-slate-800 dark:bg-[#151d2b] sm:px-8" id="topbar">
-        <button id="expandSidebar" class="icon-button" aria-label="Expand sidebar" aria-expanded="false">
-          <i data-lucide="panel-left-open" aria-hidden="true"></i>
-        </button>
-        <div class="flex min-w-0 items-center gap-3">
-          <button aria-controls="sidebar" aria-expanded="false" aria-label="Open menu" class="btn !px-3 lg:hidden" id="openMenu" type="button">
-            <svg aria-hidden="true" class="menu-icon" fill="none" focusable="false" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </button>
-          <span class="hidden text-xs text-slate-400 sm:inline"> Workspace <span class="mx-3"> / </span>
-          </span>
-          <span class="truncate text-xs font-medium" id="breadcrumb">{% block breadcrumb %}Workspace{% endblock %}</span>
-        </div>
-        <div class="flex shrink-0 items-center gap-2">
-          <button aria-label="Switch to dark mode" aria-pressed="false" class="btn theme-toggle" id="theme" title="Switch to dark mode" type="button">
-            <span aria-hidden="true" class="theme-orbit"></span>
-            <span aria-hidden="true" class="theme-icon">
-              <svg aria-hidden="true" class="theme-moon" fill="none" focusable="false" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20.2 15.4A8.7 8.7 0 0 1 8.6 3.8 8.7 8.7 0 1 0 20.2 15.4Z"></path>
-              </svg>
-              <svg aria-hidden="true" class="theme-sun" fill="none" focusable="false" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="4"></circle>
-                <g class="sun-rays">
-                  <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
-                </g>
-              </svg>
-            </span>
-          </button>
-        </div>
-      </header>
-      <main class="analytics-page" id="main" tabindex="-1">{% block content %}{% endblock %}</main>
-      <footer class="workspace-footer">© {% now "Y" %} uclass.uz · Independent student project.</footer>
-    </div>
-    <div class="pointer-events-none fixed bottom-5 left-1/2 z-50 hidden -translate-x-1/2 rounded-xl bg-slate-900 px-5 py-3 text-center text-xs text-white shadow-xl dark:bg-white dark:text-slate-900" id="toast" role="status"></div>
-    <noscript>
-      <p class="muted px-8 py-3"> Enable JavaScript for interactive filters and theme switching. </p>
-    </noscript>
-    <dialog id="workspaceSearchDialog" class="workspace-dialog search-dialog" aria-labelledby="workspaceSearchTitle">
-      <div class="section-title">
-        <h2 id="workspaceSearchTitle">Find your workspace</h2>
-        <button class="icon-button" data-close-dialog="workspaceSearchDialog" aria-label="Close search">
-          <i data-lucide="x" aria-hidden="true"></i>
-        </button>
-      </div>
-      <label class="sr-only" for="workspaceSearchInput">Search pages and courses</label>
-      <input id="workspaceSearchInput" type="search" placeholder="Search pages and courses…">
-      <div id="workspaceSearchResults">
-        <a href="{% url 'index' %}">Home</a>
-        <a href="{% url 'courses' %}">Courses</a>
-        <a href="{% url 'attendance' %}">Attendance</a>
-        <a href="{% url 'grades' %}">Grades</a>
-        <a href="{% url 'timetable' %}">Timetable</a>
-        <a href="{% url 'assignments' %}">Assignments</a>{% for course in courses %} <a href="{% url 'course_detail' course_id=course.id %}">{{ course.name }}</a>{% endfor %}
-      </div>
-      <p id="workspaceSearchEmpty" hidden="">No pages found.</p>
-    </dialog>
-    <script src="{% static 'uclass/js/insights.js' %}" defer></script>{% block extra_scripts %}{% endblock %}
-  </body>
-</html>
+<html lang="en" class="dark no-transition"><head>
+  <meta charset="utf-8">{% include 'includes/ambient_head.html' %}<script src="{% static 'js/quality.js' %}"></script>
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <meta content="light dark" name="color-scheme">
+  <title>{% block title %}Workspace{% endblock %} · uclass.uz</title>
+  <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+  <script src="{% static 'js/theme-transition.js' %}" defer></script><script defer="" src="{% static 'js/ui.js' %}">
+  </script>
+ <link rel="stylesheet" href="{% static 'css/insights.css' %}"><link rel="stylesheet" href="{% static 'css/workspace.css' %}"><script src="{% static 'vendor/lucide.min.js' %}" defer=""></script><script src="{% static 'js/workspace.js' %}" defer=""></script><link rel="stylesheet" href="{% static 'css/classic.css' %}"><link rel="stylesheet" href="{% static 'css/palette.css' %}"><link rel="stylesheet" href="{% static 'css/django.css' %}"><link rel="stylesheet" href="{% static 'css/bento.css' %}"><link rel="stylesheet" href="{% static 'css/liquid-glass.css' %}">{% block extra_head %}{% endblock %}</head>
+ <body data-page="{% block page %}dashboard{% endblock %}" data-user-id="{{ request.user.pk }}">
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none"><defs><filter id="lg-filter" filterUnits="userSpaceOnUse" x="0" y="0" width="264" height="52" color-interpolation-filters="sRGB"><feImage id="lg-map" x="0" y="0" width="264" height="52" preserveAspectRatio="none" result="map"/><feDisplacementMap in="SourceGraphic" in2="map" scale="36" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>
+  <a class="sr-only fixed left-4 top-4 z-50 rounded-xl bg-indigo-600 p-3 text-white focus:not-sr-only" href="#content">
+   Skip to content
+  </a>
+  <div class="fixed inset-0 z-30 hidden bg-slate-950/50 lg:hidden" id="overlay">
+  </div>
+  <div id="ambient-bg" aria-hidden="true" hx-preserve="true"></div><div id="navigation-announcement" class="sr-only" aria-live="polite" role="status"></div><aside hx-preserve="true" class="workspace-sidebar -translate-x-full" id="app-sidebar"><div class="workspace-brand"><a href="{% url 'home' %}" aria-label="uclass workspace"><span class="workspace-brand-icon"><i data-lucide="notebook" aria-hidden="true"></i></span><strong>uclass</strong><span class="workspace-brand-suffix">.uz</span><span class="brand-monogram">u</span></a><button id="collapseSidebar" class="icon-button" aria-label="Collapse sidebar" title="Collapse sidebar" aria-expanded="true"><i data-lucide="panel-left-close" aria-hidden="true"></i></button><button id="closeMenu" class="icon-button" aria-label="Close menu"><i data-lucide="x" aria-hidden="true"></i></button></div><button id="workspaceSearch" class="workspace-search" title="Search workspace"><i data-lucide="search" aria-hidden="true"></i><span>Search workspace</span><kbd>⌘ K</kbd></button><p class="sidebar-label">Workspace</p><nav id="navigation" aria-label="Main navigation"><span id="nav-indicator" aria-hidden="true" hidden></span><a class="nav" href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}><i data-lucide="house" aria-hidden="true"></i><span>Home</span></a><a class="nav " href="{% url 'courses' %}" {% if request.resolver_match.url_name == 'courses' or request.resolver_match.url_name == 'course_detail' %}aria-current="page"{% endif %}><i data-lucide="book-open" aria-hidden="true"></i><span>My Courses</span></a><a class="nav " href="{% url 'attendance' %}" {% if request.resolver_match.url_name == 'attendance' %}aria-current="page"{% endif %}><i data-lucide="calendar-check" aria-hidden="true"></i><span>Attendance</span></a><a class="nav " href="{% url 'grades' %}" {% if request.resolver_match.url_name == 'grades' %}aria-current="page"{% endif %}><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i><span>Grades</span></a><a class="nav " href="{% url 'timetable' %}" {% if request.resolver_match.url_name == 'timetable' %}aria-current="page"{% endif %}><i data-lucide="calendar-days" aria-hidden="true"></i><span>Timetable</span></a><a class="nav " href="{% url 'assignments' %}" {% if request.resolver_match.url_name == 'assignments' %}aria-current="page"{% endif %}><i data-lucide="list-todo" aria-hidden="true"></i><span>Assignments</span></a></nav><div class="sidebar-bottom"><a href="{% url 'home' %}" class="nav" title="About uclass"><i data-lucide="arrow-up-right" aria-hidden="true"></i><span>About uclass</span></a><a class="profile-link" title="Profile" href="{% url 'profile' %}"><span class="profile-link-avatar">{{ student.initials|default:"U" }}</span><span class="profile-link-name">{{ request.user.get_full_name|default:request.user.username }}<small>Student workspace</small></span><i data-lucide="chevrons-up-down" aria-hidden="true"></i></a></div></aside>
+  <div class="lg:ml-64" id="shell">
+<button aria-controls="app-sidebar" aria-expanded="false" aria-label="Open menu" class="btn !px-3 lg:hidden" id="openMenu" type="button">
+      <svg aria-hidden="true" class="menu-icon" fill="none" focusable="false" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+       <path d="M4 6h16M4 12h16M4 18h16">
+       </path>
+      </svg>
+     </button>
+   <main class="analytics-page" id="content" tabindex="-1">{% block content %}{% endblock %}</main>
+   <footer class="workspace-footer">© {% now "Y" %} uclass.uz · Independent student project.</footer>
+  </div>
+  <div class="pointer-events-none fixed bottom-5 left-1/2 z-50 hidden -translate-x-1/2 rounded-xl bg-slate-900 px-5 py-3 text-center text-xs text-white shadow-xl dark:bg-white dark:text-slate-900" id="toast" role="status">
+  </div>
+  <noscript>
+   <p class="muted px-8 py-3">
+    Enable JavaScript for interactive filters and theme switching.
+   </p>
+  </noscript>
+ 
+
+<dialog id="command-palette" hx-preserve="true" class="workspace-dialog search-dialog" aria-labelledby="workspaceSearchTitle"><div class="section-title"><h2 id="workspaceSearchTitle">Find your workspace</h2><button class="icon-button" data-close-dialog="command-palette" aria-label="Close search"><i data-lucide="x" aria-hidden="true"></i></button></div><label class="sr-only" for="workspaceSearchInput">Search pages and courses</label><input id="workspaceSearchInput" type="search" placeholder="Search pages and courses…"><div id="workspaceSearchResults"><a href="{% url 'home' %}">Home</a><a href="{% url 'courses' %}">Courses</a><a href="{% url 'attendance' %}">Attendance</a><a href="{% url 'grades' %}">Grades</a><a href="{% url 'timetable' %}">Timetable</a><a href="{% url 'assignments' %}">Assignments</a>{% for course in courses %}<a href="{% url 'course_detail' course_id=course.id %}">{{ course.name }}</a>{% endfor %}</div><p id="workspaceSearchEmpty" hidden="">No pages found.</p></dialog><script src="{% static 'js/insights.js' %}" defer></script><script src="{% static 'js/navigation.js' %}" defer></script>{% block extra_scripts %}{% endblock %}<script src="{% static 'js/liquid-glass.js' %}" defer></script><nav id="mobile-dock" aria-label="Phone navigation"><span id="mobile-dock-indicator" aria-hidden="true"></span><a href="{% url 'home' %}"><i data-lucide="house" aria-hidden="true"></i><span>Home</span></a><a href="{% url 'courses' %}"><i data-lucide="book-open" aria-hidden="true"></i><span>Courses</span></a><a href="{% url 'attendance' %}"><i data-lucide="calendar-check" aria-hidden="true"></i><span>Attendance</span></a><a href="{% url 'grades' %}"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i><span>Grades</span></a><a href="{% url 'timetable' %}"><i data-lucide="calendar-days" aria-hidden="true"></i><span>Timetable</span></a><button type="button" id="mobileMore" aria-label="More navigation" aria-controls="app-sidebar" aria-expanded="false"><i data-lucide="ellipsis" aria-hidden="true"></i><span>More</span></button></nav><script src="{% static 'js/mobile-navigation.js' %}" defer></script></body></html>

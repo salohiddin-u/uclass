@@ -1,60 +1,17 @@
-{% extends 'base.html' %} {% load static %} {% block title %}My Workspace{% endblock %} {% block page %}dashboard{% endblock %} {% block breadcrumb %}My Workspace{% endblock %} {% block content %} <div class="page-heading">
-  <h1>My Workspace</h1>
-  <div class="heading-actions">
-    <a class="btn" href="{% url 'grades' %}">View results</a>
-    <a class="btn primary" href="{% url 'courses' %}">Explore courses →</a>
-  </div>
-</div>
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My Workspace{% endblock %}
+{% block page %}dashboard{% endblock %}
+
+{% block content %}
+<div class="page-heading"><div class="page-header-left"><nav class="bento-breadcrumb" aria-label="Breadcrumb"><ol><li><a href="{% url 'home' %}">Workspace</a></li><li aria-hidden="true">/</li><li aria-current="page">{% if request.resolver_match.url_name == 'home' %}Home{% else %}Home{% endif %}</li></ol></nav><h1>My Workspace</h1><p class="bento-date">{{ today|date:"l, j F" }}</p></div><div class="heading-actions"><a class="btn" href="{% url 'grades' %}">View results</a><a class="btn primary" href="{% url 'courses' %}">Explore courses →</a>{% include 'includes/theme_toggle.html' %}</div></div>
 <div class="workspace-metrics summary-grid">
-  <div class="panel">
-    <p class="muted">Current average</p>
-    <p class="text-3xl font-bold">{% if current_average != None %}{{ current_average|floatformat:1 }}%{% else %}—{% endif %}</p>
-  </div>
-  <div class="panel">
-    <p class="muted">Overall attendance</p>
-    <p class="text-3xl font-bold">{% if summary.attendance != None %}{{ summary.attendance|floatformat:1 }}%{% else %}—{% endif %}</p>
-  </div>
-  <div class="panel">
-    <p class="muted">Active courses</p>
-    <p class="text-3xl font-bold">{{ courses|length }}</p>
-  </div>
-  <div class="panel">
-    <p class="muted">Upcoming assignments</p>
-    <p class="text-3xl font-bold">{{ summary.upcoming_assignments|default_if_none:'—' }}</p>
-  </div>
-</div>
-<div class="workspace-callout">
-  <i data-lucide="calendar-clock" aria-hidden="true"></i>
-  <div>
-    <strong>Next class</strong>
-    <p>{% if next_class %}{{ next_class.course_name }} · {{ next_class.starts_at|date:'j M, H:i' }}{% else %}No upcoming class is listed.{% endif %}</p>
-    <a href="{% url 'timetable' %}">Open timetable →</a>
-  </div>
-</div>
-<section class="panel">
-  <div class="section-title">
-    <h2>Today’s classes</h2>
-    <span>{{ today|date:'j F' }}</span>
-  </div>
-  <div class="course-grid">{% for lesson in today_classes %} <a class="timetable-lesson" href="{% url 'course_detail' course_id=lesson.course_id %}">
-      <strong>{{ lesson.course_name }}</strong>
-      <time>{{ lesson.starts_at|date:'H:i' }} – {{ lesson.ends_at|date:'H:i' }}</time>
-      <span>{{ lesson.room|default:'Room not listed' }}</span>
-    </a>{% empty %} <p class="muted">No classes are listed for today.</p>{% endfor %} </div>
-</section>
-<div class="section-title">
-  <h2>Your courses</h2>
-  <a href="{% url 'courses' %}">View all →</a>
-</div>
-<div class="course-grid">{% for course in courses|slice:':3' %}{% include 'includes/course_card.html' %}{% empty %} <p class="workspace-empty">No courses are available.</p>{% endfor %} </div>
-<section class="workspace-activity">
-  <div class="section-title">
-    <h2>Academic activity</h2>
-  </div>{% for activity in activities %} <a href="{% url 'course_detail' course_id=activity.course_id %}">
-    <span>
-      <strong>{{ activity.title }}</strong>
-      <small>{{ activity.course_name }}</small>
-    </span>
-    <time>{{ activity.occurred_at|date:'j M, H:i' }}</time>
-  </a>{% empty %} <p class="muted">No recent activity.</p>{% endfor %}
-</section> {% endblock %}
+<a class="panel bento-stat" href="{% url 'grades' %}"><span class="bento-stat-label">Current average <i data-lucide="chart-no-axes-combined" aria-hidden="true"></i></span><strong>{% if summary.grade != None %}{{ summary.grade|floatformat:1 }}%{% else %}—{% endif %}</strong>{% if summary.grade != None %}<span class="bento-track"><span style="width:{{ summary.grade|floatformat:'2u' }}%"></span></span>{% else %}<small>No grade available</small>{% endif %}</a>
+<a class="panel bento-stat" href="{% url 'attendance' %}"><span class="bento-stat-label">Overall attendance <i data-lucide="calendar-check" aria-hidden="true"></i></span><strong>{% if summary.attendance != None %}{{ summary.attendance|floatformat:1 }}%{% else %}—{% endif %}</strong>{% if summary.attendance != None %}<span class="bento-track"><span style="width:{{ summary.attendance|floatformat:'2u' }}%"></span></span>{% else %}<small>No attendance available</small>{% endif %}</a>
+<a class="panel bento-stat" href="{% url 'courses' %}"><span class="bento-stat-label">Active courses <i data-lucide="book-open" aria-hidden="true"></i></span><strong>{{ courses|length }}</strong><small>Courses in your workspace</small></a>
+<a class="panel bento-stat" href="{% url 'assignments' %}"><span class="bento-stat-label">Upcoming assignments <i data-lucide="list-todo" aria-hidden="true"></i></span><strong>{{ summary.upcoming_assignments|default_if_none:'—' }}</strong><small>See your assignments</small></a>
+</div><div class="bento-schedule"><div class="workspace-callout"><i data-lucide="calendar-clock" aria-hidden="true"></i><div><strong>Next class</strong><p>{% if next_class %}{{ next_class.course_name }} · {{ next_class.starts_at|date:'j M, H:i' }}{% else %}No upcoming class is listed.{% endif %}</p><a href="{% url 'timetable' %}">Open timetable →</a></div></div>
+<section class="panel"><div class="section-title"><h2>Today’s classes</h2><span>{{ today|date:'j F' }}</span></div><div class="course-grid">{% for lesson in today_classes %}<a class="timetable-lesson" href="{% url 'course_detail' course_id=lesson.course_id %}"><strong>{{ lesson.course_name }}</strong><time>{{ lesson.starts_at|date:'H:i' }} – {{ lesson.ends_at|date:'H:i' }}</time><span>{{ lesson.room|default:'Room not listed' }}</span></a>{% empty %}<p class="muted">No classes are listed for today.</p>{% endfor %}</div></section></div>
+<div class="section-title"><h2>Your courses</h2><a href="{% url 'courses' %}">View all {{ courses|length }} →</a></div><div class="course-grid">{% for course in courses %}{% include 'includes/course_card.html' %}{% empty %}<p class="workspace-empty">No courses are available.</p>{% endfor %}</div>
+<section class="workspace-activity"><div class="section-title"><h2>Academic activity</h2></div>{% for activity in activities %}<a href="{% url 'course_detail' course_id=activity.course_id %}"><span><strong>{{ activity.title }}</strong><small>{{ activity.course_name }}</small></span><time>{{ activity.occurred_at|date:'j M, H:i' }}</time></a>{% empty %}<p class="muted">No recent activity.</p>{% endfor %}</section>
+{% endblock %}

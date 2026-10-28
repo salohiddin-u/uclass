@@ -2,16 +2,16 @@
  * Course names, scores, attendance, files and sections live in the HTML.
  * This file does not fetch or render application data.
  */
-(() => {
-  'use strict';
+window.uclassInitUI=() => {
+  'use strict';window.uclassInitUIController?.abort();const lifecycle=new AbortController();window.uclassInitUIController=lifecycle;
   const $ = id => document.getElementById(id);
   const all = selector => [...document.querySelectorAll(selector)];
   const read = (key, fallback) => {
-    try { return JSON.parse(localStorage.getItem('campus-static-' + key)) ?? fallback; }
+    try { return JSON.parse(localStorage.getItem(key === 'dark' ? 'campus-static-dark' : 'uclass-' + document.body.dataset.userId + '-' + key)) ?? fallback; }
     catch { return fallback; }
   };
   const write = (key, value) => {
-    try { localStorage.setItem('campus-static-' + key, JSON.stringify(value)); }
+    try { localStorage.setItem(key === 'dark' ? 'campus-static-dark' : 'uclass-' + document.body.dataset.userId + '-' + key, JSON.stringify(value)); }
     catch { /* The interface remains usable if browser storage is disabled. */ }
   };
   let saved = read('saved', []);
@@ -33,26 +33,26 @@
     $('theme').setAttribute('aria-pressed', String(dark));
     write('dark', dark);
   }
-  theme(read('dark', false));
+  theme(read('dark', true));
   function switchTheme() { window.uclassThemeTransition($('theme'), () => theme(!document.documentElement.classList.contains('dark'))); }
-  $('theme').addEventListener('click', switchTheme);
+  $('theme').addEventListener('click', switchTheme, {signal: lifecycle.signal});
 
   function menu(open, returnFocus = true) {
-    $('sidebar').inert = !open && innerWidth < 1024;
-    $('sidebar').classList.toggle('-translate-x-full', !open);
+    $('app-sidebar').inert = !open && innerWidth < 1024;document.body.classList.toggle('mobile-menu-open',open&&innerWidth<1024);$('shell').inert=open&&innerWidth<1024;if(document.getElementById('mobile-dock'))document.getElementById('mobile-dock').inert=open&&innerWidth<1024;document.getElementById('mobileMore')?.setAttribute('aria-expanded',String(open));
+    $('app-sidebar').classList.toggle('-translate-x-full', !open);
     $('overlay').classList.toggle('hidden', !open);
     $('openMenu').setAttribute('aria-expanded', String(open));
     if (open) $('closeMenu').focus();
-    else if (returnFocus) $('openMenu').focus();
+    else if (returnFocus) (innerWidth<768?document.getElementById('mobileMore'):$('openMenu'))?.focus();
   }
   function resize() {
-    if (innerWidth >= 1024) menu(false, false);
-    $('sidebar').inert = innerWidth < 1024 && $('overlay').classList.contains('hidden');
+    menu(false, false);
+    $('app-sidebar').inert = innerWidth < 1024 && $('overlay').classList.contains('hidden');
   }
-  $('openMenu').addEventListener('click', () => menu(true));
-  $('closeMenu').addEventListener('click', () => menu(false));
-  $('overlay').addEventListener('click', () => menu(false));
-  window.addEventListener('resize', resize);
+  $('openMenu').addEventListener('click', () => menu(true), {signal: lifecycle.signal});
+  $('closeMenu').addEventListener('click', () => menu(false), {signal: lifecycle.signal});
+  $('overlay').addEventListener('click', () => menu(false), {signal: lifecycle.signal});
+  window.addEventListener('resize', resize, {signal: lifecycle.signal});
   resize();
 
   function syncSaved() {
@@ -106,7 +106,7 @@
     const rows = all('[data-result-row]');
     rows.forEach(row => {
       row.hidden = !row.textContent.toLowerCase().includes(query)
-        || $('resultFilter').value === 'attention' && Number(row.dataset.score) >= 75;
+        || $('resultFilter').value === 'attention' && (row.dataset.score === '' || Number(row.dataset.score) >= 75);
     });
     $('resultsEmpty').hidden = rows.some(row => !row.hidden);
   }
@@ -123,7 +123,7 @@
     // Fragment links also work when opening a course from the gradebook.
     if (updateHash) history.replaceState(null, '', '#' + id);
   }
-  window.addEventListener('hashchange', () => tab(location.hash.slice(1)));
+  window.addEventListener('hashchange', () => tab(location.hash.slice(1)), {signal: lifecycle.signal});
 
   function syncCompletion() {
     const checkboxes = all('[data-complete]');
@@ -176,12 +176,12 @@
         item.setAttribute('aria-pressed', String(active));
       });
     }
-  });
+  }, {signal: lifecycle.signal});
 
   document.addEventListener('input', event => {
     if (event.target.id === 'courseSearch') filterCourses();
     if (event.target.id === 'resultSearch') filterResults();
-  });
+  }, {signal: lifecycle.signal});
   document.addEventListener('change', event => {
     if (['courseFilter', 'courseSort'].includes(event.target.id)) filterCourses();
     if (event.target.id === 'resultFilter') filterResults();
@@ -192,18 +192,18 @@
       syncCompletion();
       toast(event.target.checked ? 'Section marked complete' : 'Section marked incomplete');
     }
-  });
+  }, {signal: lifecycle.signal});
 
   all('dialog').forEach(dialog => dialog.addEventListener('click', event => {
     if (event.target !== dialog) return;
     const r = dialog.getBoundingClientRect();
     if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close();
-  }));
+  }, {signal: lifecycle.signal}));
   document.addEventListener('keydown', event => {
     const menuOpen = !$('overlay').classList.contains('hidden');
     if (event.key === 'Escape' && menuOpen) menu(false);
     if (event.key === 'Tab' && menuOpen) {
-      const items = [...$('sidebar').querySelectorAll('a,button')].filter(item => item.getClientRects().length);
+      const items = [...$('app-sidebar').querySelectorAll('a,button')].filter(item => item.getClientRects().length);
       const first = items[0], last = items.at(-1);
       if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
@@ -212,11 +212,11 @@
       const input = $('courseSearch') || $('resultSearch');
       if (input) { event.preventDefault(); input.focus(); }
     }
-  });
+  }, {signal: lifecycle.signal});
   syncSaved();
   syncCompletion();
   layout(read('layout', 'grid'));
   filterCourses();
   filterResults();
   tab(location.hash.slice(1) || 'sections');
-})();
+};window.uclassInitUI();
