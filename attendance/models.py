@@ -129,7 +129,7 @@ class Grade(models.Model):
 
 class GradeItem(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
+    grade = models.ForeignKey(Grade, on_delete=models.CASCADE, related_name="grade")
     earned_grade = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     rank = models.IntegerField(blank=True, null=True)
     numusers = models.IntegerField(blank=True, null=True)

@@ -205,7 +205,11 @@ def attendance(request):
 
 @login_required
 def grades(request):
-    return render(request, 'grades.html')
+    context = {
+        "grades": Grade.objects.all().select_related("grade")
+    }
+    print(Grade.objects.all().select_related("grade"))
+    return render(request, 'grades.html', context)
 
 
 def timetable(request):

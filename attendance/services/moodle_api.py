@@ -15,7 +15,6 @@ def ws(token, function, **params):
     return requests.post(URL, data=data, timeout=45).json()
 
 
-
 def get_token(username, password):
     url = "https://edu.inha.uz/login/token.php"
 
@@ -92,72 +91,87 @@ def get_user_courses(userid, token):
     return courses
 
 def get_course_sections(courseid, token):
-    try:
-        r_sections = ws(token, "core_course_get_contents", courseid=courseid)
-        sections = {'sections': []}
-        for section in r_sections:
-            moodle_id = section['id']
-            visible = section['visible']
-            description = section.get('description', '')
-            uservisible = section['uservisible']
-            name = section['name']
-            section_number = section['section']
-            r_modules = section.get('modules', [])
-            modules = {'modules': []}
+    r_sections = ws(token, "core_course_get_contents", courseid=courseid)
+    sections = {'sections': []}
+    for section in r_sections:
+        moodle_id = section['id']
+        visible = section['visible']
+        description = section.get('description', '')
+        uservisible = section['uservisible']
+        name = section['name']
+        section_number = section['section']
+        r_modules = section.get('modules', [])
+        modules = {'modules': []}
 
 
-            for module in r_modules:
-                contents = []
+        for module in r_modules:
+            contents = []
 
-                module_name = module['name']
-                module_moodle_id = module['id']
-                module_type = module.get('modname', '')
-                module_contents = module.get('contents', [])
-                module_visible = module.get('visible', 0)
-                module_uservisible = module.get('uservisible', False)
-                url = module.get('url', '')
-                instance = module.get('instance', None)
-                opened_at = module.get('opened_at', None)
-                due_at = module.get('due_at', None)
+            module_name = module['name']
+            module_moodle_id = module['id']
+            module_type = module.get('modname', '')
+            module_contents = module.get('contents', [])
+            module_visible = module.get('visible', 0)
+            module_uservisible = module.get('uservisible', False)
+            url = module.get('url', '')
+            instance = module.get('instance', None)
+            opened_at = module.get('opened_at', None)
+            due_at = module.get('due_at', None)
 
-                for content in module_contents:
-                    content_file_url = content.get('fileurl', '')
-                    contents.append({'file_url': content_file_url})
-                modules['modules'].append({
-                    'moodle_id': module_moodle_id,
-                    'name': module_name,
-                    'module_type': module_type,
-                    'visible': module_visible,
-                    'uservisible': module_uservisible,
-                    'url': url,
-                    'instance': instance,
-                    'opened_at': opened_at,
-                    'due_at': due_at,
-                    'contents': contents
-                })
+            for content in module_contents:
+                content_file_url = content.get('fileurl', '')
+                contents.append({'file_url': content_file_url})
+            modules['modules'].append({
+                'moodle_id': module_moodle_id,
+                'name': module_name,
+                'module_type': module_type,
+                'visible': module_visible,
+                'uservisible': module_uservisible,
+                'url': url,
+                'instance': instance,
+                'opened_at': opened_at,
+                'due_at': due_at,
+                'contents': contents
+            })
 
-            item = {
-                'moodle_id': moodle_id,
-                'name': name,
-                'visible': visible,
-                'section_number': section_number,
-                'modules': modules,
-            }
-            sections['sections'].append(item)
-        return sections
-    except Exception as e:
-        return JsonResponse({"error": str(e), "message": "Error fetching course sections. Please try again later."}, status=500)
+        item = {
+            'moodle_id': moodle_id,
+            'name': name,
+            'visible': visible,
+            'section_number': section_number,
+            'modules': modules,
+        }
+        sections['sections'].append(item)
+    return sections
 
 def get_course_grade_book(userid, token):
-    try:
-        grades = ws(token, "gradereport_overview_get_course_grades", userid=userid)
-        return grades
-    except Exception as e:
-        return JsonResponse({"error": str(e), "message": "Error fetching course grades. Please try again later."}, status=500)
+    grades = ws(token, "gradereport_overview_get_course_grades", userid=userid)
+    return grades
 
 def get_grade_items(userid, courseid, token):
-    try:
-        grade_items = ws(token, "gradereport_user_get_grade_items", userid=userid, courseid=courseid)
-        return grade_items
-    except Exception as e:
-        return JsonResponse({"error": str(e), "message": "Error fetching grade items. Please try again later."}, status=500)
+    grade_items = ws(token, "gradereport_user_get_grade_items", userid=userid, courseid=courseid)
+    return grade_items
+
+def get_assignments(courseid, token):
+    assignments = ws(token, "mod_assign_get_assignments", courseid=courseid)
+    return assignments
+
+def get_quizzes(courseid, token):
+    quizzes = ws(token, "mod_quiz_get_quizzes_by_courses", courseid=courseid)
+    return quizzes
+
+def get_assignment_status(assignid, token):
+    return ws(
+        token,
+        "mod_assign_get_submission_status",
+        assignid=assignid,
+    )
+
+def get_quiz_attempts(quizid, userid, token):
+    return ws(
+        token,
+        "mod_quiz_get_user_attempts",
+        quizid=quizid,
+        userid=userid,
+        status="all",
+    )
