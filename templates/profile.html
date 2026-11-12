@@ -1,0 +1,292 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block page %}profile{% endblock %}
+
+{% block content %}
+
+    <header class="focus-page-header">
+
+        <nav class="page-breadcrumb" aria-label="Breadcrumb">
+            <ol>
+                <li>
+                    <a href="{% url 'home' %}">Workspace</a>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">Profile</li>
+            </ol>
+        </nav>
+
+        <div class="page-title-row">
+            <h1>Profile</h1>
+        </div>
+
+        <p class="page-subtitle">Your student information and account.</p>
+
+    </header>
+
+    <div class="profile-layout" id="profile-workspace" hx-history="false">
+
+        {% if request.user.is_authenticated %}
+
+            {% firstof student.full_name student.name request.user.get_full_name student.first_name student.last_name request.user.username student.student_id request.user.email student.email 'Student' as profile_name %}
+            {% firstof student.username request.user.username as profile_username %}
+            {% firstof student.email request.user.email as profile_email %}
+
+            <section class="ui-card profile-information" aria-labelledby="profile-information-title">
+
+                <header>
+                    <h2 id="profile-information-title">Student information</h2>
+                </header>
+
+                <div class="profile-identity">
+                    <span class="profile-avatar" aria-hidden="true">
+                        {% if student.initials %}
+                            {{ student.initials|slice:':2' }}
+                        {% else %}
+                            <svg
+                                class="focus-icon"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.75"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <use href="#fi-user" />
+                            </svg>
+                        {% endif %}
+                    </span>
+                    <div>
+                        <h3>{{ profile_name }}</h3>
+                        <p>Your student profile</p>
+                    </div>
+                </div>
+
+                {% if student.full_name or student.name or student.first_name or student.last_name or request.user.get_full_name or student.student_id != None and student.student_id != '' or student.student_number != None and student.student_number != '' or profile_username or profile_email or student.university or student.faculty or student.department or student.program or student.group or student.year != None and student.year != '' or student.semester != None and student.semester != '' %}
+
+                    <dl class="profile-fields">
+
+                        {% if student.full_name or student.name or student.first_name or student.last_name or request.user.get_full_name %}
+                            <div>
+                                <dt>Name</dt>
+                                <dd dir="auto">
+                                    {% if student.full_name %}
+                                        {{ student.full_name }}
+                                    {% elif student.name %}
+                                        {{ student.name }}
+                                    {% elif student.first_name or student.last_name %}
+                                        {{ student.first_name|default:'' }}
+                                        {% if student.first_name and student.last_name %}{% endif %}
+                                        {{ student.last_name|default:'' }}
+                                    {% else %}
+                                        {{ request.user.get_full_name }}
+                                    {% endif %}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                        {% if student.student_id != None and student.student_id != '' %}
+                            <div>
+                                <dt>Student ID</dt>
+                                <dd dir="auto">
+                                    {{ student.student_id }}
+                                </dd>
+                            </div>
+                        {% elif student.student_number != None and student.student_number != '' %}
+                            <div>
+                                <dt>Student ID</dt>
+                                <dd dir="auto">
+                                    {{ student.student_number }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                        {% if profile_username %}
+                            <div>
+                                <dt>Username</dt>
+                                <dd dir="auto">
+                                    {{ profile_username }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                        {% if profile_email %}
+                            <div>
+                                <dt>Email</dt>
+                                <dd dir="auto">
+                                    {{ profile_email }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                        {% if student.university %}
+                            <div>
+                                <dt>University</dt>
+                                <dd dir="auto">
+                                    {{ student.university }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                        {% if student.faculty %}
+                            <div>
+                                <dt>Faculty</dt>
+                                <dd dir="auto">
+                                    {{ student.faculty }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                        {% if student.department %}
+                            <div>
+                                <dt>Department</dt>
+                                <dd dir="auto">
+                                    {{ student.department }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                        {% if student.program %}
+                            <div>
+                                <dt>Program</dt>
+                                <dd dir="auto">
+                                    {{ student.program }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                        {% if student.group %}
+                            <div>
+                                <dt>Group</dt>
+                                <dd dir="auto">
+                                    {{ student.group }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                        {% if student.year != None and student.year != '' %}
+                            <div>
+                                <dt>Year</dt>
+                                <dd>
+                                    {{ student.year }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                        {% if student.semester != None and student.semester != '' %}
+                            <div>
+                                <dt>Semester</dt>
+                                <dd>
+                                    {{ student.semester }}
+                                </dd>
+                            </div>
+                        {% endif %}
+
+                    </dl>
+
+                {% else %}
+                    <p class="ui-inline-state profile-empty">
+                        <svg
+                            class="focus-icon"
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <use href="#fi-info" />
+                        </svg>
+                        No student information has been supplied.
+                    </p>
+                {% endif %}
+
+                <p class="profile-caption">Only information supplied to your account is shown.</p>
+
+            </section>
+
+            <section class="ui-card profile-account" aria-labelledby="profile-account-title">
+
+                <header>
+                    <h2 id="profile-account-title">Account</h2>
+                </header>
+
+                <div class="profile-action-row">
+                    <span class="profile-action-icon" aria-hidden="true">
+                        <svg
+                            class="focus-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <use href="#fi-logout" />
+                        </svg>
+                    </span>
+                    <div>
+                        <h3>Sign out</h3>
+                        <p>End your current session.</p>
+                    </div>
+                    <form method="post" action="{% url 'logout' %}" hx-boost="false" data-account-action>
+                        {% csrf_token %}
+                        <button class="ui-button" type="submit">Sign out</button>
+                    </form>
+                </div>
+
+                <div class="profile-action-row">
+                    <span class="profile-action-icon profile-danger-icon" aria-hidden="true">
+                        <svg
+                            class="focus-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <use href="#fi-trash" />
+                        </svg>
+                    </span>
+                    <div>
+                        <h3>Delete data</h3>
+                        <p>Review deletion of data linked to your ihawk account.</p>
+                    </div>
+                    <a class="ui-button profile-danger-button" href="{% url 'delete_data' %}">Delete data</a>
+                </div>
+
+                <p class="profile-caption">Data deletion requires confirmation on the next page.</p>
+
+            </section>
+
+        {% else %}
+
+            <section class="ui-card profile-signin">
+                <svg
+                    class="focus-icon"
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <use href="#fi-user" />
+                </svg>
+                <h2>Sign in to view your profile.</h2>
+                <p>Your student information is available in your signed-in workspace.</p>
+                <a class="ui-button ui-button--primary" href="{% url 'login' %}" data-native>Sign in</a>
+            </section>
+
+        {% endif %}
+
+    </div>
+
+{% endblock %}

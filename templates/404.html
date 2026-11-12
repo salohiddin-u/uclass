@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Page not found{% endblock %}
+
+{% block page %}error{% endblock %}
+
+{% block content %}
+
+    <div class="site-column site-error-page" data-site-error="404">
+
+        <header class="focus-page-header">
+            <nav class="page-breadcrumb" aria-label="Breadcrumb">
+                <ol>
+                    <li>
+                        <a href="{% url 'home' %}">Workspace</a>
+                    </li>
+                    <li aria-hidden="true">/</li>
+                    <li aria-current="page">Page not found</li>
+                </ol>
+            </nav>
+            <div class="page-title-row">
+                <h1>Page not found</h1>
+            </div>
+            <p class="page-subtitle">Your workspace is still here.</p>
+        </header>
+
+        <section class="ui-card site-error-card" aria-labelledby="site-error-title">
+            <span class="site-brand-mark" aria-hidden="true">
+                <svg
+                    class="focus-icon"
+                    aria-hidden="true"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <use href="#fi-eye" />
+                </svg>
+            </span>
+            <p class="site-error-code">404</p>
+            <h2 id="site-error-title">That page could not be found.</h2>
+            <p class="site-error-copy">The link may have changed. You can return to your workspace.</p>
+            <div class="site-error-actions">
+                <a class="ui-button ui-button--primary" href="{% url 'home' %}">Back to Home
+                    <svg
+                        class="focus-icon"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <use href="#fi-arrow" />
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+    </div>
+
+{% endblock %}

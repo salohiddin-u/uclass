@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% load static tz l10n %}
+
+{% block title %}Assignments{% endblock %}
+
+{% block page %}assignments{% endblock %}
+
+{% block content %}
+
+    <header class="focus-page-header">
+        <nav class="page-breadcrumb" aria-label="Breadcrumb">
+            <ol>
+                <li>
+                    <a href="{% url 'home' %}">Workspace</a>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">Assignments</li>
+            </ol>
+        </nav>
+        <div class="page-title-row">
+            <h1>Assignments</h1>
+        </div>
+    </header>
+    <div id="assignments-workspace" class="assignments-workspace">
+        <form
+            class="server-filters"
+            action="{% url 'assignments' %}"
+            method="get"
+            data-live-filter
+            hx-get="{% url 'assignments' %}"
+            hx-target="#content"
+            hx-select="#content"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+        >
+            {% if view %}
+                <input type="hidden" name="view" value="{{ view }}">
+            {% endif %}
+            <label class="server-search">
+                <span class="sr-only">Search assignments</span>
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ request.GET.q }}"
+                    placeholder="Search assignments"
+                    autocomplete="off"
+                >
+            </label>
+            <label class="server-select">
+                <span class="sr-only">Course</span>
+                <select name="course" aria-label="Course">
+                    <option value="">All courses</option>
+                    {% for option in course_options %}
+                        <option value="{{ option.value }}"{% if option.selected %} selected{% endif %}>
+                            {{ option.label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label class="server-select">
+                <span class="sr-only">Status</span>
+                <select name="status" aria-label="Status">
+                    <option value="">All statuses</option>
+                    {% for option in status_options %}
+                        <option value="{{ option.value }}"{% if option.selected %} selected{% endif %}>
+                            {{ option.label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <button class="ui-button ui-button--icon" type="submit" title="Search" aria-label="Search">
+                <svg
+                    class="focus-icon"
+                    aria-hidden="true"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <use href="#fi-search" />
+                </svg>
+            </button>
+            {% if filters_active %}
+                <a href="{% url 'assignments' %}" class="ui-text-button">Reset</a>
+            {% endif %}
+        </form>
+        {% if assignment_groups %}
+            <nav class="server-views" aria-label="Assignment view">
+                <a href="?{{ view_query }}&amp;view=list"{% if view != 'board' %} aria-current="page"{% endif %}>List</a><a href="?{{ view_query }}&amp;view=board"{% if view == 'board' %} aria-current="page"{% endif %}>Board</a>
+            </nav>
+        {% endif %}
+        <p class="as-note">
+            Only supplied due dates and submission statuses are shown. “Not graded” does not mean overdue or incomplete.
+        </p>
+        <section class="ui-card as-results" aria-labelledby="assignment-results-title">
+            <h2 id="assignment-results-title" class="sr-only">Assignment results</h2>
+            {% if view == 'board' %}
+                <div class="server-board">
+                    {% for group in assignment_groups %}
+                        <section>
+                            <h2>{{ group.label }}</h2>
+                            {% for assignment in group.items %}
+                                <article class="as-assignment server-assignment">
+                                    <header>
+                                        <h3>{{ assignment.title }}</h3>
+                                        {% if assignment.course_id != None %}
+                                            <a href="{% url 'course_detail' course_id=assignment.course_id %}">{{ assignment.course_name }}</a>
+                                        {% elif assignment.course_name %}
+                                            <span>{{ assignment.course_name }}</span>
+                                        {% endif %}
+                                    </header>
+                                    <div class="server-assignment-meta">
+                                        {% if assignment.status_label %}
+                                            <span>{{ assignment.status_label }}</span>
+                                        {% endif %}
+                                        {% if assignment.due_label %}
+                                            <time{% if assignment.is_overdue %} class="is-risk"{% endif %}>{{ assignment.due_label }}</time>
+                                        {% elif assignment.due_at %}
+                                            <time>{{ assignment.due_at }}</time>
+                                        {% endif %}
+                                        {% if assignment.weight != None and assignment.weight != '' %}
+                                            <span>{{ assignment.weight }}% weight</span>
+                                        {% endif %}
+                                        {% if assignment.submission_label %}
+                                            <span>{{ assignment.submission_label }}</span>
+                                        {% endif %}
+                                    </div>
+                                    {% if assignment.description or assignment.instructions or assignment.files %}
+                                        <details class="server-details">
+                                            <summary>Details</summary>
+                                            {% if assignment.description %}
+                                                <p>{{ assignment.description|linebreaksbr }}</p>
+                                            {% endif %}
+                                            {% if assignment.instructions %}
+                                                <p>{{ assignment.instructions|linebreaksbr }}</p>
+                                            {% endif %}
+                                            {% if assignment.files %}
+                                                <ul>
+                                                    {% for file in assignment.files %}
+                                                        <li>
+                                                            <a
+                                                                href="{% url 'course_file' file_id=file.id %}"
+                                                                download
+                                                                data-native
+                                                                hx-boost="false"
+                                                            >{{ file.name }}</a>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </details>
+                                    {% endif %}
+                                </article>
+                            {% empty %}
+                                <p class="server-empty-line">No assignments listed.</p>
+                            {% endfor %}
+                        </section>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="as-items">
+                    {% for assignment in assignments %}
+                        <article class="as-assignment server-assignment">
+                            <header>
+                                <h3>{{ assignment.title }}</h3>
+                                {% if assignment.course_id != None %}
+                                    <a href="{% url 'course_detail' course_id=assignment.course_id %}">{{ assignment.course_name }}</a>
+                                {% elif assignment.course_name %}
+                                    <span>{{ assignment.course_name }}</span>
+                                {% endif %}
+                            </header>
+                            <div class="server-assignment-meta">
+                                {% if assignment.status_label %}
+                                    <span>{{ assignment.status_label }}</span>
+                                {% endif %}
+                                {% if assignment.due_label %}
+                                    <time{% if assignment.is_overdue %} class="is-risk"{% endif %}>{{ assignment.due_label }}</time>
+                                {% elif assignment.due_at %}
+                                    <time>{{ assignment.due_at }}</time>
+                                {% endif %}
+                                {% if assignment.weight != None and assignment.weight != '' %}
+                                    <span>{{ assignment.weight }}% weight</span>
+                                {% endif %}
+                                {% if assignment.submission_label %}
+                                    <span>{{ assignment.submission_label }}</span>
+                                {% endif %}
+                            </div>
+                            {% if assignment.description or assignment.instructions or assignment.files %}
+                                <details class="server-details">
+                                    <summary>Details</summary>
+                                    {% if assignment.description %}
+                                        <p>{{ assignment.description|linebreaksbr }}</p>
+                                    {% endif %}
+                                    {% if assignment.instructions %}
+                                        <p>{{ assignment.instructions|linebreaksbr }}</p>
+                                    {% endif %}
+                                    {% if assignment.files %}
+                                        <ul>
+                                            {% for file in assignment.files %}
+                                                <li>
+                                                    <a
+                                                        href="{% url 'course_file' file_id=file.id %}"
+                                                        download
+                                                        data-native
+                                                        hx-boost="false"
+                                                    >{{ file.name }}</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </details>
+                            {% endif %}
+                        </article>
+                    {% empty %}
+                        <p class="server-empty-line">No assignments listed.</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+    </div>
+
+{% endblock %}

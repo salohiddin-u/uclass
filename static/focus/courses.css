@@ -1,0 +1,5 @@
+/* The backend selects, filters and orders the supplied course rows. */
+.courses-workspace{display:grid;gap:20px;min-width:0}
+.server-course-list{min-width:0}
+.course-data-row strong{overflow-wrap:anywhere}
+@media(hover:hover) and (pointer:fine){.course-data-row:hover strong{text-decoration:underline;text-underline-offset:3px}}

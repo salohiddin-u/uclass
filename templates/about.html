@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}About ihawk{% endblock %}
+
+{% block page %}about{% endblock %}
+
+{% block content %}
+
+    <div class="site-column" id="about-workspace" data-state="ready">
+
+        <header class="focus-page-header">
+            <nav class="page-breadcrumb" aria-label="Breadcrumb">
+                <ol>
+                    <li>
+                        <a href="{% url 'home' %}">Workspace</a>
+                    </li>
+                    <li aria-hidden="true">/</li>
+                    <li aria-current="page">About</li>
+                </ol>
+            </nav>
+            <div class="page-title-row">
+                <h1>About ihawk</h1>
+            </div>
+        </header>
+
+        <section class="ui-card site-about-card" aria-labelledby="about-name">
+
+            <header class="site-about-brand">
+                <span class="site-brand-mark" aria-hidden="true">
+                    <svg
+                        class="focus-icon"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <use href="#fi-eye" />
+                    </svg>
+                </span>
+                <div>
+                    <h2 id="about-name">
+                        ihawk<span>.uz</span>
+                    </h2>
+                    <p>Independent student project.</p>
+                </div>
+            </header>
+
+            <p class="site-about-copy">
+                A clear view of your courses, attendance, grades, assignments and timetable, in one workspace.
+            </p>
+
+            {% if app_version != None and app_version != '' %}
+                <p class="site-version">
+                    <span>Version</span><strong>{{ app_version }}</strong>
+                </p>
+            {% endif %}
+
+            <nav class="site-settings-list" aria-label="About and account links">
+
+                <a class="site-settings-link" href="{% url 'profile' %}">
+                    <svg
+                        class="focus-icon"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <use href="#fi-user" />
+                    </svg>
+                    <span><strong>Your account</strong><small>Student information and account</small></span>
+                    <svg
+                        class="focus-icon"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <use href="#fi-chevron" />
+                    </svg>
+                </a>
+                <a class="site-settings-link" href="{% url 'privacy' %}">
+                    <svg
+                        class="focus-icon"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <use href="#fi-info" />
+                    </svg>
+                    <span><strong>Privacy</strong><small>How your information is handled</small></span>
+                    <svg
+                        class="focus-icon"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <use href="#fi-chevron" />
+                    </svg>
+                </a>
+                <a class="site-settings-link" href="{% url 'terms' %}">
+                    <svg
+                        class="focus-icon"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <use href="#fi-book" />
+                    </svg>
+                    <span><strong>Terms of service</strong><small>Terms for using ihawk</small></span>
+                    <svg
+                        class="focus-icon"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <use href="#fi-chevron" />
+                    </svg>
+                </a>
+
+            </nav>
+
+            <footer class="site-about-footer">
+                <a class="ui-text-button" href="{% url 'home' %}">Back to Home
+                    <svg
+                        class="focus-icon"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <use href="#fi-arrow" />
+                    </svg>
+                </a>
+            </footer>
+
+        </section>
+
+    </div>
+
+{% endblock %}

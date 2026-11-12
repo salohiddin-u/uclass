@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% load static tz l10n %}
+
+{% block title %}Timetable{% endblock %}
+
+{% block page %}timetable{% endblock %}
+
+{% block content %}
+
+    <header class="focus-page-header">
+        <nav class="page-breadcrumb" aria-label="Breadcrumb">
+            <ol>
+                <li>
+                    <a href="{% url 'home' %}">Workspace</a>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">Timetable</li>
+            </ol>
+        </nav>
+        <div class="page-title-row">
+            <h1>Timetable</h1>
+        </div>
+    </header>
+    <div id="timetable-workspace" class="timetable-workspace">
+        <div class="tt-toolbar">
+            <nav class="tt-week-navigation" aria-label="Choose a week">
+                {% if previous_week %}
+                    <a
+                        class="ui-button ui-button--icon tt-previous"
+                        href="{% url 'timetable' %}?week={{ previous_week|date:'Y-m-d' }}"
+                        title="Previous week"
+                        aria-label="Previous week"
+                    >
+                        <svg
+                            class="focus-icon"
+                            aria-hidden="true"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <use href="#fi-chevron" />
+                        </svg>
+                    </a>
+                {% endif %}
+                <a class="ui-button" href="{% url 'timetable' %}">This week</a>
+                {% if next_week %}
+                    <a
+                        class="ui-button ui-button--icon"
+                        href="{% url 'timetable' %}?week={{ next_week|date:'Y-m-d' }}"
+                        title="Next week"
+                        aria-label="Next week"
+                    >
+                        <svg
+                            class="focus-icon"
+                            aria-hidden="true"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <use href="#fi-chevron" />
+                        </svg>
+                    </a>
+                {% endif %}
+            </nav>
+            <span class="tt-timezone">{{ timezone_label }}</span>
+            {% if week_label %}
+                <span class="tt-caption">{{ week_label }}</span>
+            {% endif %}
+        </div>
+        <section class="ui-card tt-week" aria-label="Weekly timetable">
+            <div class="server-week-scroll" tabindex="0" role="region" aria-label="Timetable days, scroll for more">
+                <div class="tt-grid" style="--week-columns:{{ days|length }}">
+                    {% for day in days %}
+                        <section class="tt-day">
+                            <header class="tt-day-heading">
+                                <h2>{{ day.date }}</h2>
+                                {% if day.is_today %}
+                                    <span class="server-caption">Today</span>
+                                {% endif %}
+                            </header>
+                            <div class="tt-day-events">
+                                {% for lesson in day.lessons %}
+                                    {% if lesson.course_id != None %}
+                                        <a
+                                            class="tt-lesson"
+                                            href="{% url 'course_detail' course_id=lesson.course_id %}"
+                                        >
+                                    {% else %}
+                                        <div class="tt-lesson">
+                                    {% endif %}
+                                        <span class="tt-lesson-time">
+                                            {% if lesson.time_label %}
+                                                {{ lesson.time_label }}
+                                            {% else %}
+                                                {{ lesson.starts_at }}
+                                                {% if lesson.ends_at %}
+                                                    – {{ lesson.ends_at }}
+                                                {% endif %}
+                                            {% endif %}
+                                            </span><span class="tt-lesson-copy"><strong>{{ lesson.course_name }}</strong>
+                                            {% if lesson.room %}
+                                                <span class="tt-lesson-room">{{ lesson.room }}</span>
+                                            {% endif %}
+                                            {% if lesson.instructor %}
+                                                <span class="tt-lesson-instructor">{{ lesson.instructor }}</span>
+                                            {% endif %}
+                                            </span>
+                                            {% if lesson.course_id != None %}
+                                                </a>
+                                            {% else %}
+                                                </div>
+                                            {% endif %}
+                                {% empty %}
+                                    <p class="server-empty-line">No classes listed.</p>
+                                {% endfor %}
+                            </div>
+                        </section>
+                    {% empty %}
+                        <p class="server-empty-line">No timetable available.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Delete data{% endblock %}
+
+{% block page %}delete_data{% endblock %}
+
+{% block content %}
+
+    <header class="focus-page-header">
+
+        <nav class="page-breadcrumb" aria-label="Breadcrumb">
+            <ol>
+                <li>
+                    <a href="{% url 'home' %}">Workspace</a>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li>
+                    <a href="{% url 'profile' %}">Profile</a>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">Delete data</li>
+            </ol>
+        </nav>
+
+        <div class="page-title-row">
+            <h1>Delete data</h1>
+        </div>
+
+        <p class="page-subtitle">Review your account before confirming.</p>
+
+    </header>
+
+    <div class="profile-delete-layout" id="delete-data-workspace" hx-history="false">
+
+        {% if request.user.is_authenticated %}
+
+            {% firstof student.full_name student.name request.user.get_full_name student.first_name student.last_name request.user.username student.student_id request.user.email student.email 'Student' as profile_name %}
+
+            <section class="ui-card profile-delete-card" aria-labelledby="delete-confirm-title">
+
+                <span class="profile-delete-icon" aria-hidden="true">
+                    <svg
+                        class="focus-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <use href="#fi-trash" />
+                    </svg>
+                </span>
+
+                <h2 id="delete-confirm-title">Delete your ihawk data?</h2>
+
+                <p class="profile-delete-copy">
+                    {% if deletion_summary %}
+                        {{ deletion_summary }}
+                    {% else %}
+                        You are requesting deletion of data associated with this ihawk account.
+                    {% endif %}
+                </p>
+
+                <dl class="profile-delete-identity">
+                    <div>
+                        <dt>Account</dt>
+                        <dd dir="auto">
+                            {{ profile_name }}
+                        </dd>
+                    </div>
+                    {% if student.student_id != None and student.student_id != '' %}
+                        <div>
+                            <dt>Student ID</dt>
+                            <dd dir="auto">
+                                {{ student.student_id }}
+                            </dd>
+                        </div>
+                    {% elif request.user.username %}
+                        <div>
+                            <dt>Username</dt>
+                            <dd dir="auto">
+                                {{ request.user.username }}
+                            </dd>
+                        </div>
+                    {% elif request.user.email %}
+                        <div>
+                            <dt>Email</dt>
+                            <dd dir="auto">
+                                {{ request.user.email }}
+                            </dd>
+                        </div>
+                    {% endif %}
+                </dl>
+
+                <p class="profile-caption">Check that this is the account whose data you want to delete.</p>
+
+                {% if deletion_error %}
+                    <p class="profile-deletion-error" role="alert">{{ deletion_error }}</p>
+                {% endif %}
+
+                <form
+                    class="profile-delete-form"
+                    method="post"
+                    action="{% url 'delete_data' %}"
+                    hx-boost="false"
+                    data-account-action
+                >
+                    {% csrf_token %}
+                    <button class="ui-button profile-delete-submit" type="submit">Delete my data</button>
+                    <a class="ui-button" href="{% url 'profile' %}">Cancel</a>
+                </form>
+
+            </section>
+
+        {% else %}
+
+            <section class="ui-card profile-signin">
+                <h2>Sign in to manage your data.</h2>
+                <p>Sign in to the account you want to manage.</p>
+                <a class="ui-button ui-button--primary" href="{% url 'login' %}" data-native>Sign in</a>
+            </section>
+
+        {% endif %}
+
+    </div>
+
+{% endblock %}

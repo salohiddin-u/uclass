@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+
+{% load static tz l10n %}
+
+{% block title %}Home{% endblock %}
+
+{% block page %}home{% endblock %}
+
+{% block content %}
+
+    <header class="focus-page-header">
+        <nav class="page-breadcrumb" aria-label="Breadcrumb">
+            <ol>
+                <li>
+                    <a href="{% url 'home' %}">Workspace</a>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">Home</li>
+            </ol>
+        </nav>
+        <div class="page-title-row">
+            <h1>Home</h1>
+        </div>
+    </header>
+    {% if next_class or today_classes or due_assignments or attendance_risks or courses or summary.grade != None and summary.grade != '' or summary.attendance != None and summary.attendance != '' or summary.active_courses != None and summary.active_courses != '' or summary.upcoming_assignments != None and summary.upcoming_assignments != '' %}
+        <div id="home-workspace" class="dashboard">
+
+            {% if dashboard_date or student.first_name %}
+                <p class="dashboard-date">
+                    {% if student.first_name %}
+                        {{ student.first_name }}
+                    {% endif %}
+                    {% if dashboard_date and student.first_name %}
+                        <span aria-hidden="true">·</span>
+                    {% endif %}
+                    {{ dashboard_date }}
+                </p>
+            {% endif %}
+
+            <div class="dashboard-main">
+
+                <section class="dashboard-agenda" aria-labelledby="agenda-title">
+                    <header class="ui-section-header">
+                        <h2 id="agenda-title">Today</h2>
+                        <a href="{% url 'timetable' %}">Timetable</a>
+                    </header>
+
+                    {% if next_class %}
+                        <div class="dashboard-next">
+                            <span class="dashboard-label">Next class</span>
+                            <div class="dashboard-next-time">
+                                {% if next_class.time_label %}
+                                    {{ next_class.time_label }}
+                                {% else %}
+                                    {{ next_class.starts_at }}
+                                    {% if next_class.ends_at %}
+                                        – {{ next_class.ends_at }}
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            <h3>
+                                <a href="{% url 'course_detail' course_id=next_class.course_id %}">{{ next_class.course_name }}</a>
+                            </h3>
+                            {% if next_class.room %}
+                                <p>{{ next_class.room }}</p>
+                            {% endif %}
+                            {% if next_class.instructor %}
+                                <p>{{ next_class.instructor }}</p>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <p class="server-empty-line">No upcoming class listed.</p>
+                    {% endif %}
+
+                    {% if today_classes %}
+                        <ol class="dashboard-agenda-list">
+                            {% for lesson in today_classes %}
+                                <li>
+                                    <span class="dashboard-time">
+                                        {% if lesson.time_label %}
+                                            {{ lesson.time_label }}
+                                        {% else %}
+                                            {{ lesson.starts_at }}
+                                            {% if lesson.ends_at %}
+                                                – {{ lesson.ends_at }}
+                                            {% endif %}
+                                        {% endif %}
+                                    </span><span><a href="{% url 'course_detail' course_id=lesson.course_id %}">{{ lesson.course_name }}</a>
+                                        {% if lesson.room %}
+                                            <small>{{ lesson.room }}</small>
+                                        {% endif %}
+                                    </span>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+
+                </section>
+
+                <div class="dashboard-side">
+                    <section aria-labelledby="due-title">
+                        <header class="ui-section-header">
+                            <h2 id="due-title">Due work</h2>
+                            <a href="{% url 'assignments' %}">Assignments</a>
+                        </header>
+                        <ul class="dashboard-work-list">
+                            {% for assignment in due_assignments %}
+                                <li>
+                                    <strong>{{ assignment.title }}</strong>
+                                    {% if assignment.course_name %}
+                                        <span>{{ assignment.course_name }}</span>
+                                    {% endif %}
+                                    {% if assignment.due_label %}
+                                        <span{% if assignment.is_overdue %} class="is-risk"{% endif %}>{{ assignment.due_label }}</span>
+                                    {% endif %}
+                                    {% if assignment.status_label %}
+                                        <small>{{ assignment.status_label }}</small>
+                                    {% endif %}
+                                </li>
+                            {% empty %}
+                                <li class="server-empty-line">No due work listed.</li>
+                            {% endfor %}
+                        </ul>
+                    </section>
+
+                    <section class="dashboard-risk" aria-labelledby="risk-title">
+                        <header class="ui-section-header">
+                            <h2 id="risk-title">Attendance risks</h2>
+                            <a href="{% url 'attendance' %}">Attendance</a>
+                        </header>
+                        <ul class="dashboard-risk-list">
+                            {% for item in attendance_risks %}
+                                <li>
+                                    <a href="{% url 'course_detail' course_id=item.id %}#attendance">{% firstof item.name item.title %}</a><strong class="is-risk">{{ item.attendance }}%</strong>
+                                    {% if item.risk_label %}
+                                        <small>{{ item.risk_label }}</small>
+                                    {% endif %}
+                                </li>
+                            {% empty %}
+                                <li class="server-empty-line">No attendance risks listed.</li>
+                            {% endfor %}
+                        </ul>
+                    </section>
+                </div>
+
+            </div>
+
+            {% if summary.grade != None and summary.grade != '' or summary.attendance != None and summary.attendance != '' or summary.active_courses != None and summary.active_courses != '' or summary.upcoming_assignments != None and summary.upcoming_assignments != '' %}
+                <section class="server-summary dashboard-summary" aria-label="Academic summary">
+                    {% if summary.grade != None and summary.grade != '' %}
+                        <div class="server-stat">
+                            <span>Current average</span><strong>{{ summary.grade }}%</strong>
+                        </div>
+                    {% endif %}
+                    {% if summary.attendance != None and summary.attendance != '' %}
+                        <div class="server-stat">
+                            <span>Overall attendance</span><strong>{{ summary.attendance }}%</strong>
+                        </div>
+                    {% endif %}
+                    {% if summary.active_courses != None and summary.active_courses != '' %}
+                        <div class="server-stat">
+                            <span>Active courses</span><strong>{{ summary.active_courses }}</strong>
+                        </div>
+                    {% endif %}
+                    {% if summary.upcoming_assignments != None and summary.upcoming_assignments != '' %}
+                        <div class="server-stat">
+                            <span>Upcoming assignments</span><strong>{{ summary.upcoming_assignments }}</strong>
+                        </div>
+                    {% endif %}
+                </section>
+            {% endif %}
+
+            <section class="dashboard-courses" aria-labelledby="dashboard-courses-title">
+                <header class="ui-section-header">
+                    <h2 id="dashboard-courses-title">Courses</h2>
+                    <a href="{% url 'courses' %}">View all</a>
+                </header>
+                {% if courses %}
+                    <div class="course-data-row course-column-labels" aria-hidden="true">
+                        <span>Course</span><span>Attendance</span><span>Grade</span>
+                    </div>
+                    <div class="server-course-list">
+                        {% for item in courses %}
+                            {% if item.id != None %}
+                                <a class="course-data-row" href="{% url 'course_detail' course_id=item.course.courseid %}">
+                            {% else %}
+                                <div class="course-data-row">
+                            {% endif %}
+                                <span class="courses-row-copy"><strong>{{ item.course.fullname }}</strong>
+                                    {% if item.course.professor %}
+                                        <span>{{ item.course.professor }}</span>
+                                    {% endif %}
+                                </span><span class="course-attendance{% if item.attendance_at_risk %} is-risk{% endif %}"><span class="sr-only">Attendance: </span>
+                                    {% if item.attendance != None and item.attendance != '' %}
+                                        {{ item.attendance }}%
+                                    {% else %}
+                                        <span class="muted" aria-label="Not available">—</span>
+                                    {% endif %}
+                                </span><span class="course-grade"><span class="sr-only">Grade:</span>
+                                    {% if item.earned_grade != None and item.earned_grade != '' %}
+                                        {{ item.earned_grade }}
+                                    {% else %}
+                                        <span class="muted" aria-label="Not available">—</span>
+                                    {% endif %}
+                                    {% if item.grade != None and item.grade != '' and item.grade_max != None and item.grade_max != '' %}
+                                        <small>/ {{ item.grade_max }}</small>
+                                    {% endif %}
+                                </span>
+                                {% if item.id != None %}
+                                    </a>
+                                {% else %}
+                                    </div>
+                                {% endif %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="server-empty-line">No courses yet.</p>
+                {% endif %}
+            </section>
+        </div>
+    {% else %}
+        <section id="home-workspace" class="ui-card ui-empty ui-empty--page">
+            <h2>No dashboard data yet.</h2>
+            <a class="ui-button" href="{% url 'courses' %}">View courses</a>
+        </section>
+    {% endif %}
+
+{% endblock %}

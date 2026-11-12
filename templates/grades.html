@@ -1,0 +1,439 @@
+{% extends 'base.html' %}
+
+{% load static tz l10n %}
+
+{% block title %}Grades{% endblock %}
+
+{% block page %}grades{% endblock %}
+
+{% block content %}
+
+    <header class="focus-page-header">
+        <nav class="page-breadcrumb" aria-label="Breadcrumb">
+            <ol>
+                <li>
+                    <a href="{% url 'home' %}">Workspace</a>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">Grades</li>
+            </ol>
+        </nav>
+        <div class="page-title-row">
+            <h1>Grades</h1>
+            {% if export_url %}
+                <a
+                    class="shell-icon-button"
+                    href="{{ export_url }}"
+                    download
+                    data-native
+                    hx-boost="false"
+                    aria-label="Export"
+                    title="Export"
+                >
+                    <svg
+                        class="focus-icon"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <use href="#fi-download" />
+                    </svg>
+                </a>
+            {% endif %}
+        </div>
+    </header>
+    {% if courses or grade_chart or assessment_strengths or filters_active or summary.grade != None and summary.grade != '' or summary.highest_grade != None and summary.highest_grade != '' or summary.above_target != None and summary.above_target != '' or summary.ungraded_count != None and summary.ungraded_count != '' %}
+        <div id="grades-workspace" class="grades-workspace">
+            <div id="grades-content">
+
+                {% if summary.grade != None and summary.grade != '' or summary.highest_grade != None and summary.highest_grade != '' or summary.ungraded_count != None and summary.ungraded_count != '' or summary.above_target != None and summary.above_target != '' %}
+                    <section class="ui-card server-summary" aria-label="Grades summary">
+                        {% if summary.grade != None and summary.grade != '' %}
+                            <div class="server-stat">
+                                <span>Current average</span><strong>{{ summary.grade }}%</strong>
+                                {% if summary.credits != None and summary.credits != '' %}
+                                    <small>{{ summary.credits }} credits</small>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        {% if summary.highest_grade != None and summary.highest_grade != '' %}
+                            <div class="server-stat">
+                                <span>Highest grade</span><strong>{{ summary.highest_grade }}%</strong>
+                                {% if summary.highest_course %}
+                                    <small>{{ summary.highest_course }}</small>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        {% if summary.above_target != None and summary.above_target != '' %}
+                            <div class="server-stat">
+                                <span>Courses at target</span><strong>{{ summary.above_target }}</strong>
+                            </div>
+                        {% endif %}
+                        {% if summary.ungraded_count != None and summary.ungraded_count != '' %}
+                            <div class="server-stat">
+                                <span>Awaiting grades</span><strong>{{ summary.ungraded_count }}</strong>
+                            </div>
+                        {% endif %}
+                    </section>
+                {% endif %}
+
+                {% if grade_chart or assessment_strengths %}
+                    <div
+                        class="gr-main-grid"{% if not assessment_strengths %} data-no-insights="true"{% elif not grade_chart %} data-no-chart="true"{% endif %}
+                    >
+
+                        {% if grade_chart %}
+                            <section class="ui-card gr-performance">
+                                <header class="ui-section-header">
+                                    <h2 id="grade-chart-title">Course performance</h2>
+                                    <form
+                                        class="server-inline-filter"
+                                        action="{% url 'grades' %}"
+                                        method="get"
+                                        data-live-filter
+                                        hx-get="{% url 'grades' %}"
+                                        hx-target="#content"
+                                        hx-select="#content"
+                                        hx-swap="outerHTML"
+                                        hx-push-url="true"
+                                    >
+                                        <input type="hidden" name="course_q" value="{{ request.GET.course_q }}">
+                                        <input type="hidden" name="result" value="{{ request.GET.result }}">
+                                        <input type="hidden" name="assessment_q" value="{{ request.GET.assessment_q }}">
+                                        <input type="hidden" name="status" value="{{ request.GET.status }}">
+                                        <label>
+                                            Order
+                                            <select name="chart_order" aria-label="Order course performance">
+                                                <option
+                                                    value="course"{% if request.GET.chart_order == 'course' %} selected{% endif %}
+                                                >
+                                                    Course order
+                                                </option>
+                                                <option
+                                                    value="highest"{% if request.GET.chart_order == 'highest' %} selected{% endif %}
+                                                >
+                                                    Highest grade
+                                                </option>
+                                                <option
+                                                    value="lowest"{% if request.GET.chart_order == 'lowest' %} selected{% endif %}
+                                                >
+                                                    Lowest grade
+                                                </option>
+                                            </select>
+                                        </label>
+                                        <button
+                                            class="ui-button ui-button--icon"
+                                            type="submit"
+                                            title="Sort chart"
+                                            aria-label="Sort chart"
+                                        >
+                                            <svg
+                                                class="focus-icon"
+                                                aria-hidden="true"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="1.75"
+                                            >
+                                                <use href="#fi-filter" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </header>
+                                <figure class="gr-chart" aria-labelledby="grade-chart-title">
+                                    <figcaption class="sr-only">Current course grades as percentages.</figcaption>
+                                    <div class="gr-chart-frame">
+                                        <div class="gr-chart-axis" aria-hidden="true">
+                                            <span>100</span><span>75</span><span>50</span><span>25</span><span>0</span>
+                                        </div>
+                                        <div
+                                            class="gr-chart-scroll"
+                                            tabindex="0"
+                                            role="region"
+                                            aria-label="Course grade chart"
+                                        >
+                                            <div class="gr-chart-plot">
+                                                <div class="gr-chart-grid" aria-hidden="true">
+                                                    <span></span><span></span><span></span><span></span><span></span>
+                                                </div>
+                                                <div class="gr-columns" style="--gr-columns:{{ grade_chart|length }}">
+                                                    {% for item in grade_chart %}
+                                                        <a
+                                                            class="gr-column"
+                                                            href="{% url 'course_detail' course_id=item.id %}#assessments"
+                                                            aria-label="{% firstof item.name item.title %}: {{ item.percent }} percent"
+                                                        >
+                                                            <svg
+                                                                viewBox="0 0 100 100"
+                                                                preserveAspectRatio="none"
+                                                                aria-hidden="true"
+                                                            >
+                                                                <g transform="translate(0 100) scale(1 -1)">
+                                                                <rect x="20" y="0" width="60" height="{{ item.percent|unlocalize }}" rx="2" />
+                                                                </g>
+                                                            </svg>
+                                                            <span>{{ item.code }}</span></a>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </figure>
+                            </section>
+                        {% endif %}
+
+                        {% if assessment_strengths %}
+                            <section class="ui-card gr-insights">
+                                <h2>Assessment averages</h2>
+                                {% for item in assessment_strengths %}
+                                    <div class="server-strength">
+                                        <span>{{ item.label }}</span><strong>{{ item.score }}%</strong><meter min="0" max="100" value="{{ item.score|unlocalize }}" aria-label="{{ item.label }} average">{{ item.score }}%</meter>
+                                        {% if item.note %}
+                                            <p class="server-caption">{{ item.note }}</p>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </section>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <section class="ui-card gr-gradebook">
+                    <header class="ui-section-header">
+                        <h2>Course gradebook</h2>
+                    </header>
+                    <form
+                        class="server-filters"
+                        action="{% url 'grades' %}"
+                        method="get"
+                        data-live-filter
+                        hx-get="{% url 'grades' %}"
+                        hx-target="#content"
+                        hx-select="#content"
+                        hx-swap="outerHTML"
+                        hx-push-url="true"
+                    >
+                        <input type="hidden" name="chart_order" value="{{ request.GET.chart_order }}">
+                        <input type="hidden" name="assessment_q" value="{{ request.GET.assessment_q }}">
+                        <input type="hidden" name="status" value="{{ request.GET.status }}">
+                        <label class="server-search">
+                            <span class="sr-only">Find a course</span>
+                            <input
+                                type="search"
+                                name="course_q"
+                                value="{{ request.GET.course_q }}"
+                                placeholder="Find a course"
+                                autocomplete="off"
+                            >
+                        </label>
+                        <label class="server-select">
+                            <span class="sr-only">Results</span>
+                            <select name="result" aria-label="Results">
+                                <option value="">All courses</option>
+                                {% for option in result_options %}
+                                    <option value="{{ option.value }}"{% if option.selected %} selected{% endif %}>
+                                        {{ option.label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                        <button class="ui-button ui-button--icon" type="submit" title="Search" aria-label="Search">
+                            <svg
+                                class="focus-icon"
+                                aria-hidden="true"
+                                focusable="false"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.75"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <use href="#fi-search" />
+                            </svg>
+                        </button>
+                        {% if filters_active %}
+                            <a href="{% url 'grades' %}" class="ui-text-button">Reset</a>
+                        {% endif %}
+                    </form>
+                    <div class="server-table-scroll">
+                        <table class="ui-table">
+                            <caption class="sr-only">Course gradebook</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Course</th>
+                                    <th scope="col">Credits</th>
+                                    <th scope="col">Grade</th>
+                                    <th scope="col">Attendance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for course in courses %}
+                                    <tr>
+                                        <td data-label="Course">
+                                            <a href="{% url 'course_detail' course_id=course.id %}#assessments">{% firstof course.name course.title %}</a>
+                                            {% if course.code %}
+                                                <small class="server-block-caption">{{ course.code }}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td data-label="Credits">
+                                            {% if course.credits != None and course.credits != '' %}
+                                                {{ course.credits }}
+                                            {% else %}
+                                                <span class="muted" aria-label="Not available">—</span>
+                                            {% endif %}
+                                        </td>
+                                        <td data-label="Grade">
+                                            {% if course.grade != None and course.grade != '' %}
+                                                {{ course.grade }}
+                                            {% else %}
+                                                <span class="muted" aria-label="Not available">—</span>
+                                            {% endif %}
+                                            {% if course.grade != None and course.grade != '' and course.grade_max != None and course.grade_max != '' %}
+                                                / {{ course.grade_max }}
+                                            {% endif %}
+                                        </td>
+                                        <td data-label="Attendance">
+                                            <span{% if course.attendance_at_risk %} class="is-risk"{% endif %}>
+                                                {% if course.attendance != None and course.attendance != '' %}
+                                                    {{ course.attendance }}%
+                                                {% else %}
+                                                    <span class="muted" aria-label="Not available">—</span>
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="4">No course grades yet.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="ui-card gr-assessments">
+                    <header class="ui-section-header">
+                        <h2>Assessments</h2>
+                    </header>
+                    <form
+                        class="server-filters"
+                        action="{% url 'grades' %}"
+                        method="get"
+                        data-live-filter
+                        hx-get="{% url 'grades' %}"
+                        hx-target="#content"
+                        hx-select="#content"
+                        hx-swap="outerHTML"
+                        hx-push-url="true"
+                    >
+                        <input type="hidden" name="chart_order" value="{{ request.GET.chart_order }}">
+                        <input type="hidden" name="course_q" value="{{ request.GET.course_q }}">
+                        <input type="hidden" name="result" value="{{ request.GET.result }}">
+                        <label class="server-search">
+                            <span class="sr-only">Search assessments</span>
+                            <input
+                                type="search"
+                                name="assessment_q"
+                                value="{{ request.GET.assessment_q }}"
+                                placeholder="Search assessments"
+                                autocomplete="off"
+                            >
+                        </label>
+                        <label class="server-select">
+                            <span class="sr-only">Grading status</span>
+                            <select name="status" aria-label="Grading status">
+                                <option value="">All statuses</option>
+                                {% for option in status_options %}
+                                    <option value="{{ option.value }}"{% if option.selected %} selected{% endif %}>
+                                        {{ option.label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                        <button class="ui-button ui-button--icon" type="submit" title="Search" aria-label="Search">
+                            <svg
+                                class="focus-icon"
+                                aria-hidden="true"
+                                focusable="false"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.75"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <use href="#fi-search" />
+                            </svg>
+                        </button>
+                        {% if filters_active %}
+                            <a href="{% url 'grades' %}" class="ui-text-button">Reset</a>
+                        {% endif %}
+                    </form>
+                    {% for course in courses %}
+                        {% if course.assessments %}
+                            <section class="gr-assessment-group">
+                                <h3>{% firstof course.name course.title %}</h3>
+                                <div class="server-table-scroll">
+                                    <table class="ui-table">
+                                        <caption class="sr-only">Assessments for {% firstof course.name course.title %}</caption>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Assessment</th>
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Score</th>
+                                                <th scope="col">Weight</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in course.assessments %}
+                                                <tr>
+                                                    <td data-label="Assessment">{{ item.title }}</td>
+                                                    <td data-label="Type">{{ item.type_label }}</td>
+                                                    <td data-label="Score">
+                                                        {% if item.score != None and item.score != '' %}
+                                                            {{ item.score }}
+                                                        {% else %}
+                                                            <span class="muted" aria-label="Not available">—</span>
+                                                        {% endif %}
+                                                        {% if item.score != None and item.score != '' and item.maximum != None and item.maximum != '' %}
+                                                            / {{ item.maximum }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td data-label="Weight">
+                                                        {% if item.weight != None and item.weight != '' %}
+                                                            {{ item.weight }}%
+                                                        {% else %}
+                                                            <span class="muted" aria-label="Not available">—</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+                        {% endif %}
+                    {% empty %}
+                        <p class="server-empty-line">No assessments yet.</p>
+                    {% endfor %}
+                </section>
+
+            </div>
+        </div>
+    {% else %}
+        <div id="grades-workspace">
+            <section class="ui-card ui-empty ui-empty--page">
+                <h2>No grades yet.</h2>
+                <a class="ui-button" href="{% url 'courses' %}">View courses</a>
+            </section>
+        </div>
+    {% endif %}
+
+{% endblock %}

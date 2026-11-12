@@ -1,0 +1,31 @@
+/* Home dashboard. Every value and row is emitted by Django. */
+.dashboard{display:grid;gap:24px;min-width:0}
+.dashboard-date{font-size:13px;color:var(--text-2);margin-top:-16px}
+.dashboard-main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,1fr);gap:32px;align-items:start}
+.dashboard-agenda{min-width:0}
+.dashboard .ui-section-header{margin-bottom:16px}
+.dashboard-next{padding:20px;border:1px solid var(--line);border-left:3px solid var(--text-2);border-radius:8px;background:var(--surface-2)}
+.dashboard-label{display:block;font-size:12px;color:var(--text-2);margin-bottom:8px}
+.dashboard-next-time{font-size:28px;line-height:34px;font-weight:500;letter-spacing:-.025em;margin-bottom:6px}
+.dashboard-next h3{font-size:18px;line-height:25px;font-weight:500;margin-bottom:6px;overflow-wrap:anywhere}
+.dashboard-next p{font-size:13px;color:var(--text-2);line-height:20px}
+.dashboard-agenda-list{list-style:none;margin:16px 0 0;padding:0}
+.dashboard-agenda-list li{display:grid;grid-template-columns:100px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.dashboard-time{font-size:13px;color:var(--text-2);font-variant-numeric:tabular-nums}
+.dashboard-agenda-list small{display:block;color:var(--text-2);font-size:12px;margin-top:3px}
+.dashboard-side{display:grid;gap:24px;border-left:1px solid var(--line);padding-left:28px;min-width:0}
+.dashboard-work-list,.dashboard-risk-list{list-style:none;margin:0;padding:0}
+.dashboard-work-list li{display:grid;gap:4px;padding:12px 0;border-bottom:1px solid var(--line);font-size:13px}
+.dashboard-work-list li:first-child{padding-top:0}
+.dashboard-work-list strong{font-size:14px;font-weight:500;overflow-wrap:anywhere}
+.dashboard-work-list span,.dashboard-work-list small{font-size:12px;color:var(--text-2)}
+.dashboard-work-list .is-risk{color:var(--warn)}
+.dashboard-risk-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.dashboard-risk-list li:first-child{padding-top:0}
+.dashboard-risk-list strong{font-variant-numeric:tabular-nums;font-weight:500}
+.dashboard-risk-list small{grid-column:1/-1;font-size:12px;color:var(--text-2)}
+.dashboard .server-empty-line{display:block;padding:12px 0;font-size:13px;color:var(--text-2);border:0;line-height:20px}
+.dashboard-summary{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-block:16px}
+.dashboard-courses .ui-section-header{margin-bottom:8px}
+@media(max-width:800px){.dashboard-main{grid-template-columns:minmax(0,1fr);gap:24px}.dashboard-side{padding:0;border:0;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.dashboard-side>section+section{border-left:1px solid var(--line);padding-left:20px}}
+@media(max-width:599px){.dashboard{gap:20px}.dashboard-main{gap:20px}.dashboard-date{margin-top:-12px}.dashboard-next{padding:16px}.dashboard-next-time{font-size:24px;line-height:30px}.dashboard-next h3{font-size:16px;line-height:23px}.dashboard-side{grid-template-columns:1fr;gap:20px}.dashboard-side>section+section{padding:0;border:0}.dashboard-agenda-list li{grid-template-columns:88px minmax(0,1fr);font-size:13px}.dashboard-summary{order:3}.dashboard-courses{order:2}}

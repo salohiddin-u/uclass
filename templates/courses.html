@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% load static tz l10n %}
+
+{% block title %}Courses{% endblock %}
+
+{% block page %}courses{% endblock %}
+
+{% block content %}
+
+    <header class="focus-page-header">
+        <nav class="page-breadcrumb" aria-label="Breadcrumb">
+            <ol>
+                <li>
+                    <a href="{% url 'home' %}">Workspace</a>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">Courses</li>
+            </ol>
+        </nav>
+        <div class="page-title-row">
+            <h1>Courses</h1>
+        </div>
+    </header>
+    <div id="courses-workspace" class="courses-workspace">
+        <form
+            class="server-filters"
+            action="{% url 'courses' %}"
+            method="get"
+            data-live-filter
+            hx-get="{% url 'courses' %}"
+            hx-target="#content"
+            hx-select="#content"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+        >
+            <label class="server-search">
+                <span class="sr-only">Search course or instructor</span>
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ request.GET.q }}"
+                    placeholder="Search course or instructor"
+                    autocomplete="off"
+                >
+            </label>
+            <label class="server-select">
+                <span class="sr-only">Semester</span>
+                <select name="semester" aria-label="Semester">
+                    <option value="">All semesters</option>
+                    {% for option in semester_options %}
+                        <option value="{{ option.value }}"{% if option.selected %} selected{% endif %}>
+                            {{ option.label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label class="server-select">
+                <span class="sr-only">Sort courses</span>
+                <select name="sort" aria-label="Sort courses">
+                    <option value="title"{% if request.GET.sort == 'title' %} selected{% endif %}>Title A–Z</option>
+                    <option value="grade"{% if request.GET.sort == 'grade' %} selected{% endif %}>
+                        Highest grade
+                    </option>
+                    <option value="attendance"{% if request.GET.sort == 'attendance' %} selected{% endif %}>
+                        Highest attendance
+                    </option>
+                </select>
+            </label>
+            <button class="ui-button ui-button--icon" type="submit" title="Search" aria-label="Search">
+                <svg
+                    class="focus-icon"
+                    aria-hidden="true"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <use href="#fi-search" />
+                </svg>
+            </button>
+            {% if filters_active %}
+                <a href="{% url 'courses' %}" class="ui-text-button">Reset</a>
+            {% endif %}
+        </form>
+        {% if result_count != None %}
+            <p class="server-caption">{{ result_count }} courses</p>
+        {% endif %}
+        <div id="courses-results">
+            {% if courses %}
+                <div class="course-data-row course-column-labels" aria-hidden="true">
+                    <span>Course</span><span>Attendance</span><span>Grade</span>
+                </div>
+                <div class="server-course-list">
+                    {% for item in courses %}
+                        {% if item.id != None %}
+                            <a class="course-data-row" href="{% url 'course_detail' course_id=item.id %}">
+                        {% else %}
+                            <div class="course-data-row">
+                        {% endif %}
+                            <span class="courses-row-copy"><strong>{% firstof item.name item.title %}</strong>
+                                {% if item.instructor %}
+                                    <span>{{ item.instructor }}</span>
+                                {% endif %}
+                            </span><span class="course-attendance{% if item.attendance_at_risk %} is-risk{% endif %}"><span class="sr-only">Attendance: </span>
+                                {% if item.attendance != None and item.attendance != '' %}
+                                    {{ item.attendance }}%
+                                {% else %}
+                                    <span class="muted" aria-label="Not available">—</span>
+                                {% endif %}
+                            </span><span class="course-grade"><span class="sr-only">Grade:</span>
+                                {% if item.grade != None and item.grade != '' %}
+                                    {{ item.grade }}
+                                {% else %}
+                                    <span class="muted" aria-label="Not available">—</span>
+                                {% endif %}
+                                {% if item.grade != None and item.grade != '' and item.grade_max != None and item.grade_max != '' %}
+                                    <small>/ {{ item.grade_max }}</small>
+                                {% endif %}
+                            </span>
+                            {% if item.id != None %}
+                                </a>
+                            {% else %}
+                                </div>
+                            {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <section class="ui-card ui-empty ui-empty--page">
+                    <svg
+                        class="focus-icon"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <use href="#fi-info" />
+                    </svg>
+                    <h2>No courses yet.</h2>
+                    <a class="ui-button" href="{% url 'courses' %}">View courses</a>
+                </section>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

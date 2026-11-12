@@ -1,0 +1,178 @@
+/* Quiet workspace. Academic content is laid out as sections and rows, not cards.
+   Scoped to base.html; the standalone public landing keeps its own design. */
+:root[data-design=quiet]{--bg:#111113;--surface-1:#111113;--surface-2:#1b1b1e;--surface-3:#252528;--line:rgba(255,255,255,.10);--line-strong:rgba(255,255,255,.19);--text:#ededee;--text-2:#a1a1aa;--text-3:#8c8c95;--accent:#d8d8dc;--accent-ink:#171719;--accent-soft:rgba(255,255,255,.055);--accent-text:var(--text);--cool:#9a9aa4;--cool-text:var(--text-2);--cool-soft:var(--accent-soft);--info:var(--text-2);--info-soft:var(--accent-soft);--good:var(--text-2);--good-soft:transparent;--warn:#e4b35e;--warn-soft:rgba(228,179,94,.10);--bad:var(--warn);--bad-soft:var(--warn-soft);--focus-ring:#b8b8c0;--glass:var(--bg);--glass-edge:var(--line);--rim-highlight:rgba(255,255,255,.10);--lens-fill:rgba(255,255,255,.035);--lens-body:rgba(255,255,255,.045);--lens-light:rgba(255,255,255,.065);--lens-ink:var(--text);--chrome-shadow:none;--r-xs:6px;--r-sm:6px;--r-md:8px;--r-lg:8px;--r-xl:10px;--r-card:8px;--h1:26px;--h2:16px;--h3:14px;--display:28px;--body:14px;--small:13px;--control-h:40px;--section-gap:24px;--card-gap:20px;--card-pad:16px;--sidebar-w:224px;--sidebar-collapsed:64px;--gutter:24px;--brand-primary:#5f68ab;background:var(--bg)}
+:root[data-design=quiet][data-theme=light]{--bg:#fafafa;--surface-1:#fafafa;--surface-2:#f0f0f1;--surface-3:#e6e6e8;--line:rgba(24,24,27,.11);--line-strong:rgba(24,24,27,.22);--text:#202024;--text-2:#62626c;--text-3:#777780;--accent:#29292e;--accent-ink:#fff;--accent-soft:rgba(24,24,27,.045);--warn:#875c0e;--warn-soft:rgba(135,92,14,.08);--focus-ring:#4c4c56;--lens-fill:rgba(24,24,27,.035);--lens-body:rgba(255,255,255,.5);--lens-light:rgba(255,255,255,.7);--rim-highlight:rgba(255,255,255,.65)}
+html[data-design=quiet] #focus-aurora{background:var(--bg)}
+html[data-design=quiet] #focus-aurora:before,html[data-design=quiet] #focus-aurora:after{content:none}
+html[data-design=quiet] #app-sidebar{left:0;top:0;bottom:0;padding:24px 12px 12px;border:0;border-right:1px solid var(--line);border-radius:0;box-shadow:none;background:var(--bg);backdrop-filter:none;-webkit-backdrop-filter:none}
+html[data-design=quiet] .shell-wordmark{font-size:19px;letter-spacing:-.035em}
+html[data-design=quiet] .shell-wordmark .shell-mark{color:var(--text-2)}
+html[data-design=quiet] .shell-nav{min-height:40px;height:40px;font-size:14px;border-radius:8px}
+html[data-design=quiet] .shell-nav .focus-icon{width:18px;height:18px}
+html[data-design=quiet] .sidebar-eyebrow{font-size:12px;letter-spacing:.07em;color:var(--text-2);margin:28px 12px 12px}
+html[data-design=quiet] .shell-word>span{color:var(--text-2)}
+html[data-design=quiet] .shell-account{border:0;border-radius:8px;background:transparent;box-shadow:none}
+html[data-design=quiet] .shell-account .shell-avatar{background:var(--surface-2);color:var(--text-2);border-radius:8px}
+html[data-design=quiet] .shell-account.active{background:var(--surface-2)}
+html[data-design=quiet] .shell-icon-button{border-radius:8px;border-color:var(--line);background:transparent;width:40px;height:40px;min-width:40px;min-height:40px}
+html[data-design=quiet] .shell-about{font-size:13px}
+html[data-design=quiet] .lens-fill,html[data-design=quiet] .lens-rim{border-radius:8px;box-shadow:none}
+html[data-design=quiet] .lens-clip{clip-path:inset(var(--t) var(--r) var(--b) var(--l) round 8px)}
+html[data-design=quiet] .lens-rim{box-shadow:inset 0 1px var(--rim-highlight);background:transparent}
+html[data-design=quiet] #content{margin-left:var(--sidebar-size);width:calc(100% - var(--sidebar-size));max-width:none;padding:28px 32px 24px}
+html[data-design=quiet] #page{width:100%;max-width:1120px;margin-inline:auto}
+html[data-design=quiet] .shell-footer{width:calc(100% - var(--sidebar-size));margin-left:var(--sidebar-size);padding:20px 32px;color:var(--text-2);font-size:12px}
+html[data-design=quiet] .focus-page-header{margin-bottom:24px;padding:0;border:0;background:none;box-shadow:none;gap:0}
+html[data-design=quiet] .page-breadcrumb{font-size:12px;color:var(--text-2);margin-bottom:12px}
+html[data-design=quiet] .page-title-row{align-items:center;min-height:40px}
+html[data-design=quiet] h1{font-size:26px;font-weight:600;letter-spacing:-.025em}
+html[data-design=quiet] h2{font-size:16px;letter-spacing:-.015em}
+html[data-design=quiet] h3{font-size:14px;letter-spacing:0}
+html[data-design=quiet] .page-subtitle{font-size:13px;margin-top:8px;color:var(--text-2)}
+html[data-design=quiet] a{color:var(--text);text-underline-offset:3px}
+html[data-design=quiet] a:hover{text-decoration:underline}
+html[data-design=quiet] .ui-button,html[data-design=quiet] .shell-button{min-height:40px;border-radius:6px;border-color:var(--line-strong);background:transparent;color:var(--text);box-shadow:none}
+html[data-design=quiet] .ui-button--primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+html[data-design=quiet] .ui-button:hover,html[data-design=quiet] .shell-button:hover{background:var(--surface-2);color:var(--text);text-decoration:none}
+html[data-design=quiet] .ui-text-button{color:var(--text);font-size:13px}
+html[data-design=quiet] input:not([type=checkbox]),html[data-design=quiet] select{min-height:40px;border:1px solid var(--line-strong);border-radius:6px;background:transparent;color:var(--text);font-size:14px}
+html[data-design=quiet] .ui-card,html[data-design=quiet] .ui-stat,html[data-design=quiet] .ui-course--card{border:0;border-top:1px solid var(--line);border-radius:0;background:transparent;padding:16px 0;box-shadow:none}
+html[data-design=quiet] .ui-card .ui-card{border:0;padding:12px 0}
+html[data-design=quiet] .ui-interactive{transform:none;transition:none}
+html[data-design=quiet] .ui-interactive:before{display:none}
+html[data-design=quiet] .ui-section-header{gap:12px}
+html[data-design=quiet] .ui-section-header>a{min-height:32px;font-size:13px}
+html[data-design=quiet] .ui-empty--page,html[data-design=quiet] .home-page-state,html[data-design=quiet] .courses-page-state{min-height:180px;max-width:none;gap:12px;padding:32px 16px;border:0;justify-content:center;text-align:center}
+html[data-design=quiet] .ui-empty--page>p{display:none}
+html[data-design=quiet] .ui-empty--page>h2,html[data-design=quiet] .home-page-state>h2,html[data-design=quiet] .courses-page-state>h2{font-size:15px;font-weight:500;letter-spacing:0}
+html[data-design=quiet] .home-state-icon,html[data-design=quiet] .courses-state-icon{width:24px;height:24px;margin:0;border-radius:0;background:none;color:var(--text-2)}
+html[data-design=quiet] .ui-inline-state{padding:10px 0;background:transparent;border:0}
+html[data-design=quiet] .ui-segmented,html[data-design=quiet] .cd-tabs-track,html[data-design=quiet] .at-views,html[data-design=quiet] .cd-att-views{width:fit-content;max-width:100%;border-radius:6px;background:transparent;border-color:var(--line);padding:3px}
+html[data-design=quiet] .ui-segment-thumb{border-radius:4px;background:var(--surface-2);border:0;box-shadow:none}
+html[data-design=quiet] .ui-status{border:0;background:none;padding:0;min-height:20px;color:var(--text-2);border-radius:0;font-size:13px}
+html[data-design=quiet] .ui-status.tone-bad,html[data-design=quiet] .ui-status.tone-warn{color:var(--warn)}
+html[data-design=quiet] .ui-progress{color:var(--text-2)}
+html[data-design=quiet] .ui-progress--bar{height:3px;background:var(--surface-3)}
+html[data-design=quiet] .gr-column>svg{color:var(--text-2)}
+html[data-design=quiet] .ui-table th,html[data-design=quiet] .ui-table td{font-size:13px;padding:10px 12px;background:transparent}
+html[data-design=quiet] .ui-table th{font-weight:500;color:var(--text-2)}
+html[data-design=quiet] .ui-table th:first-child,html[data-design=quiet] .ui-table td:first-child{padding-left:0}
+html[data-design=quiet] .ui-table th:last-child,html[data-design=quiet] .ui-table td:last-child{padding-right:0}
+html[data-design=quiet] .gr-stat,html[data-design=quiet] .at-stat{gap:6px}
+html[data-design=quiet] .gr-stat-number,html[data-design=quiet] .at-stat-number{font-size:28px;min-height:34px;font-weight:500;letter-spacing:-.02em}
+html[data-design=quiet] .gr-stat>span,html[data-design=quiet] .gr-stat>p{min-height:0}
+html[data-design=quiet] .gr-main-grid,html[data-design=quiet] .at-main-grid{gap:24px}
+html[data-design=quiet] .gr-chart{--gr-plot-h:170px;margin-top:16px}
+html[data-design=quiet] .gr-performance h2,html[data-design=quiet] .gr-insights h2{font-size:16px}
+html[data-design=quiet] .gr-book-grade .ui-progress{display:none}
+html[data-design=quiet] .as-board-group>.as-assignment{border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;box-shadow:none}
+html[data-design=quiet] .tt-preview{border:0;background:none;padding:0}
+html[data-design=quiet] .tt-week[data-enhanced=true] .tt-day{border-radius:0;border-color:var(--line);background:transparent}
+html[data-design=quiet] .tt-week[data-enhanced=true] .tt-day-events>.tt-lesson{border-radius:6px;background:var(--surface-2);border-color:var(--line)}
+html[data-design=quiet] .cd-course-chip,html[data-design=quiet] .cd-file-symbol{width:32px;height:32px;min-width:32px;min-height:32px;border-radius:6px;background:var(--surface-2);color:var(--text-2)}
+html[data-design=quiet] .profile-avatar{width:40px;height:40px;border-radius:8px;background:var(--surface-2);color:var(--text-2)}
+html[data-design=quiet] .site-brand-mark{display:none}
+html[data-design=quiet] .profile-action-row,html[data-design=quiet] .profile-delete-card{background:none;box-shadow:none}
+/* Shared, aligned data rows. An em dash denotes a missing metric, never a fake zero. */
+html[data-design=quiet] .course-data-row{display:grid;grid-template-columns:minmax(0,1fr) 110px 100px;column-gap:24px;align-items:center;min-width:0;padding:12px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:none;color:var(--text);min-height:60px;box-shadow:none;text-decoration:none}
+html[data-design=quiet] .course-data-row>*{grid-row:auto;grid-column:auto;min-width:0}
+html[data-design=quiet] .course-column-labels{min-height:32px;padding:6px 0;color:var(--text-2);font-size:12px}
+html[data-design=quiet] .course-column-labels>span:not(:first-child){text-align:right}
+html[data-design=quiet] .course-attendance,html[data-design=quiet] .course-grade{display:flex;align-items:center;justify-content:flex-end;gap:5px;text-align:right;white-space:nowrap;font-size:14px;font-weight:500;font-variant-numeric:tabular-nums}
+html[data-design=quiet] .course-grade small{font-size:12px;font-weight:400;color:var(--text-2)}
+html[data-design=quiet] .course-attendance .focus-icon{width:13px;height:13px}
+html[data-design=quiet] .course-data-row:hover{background:var(--accent-soft);text-decoration:none}
+html[data-design=quiet] .course-data-row:hover strong{text-decoration:underline;text-underline-offset:3px;color:var(--text)}
+html[data-design=quiet] .course-column-labels:hover{background:none}
+html[data-design=quiet] .home-course-copy,html[data-design=quiet] .courses-row-copy{display:grid;gap:3px;min-width:0}
+html[data-design=quiet] .home-course-copy>strong,html[data-design=quiet] .courses-row-copy>strong{font-size:14px;line-height:20px;font-weight:500;overflow-wrap:anywhere}
+html[data-design=quiet] .home-course-meta,html[data-design=quiet] .courses-row-copy>span{font-size:12px;line-height:18px;color:var(--text-2);overflow-wrap:anywhere}
+html[data-design=quiet] .is-risk{color:var(--warn)}
+html[data-design=quiet] .courses-workspace,html[data-design=quiet] .courses-results{gap:20px}
+html[data-design=quiet] .courses-toolbar{gap:12px;margin:0}
+html[data-design=quiet] .courses-title{gap:12px}
+html[data-design=quiet] .courses-count{font-size:13px;color:var(--text-2)}
+html[data-design=quiet] .courses-list{display:block;border:0;background:none}
+html[data-design=quiet] .courses-group-heading{padding:0;margin:0 0 8px}
+html[data-design=quiet] .courses-group-heading>h2{font-size:13px;color:var(--text-2);font-weight:500}
+html[data-design=quiet] .courses-group-heading>span{display:none}
+html[data-design=quiet] .courses-group+.courses-group{margin-top:20px}
+html[data-design=quiet] .courses-filter-chip{border:0;border-radius:4px;background:var(--surface-2);color:var(--text-2)}
+html[data-design=quiet] .courses-clear{color:var(--text)}
+html[data-design=quiet] .courses-row{padding:12px 0}
+@media(max-width:1023px) and (min-width:600px){html[data-design=quiet]{--sidebar-w:64px}html[data-design=quiet].tablet-sidebar-open{--sidebar-w:224px}html[data-design=quiet] #content{padding:24px}html[data-design=quiet] .home-next-part{padding-inline:14px}html[data-design=quiet] .sidebar-eyebrow{display:none}}
+@media(max-width:760px){html[data-design=quiet] .home-next-track{grid-template-columns:1fr}html[data-design=quiet] .home-next-part,html[data-design=quiet] .home-next-part:first-child,html[data-design=quiet] .home-next-part:last-child{padding:12px 0;border:0;border-bottom:1px solid var(--line)}html[data-design=quiet] .home-next-part:first-child{padding-top:0}html[data-design=quiet] .home-next-part>h3{margin-bottom:8px}html[data-design=quiet] .home-overview{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 0}html[data-design=quiet] .home-stat:nth-child(odd){padding-left:0;border-left:0}html[data-design=quiet] .home-stat:nth-child(even){padding-left:16px;padding-right:0}html[data-design=quiet] .home-stat:nth-child(n+3){padding-top:12px;border-top:1px solid var(--line)}}
+@media(max-width:599px){html[data-design=quiet] #content{width:100%;margin:0;padding:20px 16px}html[data-design=quiet] .shell-footer{width:100%;margin:0;padding:20px 16px calc(var(--dock-h) + 36px + env(safe-area-inset-bottom))}html[data-design=quiet] #mobile-dock{border-radius:10px;background:var(--bg);box-shadow:0 4px 20px rgba(0,0,0,.10)}html[data-design=quiet] #more-sheet{border-radius:10px;background:var(--bg)}html[data-design=quiet] .shell-nav{height:54px;min-height:54px}html[data-design=quiet] .course-data-row{grid-template-columns:minmax(0,1fr) 72px 64px;column-gap:10px;padding:12px 0}html[data-design=quiet] .course-column-labels{padding:6px 0;min-height:30px;font-size:12px}html[data-design=quiet] .course-attendance,html[data-design=quiet] .course-grade{font-size:13px;gap:3px}html[data-design=quiet] .course-attendance .focus-icon{width:11px;height:11px}html[data-design=quiet] .course-grade small{font-size:12px}html[data-design=quiet] .home-course-copy>strong,html[data-design=quiet] .courses-row-copy>strong{font-size:13px;line-height:19px}html[data-design=quiet] .home-course-meta,html[data-design=quiet] .courses-row-copy>span{font-size:12px;line-height:17px}html[data-design=quiet] .home-next-track{gap:0}html[data-design=quiet] .home-workspace{gap:20px}html[data-design=quiet] .courses-toolbar{align-items:stretch}html[data-design=quiet] input:not([type=checkbox]),html[data-design=quiet] select{font-size:16px}html[data-design=quiet] .ui-empty--page,html[data-design=quiet] .home-page-state,html[data-design=quiet] .courses-page-state{min-height:160px}}
+@media(forced-colors:active){html[data-design=quiet] .is-risk{color:LinkText}html[data-design=quiet] #app-sidebar{border-color:CanvasText}html[data-design=quiet] .course-data-row{border-color:CanvasText}html[data-design=quiet] #mobile-dock,html[data-design=quiet] #more-sheet{background:Canvas;border-color:CanvasText}}
+
+/* Keep empty priority sections to one line, and avoid repeated metadata rows. */
+html[data-design=quiet] [data-next-class]:not(:has(.home-next-class)),html[data-design=quiet] [data-due-soon]:not(:has(ul)),html[data-design=quiet] .home-attention-links:not(:has(ul)){display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+html[data-design=quiet] .home-due-meta{display:flex;flex-wrap:wrap;gap:0 8px}
+html[data-design=quiet] .home-risk-list li{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+html[data-design=quiet] .home-risk-list li>span{white-space:nowrap}
+html[data-design=quiet] .courses-group{display:block}
+html[data-design=quiet] .home-page-state .ui-button,html[data-design=quiet] .courses-page-state .ui-button,html[data-design=quiet] .ui-empty--page>.ui-button{min-height:32px;padding:4px 0;border:0;background:none;color:var(--text);font-size:13px;text-decoration:underline;gap:8px}
+html[data-design=quiet] .home-page-state .ui-button svg,html[data-design=quiet] .courses-page-state .ui-button svg,html[data-design=quiet] .ui-empty--page>.ui-button svg{display:none}
+:root[data-design=quiet]{--series-5:var(--text-2)}
+html[data-design=quiet] .ui-section-header>a:not(.ui-button){text-decoration:underline;text-underline-offset:3px}
+@media(max-width:599px){html[data-design=quiet] .ui-table td{padding:0}html[data-design=quiet] .ui-table tbody>tr{padding:12px 0;gap:8px 12px}html[data-design=quiet] .ui-table td:first-child,html[data-design=quiet] .ui-table td:last-child{padding-inline:0}}
+html[data-design=quiet] #app-sidebar a:hover,html[data-design=quiet] #mobile-dock a:hover{text-decoration:none}
+@media(max-width:599px){html[data-design=quiet] .home-next{order:1}html[data-design=quiet] .home-courses{order:2}html[data-design=quiet] .home-overview{order:3}}
+/* Backend-rendered collections retain the established page layout. */
+html[data-design=quiet] .server-filters{display:flex;align-items:end;flex-wrap:wrap;gap:12px;margin:16px 0;min-width:0}
+html[data-design=quiet] .server-search{flex:1 1 200px;min-width:0}
+html[data-design=quiet] .server-select{flex:0 1 180px;min-width:130px}
+html[data-design=quiet] .server-date{display:grid;gap:4px;flex:0 1 160px;font-size:12px;color:var(--text-2)}
+html[data-design=quiet] .server-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px}
+html[data-design=quiet] .server-stat{display:grid;gap:6px;padding-left:20px;border-left:1px solid var(--line);min-width:0}
+html[data-design=quiet] .server-stat:first-child{padding-left:0;border-left:0}
+html[data-design=quiet] .server-stat>span,html[data-design=quiet] .server-stat>small{font-size:13px;color:var(--text-2)}
+html[data-design=quiet] .server-stat>strong{font-size:28px;font-weight:500;letter-spacing:-.025em;line-height:34px;font-variant-numeric:tabular-nums}
+html[data-design=quiet] .server-caption,html[data-design=quiet] .server-block-caption{font-size:13px;color:var(--text-2)}
+html[data-design=quiet] .server-block-caption{display:block;margin-top:4px}
+html[data-design=quiet] .server-empty-line{font-size:13px;line-height:20px;color:var(--text-2);padding:16px 0}
+html[data-design=quiet] .server-table-scroll{max-width:100%;overflow-x:auto;margin-top:16px}
+html[data-design=quiet] .server-table-scroll .ui-table{width:100%}
+html[data-design=quiet] .server-details{font-size:13px;line-height:21px}
+html[data-design=quiet] .server-details>summary{cursor:pointer;text-decoration:underline;text-underline-offset:3px;width:fit-content}
+html[data-design=quiet] .server-details>p,html[data-design=quiet] .server-details>ul{padding-top:12px;max-width:60ch;overflow-wrap:anywhere}
+html[data-design=quiet] .server-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:16px;margin-bottom:20px}
+html[data-design=quiet] .server-facts dt{font-size:13px;color:var(--text-2);margin-bottom:6px}
+html[data-design=quiet] .server-facts dd{font-size:17px;font-weight:500}
+html[data-design=quiet] .server-views{display:flex;align-items:center;gap:4px;width:fit-content;max-width:100%;overflow-x:auto;margin:16px 0;white-space:nowrap;padding:3px;border:1px solid var(--line);border-radius:8px}
+html[data-design=quiet] .server-views a{padding:8px 12px;font-size:13px;min-height:36px;border-radius:6px;text-decoration:none}
+html[data-design=quiet] .server-views a[aria-current]{background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line-strong);color:var(--text)}
+html[data-design=quiet] .server-calendar,html[data-design=quiet] .server-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+html[data-design=quiet] .server-calendar section,html[data-design=quiet] .server-group{padding:16px 0;border-top:1px solid var(--line)}
+html[data-design=quiet] .server-calendar p{font-size:13px;margin-top:10px}
+html[data-design=quiet] .server-assignment{padding:16px 0;border-bottom:1px solid var(--line)}
+html[data-design=quiet] .server-assignment>header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;font-size:13px;flex-wrap:wrap}
+html[data-design=quiet] .server-assignment h3{font-size:14px;font-weight:500}
+html[data-design=quiet] .server-assignment-meta{display:flex;gap:8px 16px;flex-wrap:wrap;font-size:13px;color:var(--text-2);margin:8px 0}
+html[data-design=quiet] .server-strength{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:16px;font-size:14px}
+html[data-design=quiet] .server-strength meter{grid-column:1/-1;width:100%;height:8px;accent-color:var(--text-2)}
+html[data-design=quiet] .server-strength p{grid-column:1/-1}
+html[data-design=quiet] .gr-column>svg{animation:server-chart-enter 320ms var(--ease-out)}
+@keyframes server-chart-enter{from{clip-path:inset(100% 0 0)}to{clip-path:inset(0)}}
+@media(max-width:599px){html[data-design=quiet] .server-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}html[data-design=quiet] .server-stat{padding-left:16px}html[data-design=quiet] .server-stat:nth-child(odd){padding-left:0;border-left:0}html[data-design=quiet] .server-filters{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px}html[data-design=quiet] .server-search{grid-column:1/-1}html[data-design=quiet] .server-select,html[data-design=quiet] .server-date{grid-column:1/-1;min-width:0}html[data-design=quiet] .server-calendar,html[data-design=quiet] .server-board{grid-template-columns:1fr}html[data-design=quiet] .server-assignment>header{display:grid;gap:4px}html[data-design=quiet] .server-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){html[data-design=quiet] .gr-column>svg{animation:none}}
+/* Clear light-mode selection across the sidebar, dock, account entry and tabs.
+   Geometry stays identical: outlines are inset shadows, never new borders. */
+:root[data-design=quiet][data-theme=light]{--active-fill:#dde2f1;--active-border:#737d9b;--active-ink:#242f57;--lens-fill:var(--active-fill);--lens-body:var(--active-fill);--lens-light:transparent;--lens-ink:var(--active-ink)}
+html[data-design=quiet][data-theme=light] .lens-fill{background:var(--active-fill)}
+html[data-design=quiet][data-theme=light] .lens-rim{background:transparent;box-shadow:inset 0 0 0 1px var(--active-border),inset 0 1px rgba(255,255,255,.7)}
+html[data-design=quiet][data-theme=light] .nav-stack:not([data-has-active])>.nav-list.real>.shell-nav.active{background:var(--active-fill);border-color:transparent;box-shadow:inset 0 0 0 1px var(--active-border);color:var(--active-ink)}
+html[data-design=quiet][data-theme=light] .shell-nav.active,html[data-design=quiet][data-theme=light] .shell-account.active{color:var(--active-ink)}
+html[data-design=quiet][data-theme=light] .shell-account.active,html[data-design=quiet][data-theme=light] .server-views a[aria-current],html[data-design=quiet][data-theme=light] .ui-segmented [aria-selected=true],html[data-design=quiet][data-theme=light] .ui-segmented [aria-pressed=true]{background:var(--active-fill);box-shadow:inset 0 0 0 1px var(--active-border);color:var(--active-ink)}
+html[data-design=quiet][data-theme=light] .nav-stack[data-lens-mode=low] .shell-nav.active{background:var(--active-fill);box-shadow:inset 0 0 0 1px var(--active-border)}
+@media(forced-colors:active){html[data-design=quiet] .server-views a[aria-current]{outline:2px solid Highlight;outline-offset:-2px}html[data-design=quiet][data-theme=light] .shell-nav.active{background:Highlight;color:HighlightText}}
+html[data-design=quiet] .server-week-scroll{max-width:100%;overflow-x:auto}
+html[data-design=quiet] .server-week-scroll .tt-grid{display:grid;grid-template-columns:repeat(var(--week-columns,1),minmax(150px,1fr));gap:16px}
+html[data-design=quiet] .server-week-scroll .tt-day{padding:0;margin:0;border-top:0;min-width:0}
+html[data-design=quiet] .server-week-scroll .tt-day-heading{padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:8px}
+html[data-design=quiet] .server-week-scroll .tt-lesson{display:grid;gap:6px;padding:12px 0}
+@media(max-width:599px){html[data-design=quiet] .server-week-scroll .tt-grid{display:block}html[data-design=quiet] .server-week-scroll .tt-day+.tt-day{padding-top:20px;margin-top:20px;border-top:1px solid var(--line)}}
+html[data-design=quiet] .server-inline-filter{display:flex;align-items:center;gap:8px}
+html[data-design=quiet] .server-inline-filter label{display:flex;align-items:center;gap:8px;color:var(--text-2);font-size:13px}
+html[data-design=quiet] .server-inline-filter select{width:150px}
+html[data-design=quiet] .server-file-preview{display:block;width:100%;min-height:420px;margin-top:12px;border:1px solid var(--line);border-radius:6px;background:var(--surface-1)}

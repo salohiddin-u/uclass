@@ -1,0 +1,302 @@
+{% load static %}
+
+{% url 'landing' as landing_url %}
+{% url 'privacy' as privacy_url %}
+{% url 'terms' as terms_url %}
+<!DOCTYPE html>
+<html lang="en" data-design="quiet" data-theme="dark">
+
+    <head>
+
+        <meta charset="utf-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+        <meta name="color-scheme" content="dark light">
+
+        <meta name="robots" content="noindex">
+
+        <title>Sign in · ihawk.uz</title>
+
+        <script>
+            (() => {
+                document.documentElement.classList.add('auth-enhanced');
+                let theme = 'dark';
+                try {
+                    theme = localStorage.getItem('ihawk:focus:theme') || theme;
+                } catch {}
+                if (!['dark', 'light'].includes(theme)) theme = 'dark';
+                document.documentElement.dataset.theme = theme;
+                document.documentElement.style.colorScheme = theme;
+            })();
+        </script>
+
+        <style>
+            html {
+                background: #111113;
+                color-scheme: dark
+            }
+
+            html[data-theme=light] {
+                background: #fafafa;
+                color-scheme: light
+            }
+
+            body {
+                margin: 0
+            }
+        </style>
+
+        <link
+            rel="preload"
+            href="{% static 'fonts/PlusJakartaSans.woff' %}"
+            as="font"
+            type="font/woff"
+            crossorigin
+        >
+
+        <link rel="stylesheet" href="{% static 'focus/tokens.css' %}">
+
+        <link rel="stylesheet" href="{% static 'focus/foundation.css' %}">
+
+        <link rel="stylesheet" href="{% static 'focus/workspace.css' %}?v=server-1">
+
+        <link rel="stylesheet" href="{% static 'focus/login.css' %}?v=1">
+
+        <script defer src="{% static 'focus/login.js' %}?v=1"></script>
+
+    </head>
+
+    <body class="auth-page">
+
+        <a class="skip-link" href="#login-content">Skip to sign in</a>
+
+        <header class="auth-header">
+
+            <a
+                class="auth-brand"
+                href="{% if public_home_url %}{{ public_home_url }}{% elif landing_url %}{{ landing_url }}{% else %}{% url 'home' %}{% endif %}"
+                aria-label="ihawk.uz home"
+            >
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="m3 10 6-5h12l-5 5H3Zm0 4h13l5 5H9l-6-5Z" />
+                    <circle cx="13" cy="12" r="2" />
+                </svg>
+
+                <span>ihawk<span class="auth-brand-suffix">.uz</span></span>
+            </a>
+
+            <button
+                class="auth-theme"
+                type="button"
+                data-auth-theme
+                aria-label="Switch color theme"
+                title="Switch color theme"
+                hidden
+            >
+
+                <svg
+                    class="auth-sun"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                >
+                    <circle cx="12" cy="12" r="4" />
+                    <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+                </svg>
+
+                <svg
+                    class="auth-moon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.6 8.6 0 1 0 20.5 14Z" />
+                </svg>
+
+            </button>
+
+        </header>
+
+        <main class="auth-main" id="login-content" tabindex="-1">
+
+            <section class="auth-content" aria-labelledby="login-title">
+
+                <h1 id="login-title">Sign in</h1>
+
+                <form class="auth-form" id="login-form" action="{% url 'login' %}" method="post" hx-boost="false">
+
+                    {% csrf_token %}
+
+                    {% if next %}
+                        <input type="hidden" name="next" value="{{ next }}">
+                    {% endif %}
+
+                    {% if form.non_field_errors or login_error or error %}
+
+                        <div class="auth-error-summary" id="login-errors" role="alert" tabindex="-1">
+
+                            {% if form.non_field_errors %}
+                                {{ form.non_field_errors }}
+                            {% elif login_error %}
+                                {{ login_error }}
+                            {% else %}
+                                {{ error }}
+                            {% endif %}
+
+                        </div>
+
+                    {% elif form.errors %}
+                        <p class="auth-error-summary" id="login-errors" role="alert" tabindex="-1">
+                            Check the marked fields.
+                        </p>
+                    {% endif %}
+
+                    <div class="auth-field">
+
+                        <label for="login-username">Username or student ID</label>
+
+                        <input
+                            id="login-username"
+                            name="{{ form.username.html_name|default:'username' }}"
+                            type="text"
+                            value="{% if form %}{{ form.username.value|default_if_none:'' }}{% else %}{{ username|default_if_none:'' }}{% endif %}"
+                            autocomplete="username"
+                            autocapitalize="none"
+                            spellcheck="false"
+                            required{% if form.username.errors %}
+                            aria-invalid="true"
+                            aria-describedby="username-errors"{% endif %}
+                        >
+
+                        {% if form.username.errors %}
+                            <p class="auth-field-error" id="username-errors">{{ form.username.errors|striptags }}</p>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="auth-field">
+
+                        <label for="login-password">Password</label>
+
+                        <div class="auth-password-wrap">
+
+                            <input
+                                id="login-password"
+                                name="{{ form.password.html_name|default:'password' }}"
+                                type="password"
+                                autocomplete="current-password"
+                                spellcheck="false"
+                                required{% if form.password.errors %}
+                                aria-invalid="true"
+                                aria-describedby="password-errors"{% endif %}
+                            >
+
+                            <button
+                                class="auth-password-toggle"
+                                type="button"
+                                data-password-toggle
+                                aria-controls="login-password"
+                                aria-label="Show password"
+                                aria-pressed="false"
+                                hidden
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                        {% if form.password.errors %}
+                            <p class="auth-field-error" id="password-errors">{{ form.password.errors|striptags }}</p>
+                        {% endif %}
+
+                    </div>
+
+                    {% if credential_storage_enabled %}
+
+                        <div class="auth-consent">
+
+                            <p>
+                                Automatic synchronization requires storing and using your Moodle credentials. Review
+                                {% if privacy_url %}
+                                    the <a href="{{ privacy_url }}">Privacy Policy</a>
+                                {% else %}
+                                    the service’s privacy information
+                                {% endif %}
+                                before continuing.
+                            </p>
+
+                            <label for="credential-consent">
+                                <input
+                                    id="credential-consent"
+                                    type="checkbox"
+                                    name="credential_consent"
+                                    value="1"
+                                    required{% if form.credential_consent.value %}
+                                    checked{% endif %}{% if form.credential_consent.errors %}
+                                    aria-invalid="true"
+                                    aria-describedby="credential-errors"{% endif %}
+                                >
+                                <span>I consent to this storage and use.</span>
+                            </label>
+
+                            {% if form.credential_consent.errors %}
+                                <p class="auth-field-error" id="credential-errors">
+                                    {{ form.credential_consent.errors|striptags }}
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+                    <button class="auth-submit" type="submit" data-login-submit>Sign in</button>
+
+                </form>
+
+                <section class="auth-safety" aria-labelledby="safety-title">
+
+                    <h2 id="safety-title">Account safety</h2>
+
+                    <p>Use an account that belongs to you. Sign out when using a shared device.</p>
+
+                    {% if privacy_url or terms_url %}
+                        <nav class="auth-legal" aria-label="Legal information">
+                            {% if privacy_url %}
+                                <a href="{{ privacy_url }}">Privacy Policy</a>
+                            {% endif %}
+                            {% if terms_url %}
+                                <a href="{{ terms_url }}">Terms of Service</a>
+                            {% endif %}
+                        </nav>
+                    {% endif %}
+
+                </section>
+
+            </section>
+
+        </main>
+
+        <footer class="auth-footer">
+            Independent student project. Not an official Inha University service.
+        </footer>
+
+    </body>
+
+</html>

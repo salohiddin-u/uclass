@@ -1,0 +1,628 @@
+{% load static %}
+
+{% if request.user.is_authenticated %}
+    {% url 'home' as entry_url %}
+{% else %}
+    {% url 'login' as entry_url %}
+{% endif %}
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-quality="low">
+
+    <head>
+
+        <meta charset="utf-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover">
+
+        <meta name="color-scheme" content="dark light">
+
+        <meta
+            name="description"
+            content="A clearer view of your university day. Bring courses, attendance, grades, assignments and your timetable together with ihawk.uz."
+        >
+
+        <title>ihawk.uz — Your academic day, in focus.</title>
+
+        <link
+            rel="preload"
+            href="{% static 'fonts/PlusJakartaSans.woff' %}"
+            as="font"
+            type="font/woff"
+            crossorigin
+        >
+
+        <script>
+            (() => {
+                const root = document.documentElement;
+                let theme = 'dark';
+                const effects = 'full';
+                try {
+                    theme = localStorage.getItem('ihawk:focus:theme') || theme;
+                } catch {}
+                if (!['dark', 'light'].includes(theme)) theme = 'dark';
+                const prefers = value => matchMedia(value).matches;
+                const constrained = prefers('(prefers-reduced-transparency: reduce)') || prefers('(prefers-reduced-data: reduce)') || navigator.connection?.saveData;
+                root.dataset.theme = theme;
+                root.dataset.effects = effects;
+                root.dataset.quality = constrained ? 'low' : 'high';
+                root.style.colorScheme = theme;
+            })();
+        </script>
+
+        <style>
+            html {
+                --bg: #06070B;
+                --aurora-primary: rgba(95, 104, 171, .1);
+                --aurora-cool: rgba(108, 140, 255, .08);
+                --aurora-teal: rgba(50, 190, 170, .045);
+                --dot: rgba(243, 244, 248, .045);
+                background: var(--bg);
+                color-scheme: dark
+            }
+
+            html[data-theme=light] {
+                --bg: #F4F5F9;
+                --aurora-primary: rgba(95, 104, 171, .07);
+                --aurora-cool: rgba(108, 140, 255, .07);
+                --aurora-teal: rgba(20, 155, 135, .04);
+                --dot: rgba(12, 14, 24, .045);
+                color-scheme: light
+            }
+
+            html,
+            body {
+                max-width: 100%;
+                overflow-x: clip
+            }
+
+            body {
+                margin: 0;
+                background: var(--bg)
+            }
+
+            #landing-aurora {
+                position: fixed;
+                inset: 0;
+                z-index: -1;
+                pointer-events: none;
+                overflow: hidden;
+                contain: paint;
+                background: var(--bg)
+            }
+
+            #landing-aurora:before {
+                content: "";
+                position: absolute;
+                inset: -4%;
+                background: radial-gradient(ellipse at 8% 10%, var(--aurora-primary), transparent 45%), radial-gradient(ellipse at 95% 6%, var(--aurora-cool), transparent 47%), radial-gradient(ellipse at 50% 100%, var(--aurora-teal), transparent 48%)
+            }
+
+            #landing-aurora:after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background-image: radial-gradient(var(--dot) .7px, transparent .7px);
+                background-size: 14px 14px
+            }
+
+            html[data-quality=high] #landing-aurora:before {
+                animation: landing-drift 32s ease-in-out infinite alternate
+            }
+
+            @keyframes landing-drift {
+                from {
+                    transform: translate3d(-1%, -1%, 0)
+                }
+
+                to {
+                    transform: translate3d(1%, 1%, 0)
+                }
+            }
+
+            html.theme-switching *,
+            html.theme-switching *:before,
+            html.theme-switching *:after {
+                transition: none !important
+            }
+
+            html[data-motion=paused] #landing-aurora:before {
+                animation-play-state: paused
+            }
+
+            @media(prefers-reduced-motion:reduce) {
+                #landing-aurora:before {
+                    animation: none !important
+                }
+            }
+        </style>
+
+        <link rel="stylesheet" href="{% static 'focus/tokens.css' %}">
+
+        <link rel="stylesheet" href="{% static 'focus/foundation.css' %}">
+
+        <link rel="stylesheet" href="{% static 'focus/landing.css' %}">
+
+        <script defer src="{% static 'focus/foundation.js' %}"></script>
+
+        <script defer src="{% static 'focus/landing.js' %}"></script>
+
+    </head>
+
+    <body class="lp-body" id="top">
+
+        <a class="skip-link" href="#landing-content">Skip to content</a>
+
+        <svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+
+            <symbol id="lp-hawk" viewBox="0 0 24 24">
+            <path d="m3 10 6-5h12l-5 5H3Zm0 4h13l5 5H9l-6-5Z" />
+            <circle cx="13" cy="12" r="2" />
+            </symbol>
+
+            <symbol id="lp-arrow" viewBox="0 0 24 24">
+            <path d="M4 12h16m-6-6 6 6-6 6" />
+            </symbol>
+
+            <symbol id="lp-book" viewBox="0 0 24 24">
+            <path d="M12 6v15M3 4c3-1 6 0 9 2 3-2 6-3 9-2v15c-3-1-6 0-9 2-3-2-6-3-9-2V4Z" />
+            </symbol>
+
+            <symbol id="lp-chart" viewBox="0 0 24 24">
+            <path d="M4 20V12m5 8V8m6 12V4m5 16V10M3 20h18" />
+            </symbol>
+
+            <symbol id="lp-check" viewBox="0 0 24 24">
+            <rect x="3" y="5" width="18" height="16" rx="2" />
+            <path d="M3 10h18M8 3v4m8-4v4m-9 9 3 3 6-6" />
+            </symbol>
+
+            <symbol id="lp-calendar" viewBox="0 0 24 24">
+            <rect x="3" y="5" width="18" height="16" rx="2" />
+            <path d="M3 11h18M8 3v4m8-4v4M7 15h.01M12 15h.01M17 15h.01M7 18h.01M12 18h.01" />
+            </symbol>
+
+            <symbol id="lp-tasks" viewBox="0 0 24 24">
+            <rect x="3" y="4" width="6" height="6" rx="1" />
+            <path d="M13 5h8m-8 4h6M3 17l2 2 4-5m4 1h8m-8 4h6" />
+            </symbol>
+
+            <symbol id="lp-sun" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+            </symbol>
+
+            <symbol id="lp-moon" viewBox="0 0 24 24">
+            <path d="M20.5 14A9 9 0 0 1 10 3.5 9 9 0 1 0 20.5 14Z" />
+            </symbol>
+
+            <symbol id="lp-plus" viewBox="0 0 24 24">
+            <path d="M12 5v14M5 12h14" />
+            </symbol>
+
+            <symbol id="lp-down" viewBox="0 0 24 24">
+            <path d="M12 4v16m-6-6 6 6 6-6" />
+            </symbol>
+
+            <symbol id="lp-menu" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+            </symbol>
+
+            </defs>
+        </svg>
+
+        <div id="landing-aurora" aria-hidden="true"></div>
+
+        <header class="lp-header lp-container">
+
+            <a class="lp-brand" href="#top" aria-label="ihawk.uz home">
+                <svg class="lp-icon lp-brand-mark" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                    <use href="#lp-hawk" />
+                </svg>
+                <span>ihawk<span class="lp-brand-suffix">.uz</span></span></a>
+
+            <nav class="lp-navigation" aria-label="Main navigation">
+                <a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#questions">FAQs</a>
+            </nav>
+
+            <div class="lp-header-actions">
+
+                <span class="lp-theme-slot">
+                    <button
+                        class="lp-theme"
+                        type="button"
+                        data-lp-theme
+                        aria-label="Switch to light mode"
+                        title="Switch to light mode"
+                        hidden
+                    >
+                        <svg class="lp-icon lp-theme-sun" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                            <use href="#lp-sun" />
+                        </svg>
+                        <svg class="lp-icon lp-theme-moon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                            <use href="#lp-moon" />
+                        </svg>
+                    </button>
+                </span>
+                <a class="lp-button lp-button-small" href="{{ entry_url }}">
+                    {% if request.user.is_authenticated %}
+                        Workspace
+                    {% else %}
+                        Sign in
+                    {% endif %}
+                    <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                        <use href="#lp-arrow" />
+                    </svg>
+                </a>
+
+                <details class="lp-mobile-menu" data-lp-menu>
+
+                    <summary class="lp-menu-toggle" aria-label="Navigation menu" title="Navigation menu">
+                        <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                            <use href="#lp-menu" />
+                        </svg>
+                    </summary>
+
+                    <div class="lp-mobile-panel">
+
+                        <nav aria-label="Mobile navigation">
+                            <a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#questions">FAQs</a>
+                        </nav>
+
+                        <div class="lp-mobile-theme-row" data-lp-theme-row hidden>
+                            <span>Color theme</span>
+                            <button
+                                class="lp-theme"
+                                type="button"
+                                data-lp-theme
+                                aria-label="Switch to light mode"
+                                title="Switch to light mode"
+                                hidden
+                            >
+                                <svg
+                                    class="lp-icon lp-theme-sun"
+                                    aria-hidden="true"
+                                    viewBox="0 0 24 24"
+                                    focusable="false"
+                                >
+                                    <use href="#lp-sun" />
+                                </svg>
+                                <svg
+                                    class="lp-icon lp-theme-moon"
+                                    aria-hidden="true"
+                                    viewBox="0 0 24 24"
+                                    focusable="false"
+                                >
+                                    <use href="#lp-moon" />
+                                </svg>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </details>
+
+            </div>
+
+        </header>
+
+        <main id="landing-content" class="lp-main lp-container">
+
+            <section class="lp-hero" aria-labelledby="landing-title">
+
+                <div class="lp-hero-copy">
+
+                    <p class="lp-eyebrow">
+                        <span aria-hidden="true"></span>A clearer view of university life
+                    </p>
+
+                    <h1 id="landing-title">
+                        Your day.
+                        <br>
+                        <em>In focus.</em>
+                    </h1>
+
+                    <p class="lp-hero-description">
+                        Courses, attendance, grades and what’s next.
+                        <br class="lp-desktop-break">
+                        All together, with room to breathe.
+                    </p>
+
+                    <div class="lp-hero-actions">
+                        <a class="lp-button lp-button-primary" href="{{ entry_url }}">
+                            {% if request.user.is_authenticated %}
+                                Open workspace
+                            {% else %}
+                                Sign in to ihawk
+                            {% endif %}
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-arrow" />
+                            </svg>
+                        </a><a class="lp-text-link" href="#features">Take a closer look
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-down" />
+                            </svg>
+                        </a>
+                    </div>
+
+                    <p class="lp-hero-note">Your next step, a little clearer.</p>
+
+                </div>
+
+                <figure class="lp-visual" data-lp-visual="courses" aria-labelledby="lp-visual-title">
+
+                    <div class="lp-visual-heading">
+                        <span class="lp-small-label">THE BIGGER PICTURE</span><span class="lp-connected"><span aria-hidden="true"></span>One workspace</span>
+                    </div>
+
+                    <div class="lp-map" role="group" aria-label="Explore the workspace views">
+
+                        <svg class="lp-connections" viewBox="0 0 500 340" preserveAspectRatio="none" aria-hidden="true">
+                            <g fill="none" stroke="currentColor" stroke-width="1.2">
+                            <path data-lp-connection="courses" d="M100 78C165 78 167 160 250 160" />
+                            <path data-lp-connection="grades" d="M400 78C335 78 333 160 250 160" />
+                            <path data-lp-connection="attendance" d="M100 231C165 231 167 160 250 160" />
+                            <path data-lp-connection="timetable" d="M400 231C335 231 333 160 250 160" />
+                            <path data-lp-connection="assignments" d="M250 306V160" />
+                            </g>
+                            <g class="lp-map-points" fill="currentColor">
+                            <circle cx="175" cy="115" r="3" />
+                            <circle cx="325" cy="115" r="3" />
+                            <circle cx="175" cy="199" r="3" />
+                            <circle cx="325" cy="199" r="3" />
+                            </g>
+                        </svg>
+
+                        <span class="lp-map-center" aria-hidden="true"><span class="lp-center-orbit"></span>
+                            <svg class="lp-icon" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-hawk" />
+                            </svg>
+                        </span>
+                        <a
+                            class="lp-view-node lp-node-courses"
+                            href="#feature-courses"
+                            data-lp-view="courses"
+                            data-selected="true"
+                        >
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-book" />
+                            </svg>
+                            <span>Courses</span></a>
+                        <a class="lp-view-node lp-node-grades" href="#feature-results" data-lp-view="grades">
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-chart" />
+                            </svg>
+                            <span>Grades</span></a>
+                        <a class="lp-view-node lp-node-attendance" href="#feature-results" data-lp-view="attendance">
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-check" />
+                            </svg>
+                            <span>Attendance</span></a>
+                        <a class="lp-view-node lp-node-timetable" href="#feature-day" data-lp-view="timetable">
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-calendar" />
+                            </svg>
+                            <span>Timetable</span></a>
+                        <a class="lp-view-node lp-node-assignments" href="#feature-day" data-lp-view="assignments">
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-tasks" />
+                            </svg>
+                            <span>Assignments</span></a>
+
+                    </div>
+
+                    <figcaption class="lp-visual-caption" aria-live="polite" aria-atomic="true">
+                        <h2 id="lp-visual-title">Every course, without the digging.</h2>
+                        <p id="lp-visual-copy">Learning materials and recorded results, connected to the course they belong to.</p>
+                    </figcaption>
+
+                </figure>
+
+            </section>
+
+            <section class="lp-section" id="features" aria-labelledby="features-title">
+
+                <div class="lp-section-heading" data-lp-reveal>
+                    <div>
+                        <p class="lp-section-kicker">A LITTLE LESS SCATTERED</p>
+                        <h2 id="features-title">
+                            Less hunting.
+                            <br>
+                            More headspace.
+                        </h2>
+                    </div>
+                    <p>
+                        The things you check every day,
+                        <br class="lp-desktop-break">
+                        finally in the same place.
+                    </p>
+                </div>
+
+                <div class="lp-feature-grid">
+
+                    <article class="lp-feature" id="feature-courses" data-lp-reveal>
+                        <span class="lp-feature-icon">
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-book" />
+                            </svg>
+                        </span>
+                        <p class="lp-small-label">COURSES &amp; MATERIALS</p>
+                        <h3>Find your place.</h3>
+                        <p>Open a course and get straight to its materials, assessments and recorded results.</p>
+                        <span class="lp-feature-foot">From the overview to the details</span>
+                    </article>
+
+                    <article class="lp-feature" id="feature-results" data-lp-reveal>
+                        <span class="lp-feature-icon">
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-chart" />
+                            </svg>
+                        </span>
+                        <p class="lp-small-label">GRADES &amp; ATTENDANCE</p>
+                        <h3>See where you stand.</h3>
+                        <p>Read your recorded grades and attendance clearly. Filter the details and export what you need.</p>
+                        <span class="lp-feature-foot">Clarity, without the guesswork</span>
+                    </article>
+
+                    <article class="lp-feature" id="feature-day" data-lp-reveal>
+                        <span class="lp-feature-icon">
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-calendar" />
+                            </svg>
+                        </span>
+                        <p class="lp-small-label">TIMETABLE &amp; ASSIGNMENTS</p>
+                        <h3>Make room for what’s next.</h3>
+                        <p>See your week and keep available assignment due dates close, on a screen that fits your day.</p>
+                        <span class="lp-feature-foot">A little more perspective</span>
+                    </article>
+
+                </div>
+
+            </section>
+
+            <section class="lp-section lp-workflow" id="how-it-works" aria-labelledby="workflow-title">
+
+                <div class="lp-section-heading" data-lp-reveal>
+                    <div>
+                        <p class="lp-section-kicker">AN EASIER START</p>
+                        <h2 id="workflow-title">Settle into your day.</h2>
+                    </div>
+                    <p>
+                        A familiar rhythm.
+                        <br class="lp-desktop-break">
+                        A quieter place to follow it.
+                    </p>
+                </div>
+
+                <ol class="lp-steps" role="list">
+                    <li data-lp-reveal>
+                        <span class="lp-step-number" aria-hidden="true">01</span>
+                        <h3>Sign in.</h3>
+                        <p>Enter your student workspace and pick up where you need to.</p>
+                    </li>
+                    <li data-lp-reveal>
+                        <span class="lp-step-number" aria-hidden="true">02</span>
+                        <h3>Get the bigger picture.</h3>
+                        <p>Move from your overview to a course, its materials or your recorded results.</p>
+                    </li>
+                    <li data-lp-reveal>
+                        <span class="lp-step-number" aria-hidden="true">03</span>
+                        <h3>Find your next step.</h3>
+                        <p>Check the timetable and keep track of assignments with supplied due dates.</p>
+                    </li>
+                </ol>
+
+            </section>
+
+            <section class="lp-section lp-questions" id="questions" aria-labelledby="questions-title">
+
+                <div data-lp-reveal>
+                    <p class="lp-section-kicker">GOOD TO KNOW</p>
+                    <h2 id="questions-title">
+                        A few things,
+                        <br>
+                        made clear.
+                    </h2>
+                    <p class="lp-questions-intro">
+                        A clearer workspace starts
+                        <br class="lp-desktop-break">
+                        with knowing what to expect.
+                    </p>
+                </div>
+
+                <div class="lp-faq-list" data-lp-reveal>
+
+                    <details>
+                        <summary>
+                            Do I need to sign in?
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-plus" />
+                            </svg>
+                        </summary>
+                        <p>
+                            Yes. Sign in to open your personal workspace, where you can see the courses and academic records supplied to your account.
+                        </p>
+                    </details>
+
+                    <details>
+                        <summary>
+                            What if a grade or due date is missing?
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-plus" />
+                            </svg>
+                        </summary>
+                        <p>
+                            ihawk shows the records that are available. Unrecorded attendance is not automatically absent, and “Not graded” does not mean overdue or incomplete.
+                        </p>
+                    </details>
+
+                    <details>
+                        <summary>
+                            Can I use ihawk on my phone?
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-plus" />
+                            </svg>
+                        </summary>
+                        <p>Yes. The workspace adapts to your screen, with bottom navigation on phones and a sidebar on larger screens.</p>
+                    </details>
+
+                    <details>
+                        <summary>
+                            Can I export my records?
+                            <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <use href="#lp-plus" />
+                            </svg>
+                        </summary>
+                        <p>You can export recorded attendance and course grades as CSV from the relevant page.</p>
+                    </details>
+
+                </div>
+
+            </section>
+
+            <section class="lp-final" aria-labelledby="final-title" data-lp-reveal>
+                <span class="lp-final-mark" aria-hidden="true">
+                    <svg class="lp-icon" viewBox="0 0 24 24" focusable="false">
+                        <use href="#lp-hawk" />
+                    </svg>
+                </span>
+                <div>
+                    <p class="lp-section-kicker">A LITTLE MORE FOCUS</p>
+                    <h2 id="final-title">
+                        Your day is already full.
+                        <br>
+                        Give it a clearer view.
+                    </h2>
+                </div>
+                <a class="lp-button lp-button-primary" href="{{ entry_url }}">
+                    {% if request.user.is_authenticated %}
+                        Open workspace
+                    {% else %}
+                        Sign in to ihawk
+                    {% endif %}
+                    <svg class="lp-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                        <use href="#lp-arrow" />
+                    </svg>
+                </a>
+            </section>
+
+        </main>
+
+        <footer class="lp-footer lp-container">
+            <div>
+                <a class="lp-brand" href="#top" aria-label="ihawk.uz home">
+                    <svg class="lp-icon lp-brand-mark" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                        <use href="#lp-hawk" />
+                    </svg>
+                    <span>ihawk<span class="lp-brand-suffix">.uz</span></span></a>
+                <p>© {% now 'Y' %} ihawk.uz · Independent student project.</p>
+            </div>
+            <nav aria-label="Legal">
+                <a href="{% url 'privacy' %}">Privacy</a><a href="{% url 'terms' %}">Terms</a>
+            </nav>
+        </footer>
+
+    </body>
+
+</html>

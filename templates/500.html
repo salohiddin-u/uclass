@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Something went wrong{% endblock %}
+
+{% block page %}error{% endblock %}
+
+{% block content %}
+
+    <div class="site-column site-error-page" data-site-error="500">
+
+        <header class="focus-page-header">
+            <nav class="page-breadcrumb" aria-label="Breadcrumb">
+                <ol>
+                    <li>
+                        <a href="{% url 'home' %}">Workspace</a>
+                    </li>
+                    <li aria-hidden="true">/</li>
+                    <li aria-current="page">Something went wrong</li>
+                </ol>
+            </nav>
+            <div class="page-title-row">
+                <h1>Something went wrong</h1>
+            </div>
+            <p class="page-subtitle">Your workspace is still here.</p>
+        </header>
+
+        <section class="ui-card site-error-card" aria-labelledby="site-error-title">
+            <span class="site-brand-mark" aria-hidden="true">
+                <svg
+                    class="focus-icon"
+                    aria-hidden="true"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <use href="#fi-eye" />
+                </svg>
+            </span>
+            <p class="site-error-code">500</p>
+            <h2 id="site-error-title">We couldn’t load this page.</h2>
+            <p class="site-error-copy">Please try again in a moment.</p>
+            <div class="site-error-actions">
+                <a
+                    class="ui-button ui-button--primary"
+                    href="{{ request.get_full_path }}"
+                    data-native
+                    hx-boost="false"
+                >Try again</a><a class="ui-text-button" href="{% url 'home' %}">Back to Home</a>
+            </div>
+        </section>
+
+    </div>
+
+{% endblock %}

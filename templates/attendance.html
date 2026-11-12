@@ -1,0 +1,400 @@
+{% extends 'base.html' %}
+
+{% load static tz l10n %}
+
+{% block title %}Attendance{% endblock %}
+
+{% block page %}attendance{% endblock %}
+
+{% block content %}
+
+    <header class="focus-page-header">
+        <nav class="page-breadcrumb" aria-label="Breadcrumb">
+            <ol>
+                <li>
+                    <a href="{% url 'home' %}">Workspace</a>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">Attendance</li>
+            </ol>
+        </nav>
+        <div class="page-title-row">
+            <h1>Attendance</h1>
+            {% if export_url %}
+                <a
+                    class="shell-icon-button"
+                    href="{{ export_url }}"
+                    download
+                    data-native
+                    hx-boost="false"
+                    aria-label="Export"
+                    title="Export"
+                >
+                    <svg
+                        class="focus-icon"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <use href="#fi-download" />
+                    </svg>
+                </a>
+            {% endif %}
+        </div>
+    </header>
+    {% if sessions or attendance_days or attendance_groups or attendance_weeks or attendance_weekdays or attendance_insights or attendance_breakdown or session_map_courses or filters_active or summary.attendance != None and summary.attendance != '' %}
+        <div id="attendance-workspace" class="attendance-workspace">
+
+            {% if summary.attendance != None and summary.attendance != '' or attendance_breakdown %}
+                <section class="ui-card server-summary" aria-label="Attendance summary">
+                    {% if summary.attendance != None and summary.attendance != '' %}
+                        <div class="server-stat">
+                            <span>Overall attendance</span><strong>{{ summary.attendance }}%</strong>
+                        </div>
+                    {% endif %}
+                    {% for item in attendance_breakdown %}
+                        <div class="server-stat">
+                            <span>{{ item.label }}</span><strong>{{ item.count }}</strong>
+                            {% if item.percent != None %}
+                                <small>{{ item.percent }}%</small>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </section>
+            {% endif %}
+
+            <section class="ui-card at-database">
+                <header class="ui-section-header">
+                    <h2>Sessions</h2>
+                    {% if result_count != None %}
+                        <span class="server-caption">{{ result_count }} sessions</span>
+                    {% endif %}
+                </header>
+                <form
+                    class="server-filters"
+                    action="{% url 'attendance' %}"
+                    method="get"
+                    data-live-filter
+                    hx-get="{% url 'attendance' %}"
+                    hx-target="#content"
+                    hx-select="#content"
+                    hx-swap="outerHTML"
+                    hx-push-url="true"
+                >
+                    {% if view %}
+                        <input type="hidden" name="view" value="{{ view }}">
+                    {% endif %}
+                    <label class="server-search">
+                        <span class="sr-only">Search sessions</span>
+                        <input
+                            type="search"
+                            name="q"
+                            value="{{ request.GET.q }}"
+                            placeholder="Search sessions"
+                            autocomplete="off"
+                        >
+                    </label>
+                    <label class="server-select">
+                        <span class="sr-only">Course</span>
+                        <select name="course" aria-label="Course">
+                            <option value="">All courses</option>
+                            {% for option in course_options %}
+                                <option value="{{ option.value }}"{% if option.selected %} selected{% endif %}>
+                                    {{ option.label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="server-select">
+                        <span class="sr-only">Status</span>
+                        <select name="status" aria-label="Status">
+                            <option value="">All statuses</option>
+                            {% for option in status_options %}
+                                <option value="{{ option.value }}"{% if option.selected %} selected{% endif %}>
+                                    {{ option.label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="server-date">
+                        <span>From</span>
+                        <input type="date" name="from" value="{{ request.GET.from }}">
+                    </label>
+                    <label class="server-date">
+                        <span>Until</span>
+                        <input type="date" name="until" value="{{ request.GET.until }}">
+                    </label>
+                    <button class="ui-button ui-button--icon" type="submit" title="Search" aria-label="Search">
+                        <svg
+                            class="focus-icon"
+                            aria-hidden="true"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <use href="#fi-search" />
+                        </svg>
+                    </button>
+                    {% if filters_active %}
+                        <a href="{% url 'attendance' %}" class="ui-text-button">Reset</a>
+                    {% endif %}
+                </form>
+                <nav class="server-views" aria-label="Attendance view">
+                    <a
+                        href="?{{ view_query }}&amp;view=table"{% if view != 'calendar' and view != 'course' %} aria-current="page"{% endif %}
+                    >Table</a><a
+                        href="?{{ view_query }}&amp;view=calendar"{% if view == 'calendar' %} aria-current="page"{% endif %}
+                    >Calendar</a><a href="?{{ view_query }}&amp;view=course"{% if view == 'course' %} aria-current="page"{% endif %}>By course</a>
+                </nav>
+
+                {% if attendance_method %}
+                    <p class="server-caption">{{ attendance_method }}</p>
+                {% endif %}
+
+                {% if view == 'calendar' %}
+                    <div class="server-calendar">
+                        {% for day in attendance_days %}
+                            <section>
+                                <h3>{{ day.label }}</h3>
+                                {% for session in day.sessions %}
+                                    <p>
+                                        {{ session.course_name }} · {{ session.time_label }} · {{ session.status_label }}
+                                    </p>
+                                {% empty %}
+                                    <p class="server-empty-line">No sessions listed.</p>
+                                {% endfor %}
+                            </section>
+                        {% empty %}
+                            <p class="server-empty-line">No calendar records.</p>
+                        {% endfor %}
+                    </div>
+
+                {% elif view == 'course' %}
+                    {% for group in attendance_groups %}
+                        <section class="server-group">
+                            <h3>{{ group.name }}</h3>
+                            <div class="server-table-scroll">
+                                <table class="ui-table server-session-table">
+                                    <caption class="sr-only">Attendance sessions</caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Course</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Time</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Points</th>
+                                            <th scope="col">Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for session in group.sessions %}
+                                            <tr>
+                                                <td data-label="Course">
+                                                    {% if session.course_id != None %}
+                                                        <a href="{% url 'course_detail' course_id=session.course_id %}#attendance">{{ session.course_name }}</a>
+                                                    {% else %}
+                                                        {{ session.course_name }}
+                                                    {% endif %}
+                                                </td>
+                                                <td data-label="Date">{{ session.date }}</td>
+                                                <td data-label="Time">{{ session.time_label }}</td>
+                                                <td data-label="Status">
+                                                    <span{% if session.is_at_risk %} class="is-risk"{% endif %}>{{ session.status_label }}</span>
+                                                </td>
+                                                <td data-label="Points">
+                                                    {% if session.points_label %}
+                                                        {{ session.points_label }}
+                                                    {% else %}
+                                                        {% if session.points != None and session.points != '' %}
+                                                            {{ session.points }}
+                                                        {% else %}
+                                                            <span class="muted" aria-label="Not available">—</span>
+                                                        {% endif %}
+                                                        {% if session.points != None and session.points != '' and session.maximum != None and session.maximum != '' %}
+                                                            / {{ session.maximum }}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </td>
+                                                <td data-label="Details">
+                                                    {% if session.remarks %}
+                                                        <details class="server-details">
+                                                            <summary>Details</summary>
+                                                            <p>{{ session.remarks|linebreaksbr }}</p>
+                                                        </details>
+                                                    {% else %}
+                                                        <span class="muted">—</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="6">No sessions listed.</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    {% empty %}
+                        <p class="server-empty-line">No course records.</p>
+                    {% endfor %}
+
+                {% else %}
+                    <div class="server-table-scroll">
+                        <table class="ui-table server-session-table">
+                            <caption class="sr-only">Attendance sessions</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Course</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Time</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Points</th>
+                                    <th scope="col">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for session in sessions %}
+                                    <tr>
+                                        <td data-label="Course">
+                                            {% if session.course_id != None %}
+                                                <a href="{% url 'course_detail' course_id=session.course_id %}#attendance">{{ session.course_name }}</a>
+                                            {% else %}
+                                                {{ session.course_name }}
+                                            {% endif %}
+                                        </td>
+                                        <td data-label="Date">{{ session.date }}</td>
+                                        <td data-label="Time">{{ session.time_label }}</td>
+                                        <td data-label="Status">
+                                            <span{% if session.is_at_risk %} class="is-risk"{% endif %}>{{ session.status_label }}</span>
+                                        </td>
+                                        <td data-label="Points">
+                                            {% if session.points_label %}
+                                                {{ session.points_label }}
+                                            {% else %}
+                                                {% if session.points != None and session.points != '' %}
+                                                    {{ session.points }}
+                                                {% else %}
+                                                    <span class="muted" aria-label="Not available">—</span>
+                                                {% endif %}
+                                                {% if session.points != None and session.points != '' and session.maximum != None and session.maximum != '' %}
+                                                    / {{ session.maximum }}
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                        <td data-label="Details">
+                                            {% if session.remarks %}
+                                                <details class="server-details">
+                                                    <summary>Details</summary>
+                                                    <p>{{ session.remarks|linebreaksbr }}</p>
+                                                </details>
+                                            {% else %}
+                                                <span class="muted">—</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="6">No sessions listed.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </section>
+
+            {% if attendance_weeks or attendance_weekdays or attendance_insights %}
+                <section class="ui-card at-patterns">
+                    <h2>Attendance patterns</h2>
+                    {% for item in attendance_weeks %}
+                        <div class="at-pattern-row">
+                            <span>{{ item.label }}</span><strong>{{ item.percent }}%</strong>
+                        </div>
+                    {% endfor %}
+                    {% for item in attendance_weekdays %}
+                        <div class="at-pattern-row">
+                            <span>{{ item.label }}</span><strong>{{ item.percent }}%</strong>
+                        </div>
+                    {% endfor %}
+                    {% for item in attendance_insights %}
+                        <div class="at-insight">
+                            {% if item.title %}
+                                <h3>{{ item.title }}</h3>
+                            {% endif %}
+                            {% if item.description %}
+                                <p>{{ item.description }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </section>
+            {% endif %}
+
+            {% if session_map_courses %}
+                <section class="ui-card at-map">
+                    <header class="ui-section-header">
+                        <h2>Session map</h2>
+                    </header>
+                    <div class="server-table-scroll" tabindex="0" role="region" aria-label="Session map records">
+                        <table class="ui-table">
+                            <caption class="sr-only">Attendance session map</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Course</th>
+                                    {% for date in session_map_dates %}
+                                        <th scope="col">{{ date }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in session_map_courses %}
+                                    <tr>
+                                        <th scope="row">
+                                            <a href="{% url 'course_detail' course_id=row.id %}#attendance">{{ row.name }}</a>
+                                        </th>
+                                        {% for session in row.cells %}
+                                            <td>
+                                                {% if session %}
+                                                    <details class="server-details">
+                                                        <summary{% if session.is_at_risk %} class="is-risk"{% endif %}>
+                                                            {{ session.status_label }}
+                                                        </summary>
+                                                        {% if session.time_label %}
+                                                            <p>{{ session.time_label }}</p>
+                                                        {% endif %}
+                                                        {% if session.remarks %}
+                                                            <p>{{ session.remarks }}</p>
+                                                        {% endif %}
+                                                    </details>
+                                                {% else %}
+                                                    —
+                                                {% endif %}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            {% endif %}
+        </div>
+    {% else %}
+        <div id="attendance-workspace">
+            <section class="ui-card ui-empty ui-empty--page">
+                <h2>No attendance records yet.</h2>
+                <a class="ui-button" href="{% url 'courses' %}">View courses</a>
+            </section>
+        </div>
+    {% endif %}
+
+{% endblock %}
