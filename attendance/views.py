@@ -22,7 +22,7 @@ from .services.encryption import encrypt, decrypt
 from .models import *
 
 from .services.moodle_api import *
-from .services.sync import sync_courses, sync_grades
+from .services.sync import *
 
 env = environs.Env()
 env.read_env()
@@ -108,6 +108,7 @@ def login_view(request):
         try:
             sync_courses(student.userid)
             sync_grades(student.userid)
+            sync_assignments(student.userid)
         except Exception:
             logger.exception(
                 "Moodle synchronization failed for student %s",
@@ -246,6 +247,7 @@ def course_detail(request, course_id):
         'student': Student.objects.get(user=request.user),
         'sections': sections,
         'grade': GradeBook.objects.get(student__user=request.user, course=course),
+        'assessments': Assignment.objects.filter(course_module__course=course).order_by('cmid'),
     })
 
 def logout_view(request):

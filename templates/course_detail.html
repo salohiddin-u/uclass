@@ -401,49 +401,24 @@
                         <thead>
                             <tr>
                                 <th scope="col">Assessment</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Score</th>
+                                <th scope="col">Max Attempts</th>
+                                <th scope="col">Deadline</th>
                                 <th scope="col">Weight</th>
                             </tr>
                         </thead>
                         <tbody>
 
-                            <tr>
-                                <td data-label="Assessment">Lab assignments</td>
-                                <td data-label="Type">Coursework</td>
+                            {% for assessment in assessments %}
+                                <tr>
+                                <td data-label="Assessment">{{ assessment.name }}</td>
+                                <td data-label="Type">{{ assessment.max_attempts }}</td>
                                 <td data-label="Score">
 
-                                    18
-
-                                    / 20
-
+                                    {{ assessment.duedate }}
                                 </td>
                                 <td data-label="Weight">20%</td>
                             </tr>
-
-                            <tr>
-                                <td data-label="Assessment">Midterm exam</td>
-                                <td data-label="Type">Exam</td>
-                                <td data-label="Score">
-
-                                    26
-
-                                    / 30
-
-                                </td>
-                                <td data-label="Weight">30%</td>
-                            </tr>
-
-                            <tr>
-                                <td data-label="Assessment">Final exam</td>
-                                <td data-label="Type">Exam</td>
-                                <td data-label="Score">
-
-                                    <span class="muted" aria-label="Not available">—</span>
-
-                                </td>
-                                <td data-label="Weight">50%</td>
-                            </tr>
+                            {% endfor %}
 
                         </tbody>
                     </table>

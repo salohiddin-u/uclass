@@ -156,6 +156,30 @@ def sync_grades(pk):
                     )
     return True
 
+def sync_assignments(pk):
+    student = Student.objects.get(userid=pk)
+    token = get_token(student.user.username, decrypt(student.enc_password))
+    courses = CourseEnrollment.objects.filter(student=student)
+    c = []
+    for course in courses:
+        c.append(course.course.courseid)
+    assignments = get_assignments(token=token, courseids_list=c)
+    for course in assignments['courses']:
+        for course_assignment in course['assignments']:
+            course_module = CourseModule.objects.get(cmid=course_assignment['coursemodule'])
+            Assignment.objects.update_or_create(
+                course_module = course_module,
+                cmid=course_assignment['cmid'],
+                defaults={
+                    'name': course_assignment.get('name', ''),
+                    'duedate': to_datetime(course_assignment['duedate']),
+                    'allowsubmissionsfromdate': to_datetime(course_assignment['allowsubmissionsfromdate']),
+                    'grade': course_assignment.get('grade'),
+                    'max_attempts': course_assignment.get('maxattempts', 0),
+                    'time_modified': to_datetime(course_assignment['timemodified']),
+                }
+            )
+
 
 def sync_attendance(pk):
     student = Student.objects.get(userid=pk)

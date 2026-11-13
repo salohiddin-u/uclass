@@ -152,8 +152,11 @@ def get_grade_items(userid, courseid, token):
     grade_items = ws(token, "gradereport_user_get_grade_items", userid=userid, courseid=courseid)
     return grade_items
 
-def get_assignments(courseid, token):
-    assignments = ws(token, "mod_assign_get_assignments", courseid=courseid)
+def get_assignments(courseids_list, token):
+    courseids = {}
+    for i in range(0, len(courseids_list)):
+        courseids[f"courseids[{i}]"] = courseids_list[i]
+    assignments = ws(token, "mod_assign_get_assignments", **courseids)
     return assignments
 
 def get_quizzes(courseid, token):
@@ -175,3 +178,5 @@ def get_quiz_attempts(quizid, userid, token):
         userid=userid,
         status="all",
     )
+
+
