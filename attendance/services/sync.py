@@ -163,22 +163,24 @@ def sync_assignments(pk):
     c = []
     for course in courses:
         c.append(course.course.courseid)
-    assignments = get_assignments(token=token, courseids_list=c)
-    for course in assignments['courses']:
-        for course_assignment in course['assignments']:
-            course_module = CourseModule.objects.get(cmid=course_assignment['coursemodule'])
-            Assignment.objects.update_or_create(
-                course_module = course_module,
-                cmid=course_assignment['cmid'],
-                defaults={
-                    'name': course_assignment.get('name', ''),
-                    'duedate': to_datetime(course_assignment['duedate']),
-                    'allowsubmissionsfromdate': to_datetime(course_assignment['allowsubmissionsfromdate']),
-                    'grade': course_assignment.get('grade'),
-                    'max_attempts': course_assignment.get('maxattempts', 0),
-                    'time_modified': to_datetime(course_assignment['timemodified']),
-                }
-            )
+    courses_assignments = get_assignments(token=token, courseids_list=c)
+    for course in courses_assignments['courses']:
+        for assignment in course['assignments']:
+            module = CourseModule.objects.get(cmid=assignment['cmid'])
+            for assignment_file in assignment['introattachments']:
+                course_file = CourseFile.objects.update_or_create(
+                    module=module,
+                    defaults={
+                        'filename': unescape(assignment_file['filename'] or ''),
+                        'size': (assignment_file['filesize'])/1048576,
+                        'url': assignment_file['fileurl'],
+                        'modified': to_datetime(assignment_file['timemodified']),
+                        'mimetype': assignment_file['mimetype'],
+                        'author': ""
+
+                    }
+
+                )
 
 
 def sync_attendance(pk):

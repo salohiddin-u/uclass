@@ -3,6 +3,8 @@ from asyncio.log import logger
 import truststore
 from django.http import HttpResponse, StreamingHttpResponse
 
+from .models import Student
+
 truststore.inject_into_ssl()
 
 from urllib.parse import urlparse, unquote
@@ -247,7 +249,6 @@ def course_detail(request, course_id):
         'student': Student.objects.get(user=request.user),
         'sections': sections,
         'grade': GradeBook.objects.get(student__user=request.user, course=course),
-        'assessments': Assignment.objects.filter(course_module__course=course).order_by('cmid'),
     })
 
 def logout_view(request):

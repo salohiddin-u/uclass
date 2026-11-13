@@ -177,22 +177,3 @@ class ChatMessage(models.Model):
     def __str__(self):
         return f"Message: {self.message}"
 
-class Assignment(models.Model):
-    course_module = models.ForeignKey(CourseModule, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200, null=True, blank=True)
-    cmid = models.IntegerField()
-    duedate = models.DateTimeField(null=True, blank=True)
-    allowsubmissionsfromdate = models.DateTimeField(null=True, blank=True)
-    time_modified = models.DateTimeField(null=True, blank=True)
-    grade = models.IntegerField(null=True, blank=True)
-    max_attempts = models.IntegerField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.course_module} - {self.name}"
-
-class AssignmentStatus(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
-    status = models.CharField(max_length=200, null=True, blank=True)
-    def __str__(self):
-        return f"{self.assignment} - {self.status}"
